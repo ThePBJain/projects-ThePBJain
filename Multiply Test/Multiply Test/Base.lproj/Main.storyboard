@@ -52,11 +52,11 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" translatesAutoresizingMaskIntoConstraints="NO" id="YY5-rI-hJc">
-                                <rect key="frame" x="60" y="407" width="254" height="28"/>
+                                <rect key="frame" x="60" y="407" width="254" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
-                                    <segment title="First"/>
-                                    <segment title="Second"/>
+                                    <segment title=""/>
+                                    <segment title=""/>
                                     <segment title=""/>
                                     <segment title=""/>
                                 </segments>
@@ -78,8 +78,12 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Iop-JC-RmY">
+                                <rect key="frame" x="44" y="106" width="294" height="2"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </progressView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4F8-7z-urQ">
-                                <rect key="frame" x="149" y="585" width="80" height="59"/>
+                                <rect key="frame" x="124" y="588" width="126" height="59"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="39"/>
                                 <state key="normal" title="Start"/>
@@ -87,10 +91,6 @@
                                     <action selector="nextQuestion:" destination="BYZ-38-t0r" eventType="touchUpInside" id="md2-lL-C7N"/>
                                 </connections>
                             </button>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Iop-JC-RmY">
-                                <rect key="frame" x="44" y="106" width="294" height="2"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </progressView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -104,9 +104,11 @@
                     <connections>
                         <outlet property="answerChoices" destination="YY5-rI-hJc" id="ZiW-kD-C7f"/>
                         <outlet property="correctnessIndicator" destination="rPN-mq-Ua2" id="LEI-qW-wl2"/>
+                        <outlet property="mainButton" destination="4F8-7z-urQ" id="DJY-fC-mSJ"/>
                         <outlet property="multiplicand" destination="5xu-U1-Sky" id="kpe-TZ-Zd9"/>
                         <outlet property="multiplier" destination="nWw-WB-xY7" id="MOc-PV-0vz"/>
                         <outlet property="progress" destination="U05-jd-1QB" id="ugB-SG-gvb"/>
+                        <outlet property="progressBar" destination="Iop-JC-RmY" id="LXz-M1-G42"/>
                         <outlet property="result" destination="gcc-Ai-OGQ" id="kdY-AM-xgW"/>
                     </connections>
                 </viewController>
