@@ -25,6 +25,7 @@ class ViewController: UIViewController {
     let numQuestions = 5
     var answerIndex:Int?
     var numCorrectAnswers = 0
+    var numDisabledAnswerChoices = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         resetTest()
@@ -62,6 +63,7 @@ class ViewController: UIViewController {
                 usedAnswers.append(wrongAnswer)
                 answerChoices.setTitle(String(wrongAnswer), forSegmentAt: Int(i))
             }
+            answerChoices.setEnabled(true, forSegmentAt: Int(i))
         }
     }
     
@@ -97,6 +99,7 @@ class ViewController: UIViewController {
             correctnessIndicator.isHidden = true
             result.isHidden = true
             mainButton.isHidden = true
+            numDisabledAnswerChoices = 0
             //set button to reset before last question gets answered
             if(progressBar.progress == (1.0 - (1.0/Float(numQuestions))) ) {
                 mainButton.setTitle("Reset", for: UIControlState.normal)
@@ -134,6 +137,19 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func askedForHint(_ sender: Any) {
+        //asked for hint, need to
+        if(Int(numAnswerChoices) - numDisabledAnswerChoices > 2){
+            if let answerIndex = answerIndex {
+                var indexToDisable = -1
+                while(indexToDisable < 0 || indexToDisable == answerIndex || !answerChoices.isEnabledForSegment(at: indexToDisable)) {
+                    indexToDisable = Int(arc4random_uniform(numAnswerChoices))
+                }
+                answerChoices.setEnabled(false, forSegmentAt: indexToDisable)
+                numDisabledAnswerChoices += 1
+            }
+        }
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
