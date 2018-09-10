@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" systemVersion="17A277" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="ipad9_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -9,16 +14,167 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Pentomino_Game" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fRp-zL-u08">
+                                <rect key="frame" x="0.0" y="20" width="768" height="502"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Board0" translatesAutoresizingMaskIntoConstraints="NO" id="xJS-Yh-gjk">
+                                        <rect key="frame" x="174" y="41" width="420" height="420"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="420" id="qeD-we-st9"/>
+                                            <constraint firstAttribute="height" constant="420" id="yBx-A2-94K"/>
+                                        </constraints>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OSe-mw-wdx" userLabel="Board0">
+                                        <rect key="frame" x="44" y="41" width="105" height="105"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" backgroundImage="Board0button">
+                                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="setPlayingBoard:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FRW-0V-ntp"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oa7-Kc-MOG" userLabel="Board1">
+                                        <rect key="frame" x="44" y="189" width="105" height="105"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" backgroundImage="Board1button">
+                                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="setPlayingBoard:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gJ1-fp-nZ6"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lKA-YU-R2h" userLabel="Board2">
+                                        <rect key="frame" x="44" y="333" width="105" height="105"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" backgroundImage="Board2button">
+                                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="setPlayingBoard:" destination="BYZ-38-t0r" eventType="touchUpInside" id="m3n-BF-kND"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hzp-26-vFK" userLabel="Board3">
+                                        <rect key="frame" x="620" y="41" width="105" height="105"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" backgroundImage="Board3button">
+                                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="setPlayingBoard:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gf1-9s-nvx"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PRJ-YM-7yu" userLabel="Board4">
+                                        <rect key="frame" x="620" y="189" width="105" height="105"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" backgroundImage="Board4button">
+                                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="setPlayingBoard:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Fp-ov-s4l"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KAm-6F-xDk" userLabel="Board5">
+                                        <rect key="frame" x="620" y="333" width="105" height="105"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" backgroundImage="Board5button">
+                                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="setPlayingBoard:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sVq-xq-WVF"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zgh-Pi-7ya">
+                                        <rect key="frame" x="71" y="455" width="51" height="38"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                        <state key="normal" title="Solve">
+                                            <color key="titleColor" red="0.78139379433607348" green="1" blue="0.055926448929131789" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="solveBoard:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gAc-u0-Bx3"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CXY-cE-PGn">
+                                        <rect key="frame" x="366" y="455" width="38" height="38"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                        <state key="normal" title="Hint">
+                                            <color key="titleColor" red="0.78139379433607348" green="1" blue="0.055926448929131789" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AFP-ci-RpN">
+                                        <rect key="frame" x="647" y="455" width="52" height="38"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                        <state key="normal" title="Reset">
+                                            <color key="titleColor" red="0.78139379433607348" green="1" blue="0.055926448929131789" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="resetBoard:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kWD-Ua-oz1"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.35289794889999998" green="0.56686444030000005" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="xJS-Yh-gjk" firstAttribute="centerY" secondItem="fRp-zL-u08" secondAttribute="centerY" id="W8L-2w-cqR"/>
+                                    <constraint firstItem="xJS-Yh-gjk" firstAttribute="centerX" secondItem="fRp-zL-u08" secondAttribute="centerX" id="yln-OO-dLE"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5nb-9e-rW6" userLabel="PieceView">
+                                <rect key="frame" x="20" y="542" width="728" height="462"/>
+                                <color key="backgroundColor" red="0.40742334152030457" green="1" blue="0.077962155329293292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="fRp-zL-u08" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="0AE-5J-esn"/>
+                            <constraint firstItem="fRp-zL-u08" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="3c0-BP-hmo"/>
+                            <constraint firstItem="5nb-9e-rW6" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" constant="-20" id="4FV-xO-m7H"/>
+                            <constraint firstItem="fRp-zL-u08" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.5" id="K7G-TB-c4Z"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="fRp-zL-u08" secondAttribute="trailing" id="YhV-eP-4sd"/>
+                            <constraint firstItem="5nb-9e-rW6" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="-20" id="f3B-Es-XMm"/>
+                            <constraint firstItem="5nb-9e-rW6" firstAttribute="top" secondItem="fRp-zL-u08" secondAttribute="bottom" constant="20" id="ttA-sA-7NT"/>
+                            <constraint firstItem="5nb-9e-rW6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="xkn-sE-nMv"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="bottomView" destination="5nb-9e-rW6" id="816-fh-Rr3"/>
+                        <outlet property="mainBoard" destination="xJS-Yh-gjk" id="xaH-ZI-ega"/>
+                        <outlet property="resetButton" destination="AFP-ci-RpN" id="iOb-Sd-Tor"/>
+                        <outlet property="solveButton" destination="zgh-Pi-7ya" id="ttT-ey-zx6"/>
+                        <outletCollection property="boardButtons" destination="OSe-mw-wdx" collectionClass="NSMutableArray" id="4ny-rD-P93"/>
+                        <outletCollection property="boardButtons" destination="oa7-Kc-MOG" collectionClass="NSMutableArray" id="LB2-Tj-GDr"/>
+                        <outletCollection property="boardButtons" destination="lKA-YU-R2h" collectionClass="NSMutableArray" id="j1n-MN-on7"/>
+                        <outletCollection property="boardButtons" destination="hzp-26-vFK" collectionClass="NSMutableArray" id="qF7-8h-lhv"/>
+                        <outletCollection property="boardButtons" destination="PRJ-YM-7yu" collectionClass="NSMutableArray" id="3z8-aZ-kzL"/>
+                        <outletCollection property="boardButtons" destination="KAm-6F-xDk" collectionClass="NSMutableArray" id="UfR-ku-3IR"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="33.59375" y="38.671875"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Board0" width="420" height="420"/>
+        <image name="Board0button" width="105" height="105"/>
+        <image name="Board1button" width="105" height="105"/>
+        <image name="Board2button" width="105" height="105"/>
+        <image name="Board3button" width="105" height="105"/>
+        <image name="Board4button" width="105" height="105"/>
+        <image name="Board5button" width="105" height="105"/>
+    </resources>
 </document>
