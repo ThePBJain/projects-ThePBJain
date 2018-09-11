@@ -41,43 +41,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        layoutPieces()
+        //layoutPieces()
+        resetBoard(UIButton())
     }
-    
-    func layoutPieces(){
-        let numPiecesPerRow: Int = Int(self.bottomView.frame.size.width)/(pieceDimension*pieceBlockPixel)
-        //let numRows: Int = Int(self.bottomView.frame.size.height)/(pieceDimension*pieceBlockPixel)
-        var counterX = 0
-        var counterY = 0
-        for aView in pieces.values {
-            let _x = counterX%numPiecesPerRow * (pieceDimension*pieceBlockPixel)
-            counterY = counterX / numPiecesPerRow
-            let _y = counterY * ((pieceDimension+2)*pieceBlockPixel)
-            counterX += 1
-            aView.frame.origin = CGPoint(x: _x, y: _y)
-            self.bottomView.addSubview(aView)
-        }
-    }
-    func resetTransforms(){
-        if(currentGame != 0){
-            let currentSolution = pentominoModel.allSolutions[self.currentGame-1]
-            for (key, value) in currentSolution{
-                let _rotate = -1.0*CGFloat(value.rotations) * (CGFloat.pi/2.0);
-                let _isFlipped = value.isFlipped
-                if let pieceView = pieces[key]{
-                    if(_isFlipped){
-                        if let pieceImage = pieceView.image{
-                            pieceView.image = pieceImage.withHorizontallyFlippedOrientation()
-                        }
-                    }
-                    pieceView.transform = pieceView.transform.rotated(by: _rotate)
-                    
-                }
-            }
-        }
-    }
-    
-    
     
 
     @IBAction func setPlayingBoard(_ sender: Any) {
@@ -104,14 +70,14 @@ class ViewController: UIViewController {
                 if let pieceView = pieces[key]{
                     moveView(pieceView, toSuperview: mainBoard)
                     UIView.animate(withDuration: 1.0, animations: { () -> Void in
-                        pieceView.transform = pieceView.transform.rotated(by: _rotate)
+                        
+                        var stackedTransform = CGAffineTransform.identity
+                        stackedTransform = stackedTransform.rotated(by: _rotate)
                         if(_isFlipped){
-                            if let pieceImage = pieceView.image{
-                                pieceView.image = pieceImage.withHorizontallyFlippedOrientation()
-                            }
+                            stackedTransform = stackedTransform.scaledBy(x: -1, y: 1)
                         }
+                        pieceView.transform = stackedTransform
                         pieceView.frame.origin = CGPoint(x: _x, y: _y)
-                        //self.mainBoard.addSubview(pieceView)
                     })
                 }
             }
@@ -122,9 +88,37 @@ class ViewController: UIViewController {
             resetButton.isEnabled = true
         }
     }
+    
+    func layoutPieces(){
+        let numPiecesPerRow: Int = Int(self.bottomView.frame.size.width)/(pieceDimension*pieceBlockPixel)
+        //let numRows: Int = Int(self.bottomView.frame.size.height)/(pieceDimension*pieceBlockPixel)
+        var counterX = 0
+        var counterY = 0
+        for aView in pieces.values {
+            
+            let _x = counterX%numPiecesPerRow * (pieceDimension*pieceBlockPixel)
+            counterY = counterX / numPiecesPerRow
+            let _y = counterY * ((pieceDimension+2)*pieceBlockPixel)
+            counterX += 1
+            aView.frame.origin = CGPoint(x: _x, y: _y)
+            //self.bottomView.addSubview(aView)
+        }
+    }
+    
     @IBAction func resetBoard(_ sender: Any) {
-        resetTransforms()
-        layoutPieces()
+        
+        for piece in pieces.values{
+            moveView(piece, toSuperview: bottomView)
+            UIView.animate(withDuration: 1.0, animations: { () -> Void in
+                //reset transforms
+                piece.transform = CGAffineTransform.identity
+                //reset location
+                self.layoutPieces()
+            })
+        }
+        
+        
+        
         for button in boardButtons{
             button.isEnabled = true
         }
