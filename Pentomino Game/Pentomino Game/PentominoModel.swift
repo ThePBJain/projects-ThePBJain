@@ -22,9 +22,12 @@ typealias Solution = [String:Position]
 typealias Solutions = [Solution]
 
 class PentominoModel {
+    //all variables to handle board layout
     private let numBoards = 6
     private let numPlayingPieces = 12
-    let allSolutions : Solutions //[[String:[String:Int]]]
+    private let pieceDimension = 6
+    private let pieceBlockPixel = 30
+    let allSolutions : Solutions 
     private let boards : [String]
     private let boardLetters = ["F", "I", "L", "N", "P",
                                 "T", "U", "V", "W", "X", "Y", "Z"]
@@ -53,6 +56,7 @@ class PentominoModel {
         boards = _boards
         playingPieces = _playingPieces
     }
+    
     //Pulled from LionModel
     func boardNames(index i:Int) -> String {
         return boards[i%numBoards]
@@ -74,4 +78,21 @@ class PentominoModel {
             return playingPieces[0]
         }
     }
+    
+    func getNumPlayingPieces() -> Int {
+        return numPlayingPieces
+    }
+    
+    func getNumBoards() -> Int {
+        return numBoards
+    }
+    
+    func getPieceBlockPixel() -> Int {
+        return pieceBlockPixel
+    }
+    
+    func getPieceDimension() -> Int {
+        return pieceDimension
+    }
+    
 }
