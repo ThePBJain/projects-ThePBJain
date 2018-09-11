@@ -19,9 +19,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5nb-9e-rW6" userLabel="PieceView">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5nb-9e-rW6" userLabel="BottomView">
                                 <rect key="frame" x="20" y="542" width="728" height="462"/>
-                                <color key="backgroundColor" red="0.40742334152030457" green="1" blue="0.077962155329293292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="0.40742334149999998" green="1" blue="0.077962155330000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fRp-zL-u08">
                                 <rect key="frame" x="0.0" y="20" width="768" height="502"/>
@@ -150,15 +150,22 @@
                                     <constraint firstItem="PRJ-YM-7yu" firstAttribute="centerX" secondItem="hzp-26-vFK" secondAttribute="centerX" id="zew-AG-q4Z"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5JJ-5Q-r5k" userLabel="InvisibleView">
+                                <rect key="frame" x="20" y="542" width="728" height="462"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="fRp-zL-u08" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="0AE-5J-esn"/>
                             <constraint firstItem="fRp-zL-u08" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="3c0-BP-hmo"/>
                             <constraint firstItem="5nb-9e-rW6" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" constant="-20" id="4FV-xO-m7H"/>
+                            <constraint firstItem="5JJ-5Q-r5k" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Ekg-hZ-PBO"/>
                             <constraint firstItem="fRp-zL-u08" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.5" id="K7G-TB-c4Z"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="fRp-zL-u08" secondAttribute="trailing" id="YhV-eP-4sd"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="5JJ-5Q-r5k" secondAttribute="bottom" constant="20" id="Ykt-Fc-3Ia"/>
                             <constraint firstItem="5nb-9e-rW6" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="-20" id="f3B-Es-XMm"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="5JJ-5Q-r5k" secondAttribute="trailing" constant="20" id="gRZ-Tf-4vQ"/>
+                            <constraint firstItem="5JJ-5Q-r5k" firstAttribute="top" secondItem="fRp-zL-u08" secondAttribute="bottom" constant="20" id="qke-hu-gOf"/>
                             <constraint firstItem="5nb-9e-rW6" firstAttribute="top" secondItem="fRp-zL-u08" secondAttribute="bottom" constant="20" id="ttA-sA-7NT"/>
                             <constraint firstItem="5nb-9e-rW6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="xkn-sE-nMv"/>
                         </constraints>
@@ -166,6 +173,7 @@
                     </view>
                     <connections>
                         <outlet property="bottomView" destination="5nb-9e-rW6" id="816-fh-Rr3"/>
+                        <outlet property="invisibleView" destination="5JJ-5Q-r5k" id="cW6-Tf-PNV"/>
                         <outlet property="mainBoard" destination="xJS-Yh-gjk" id="xaH-ZI-ega"/>
                         <outlet property="resetButton" destination="AFP-ci-RpN" id="iOb-Sd-Tor"/>
                         <outlet property="solveButton" destination="zgh-Pi-7ya" id="ttT-ey-zx6"/>

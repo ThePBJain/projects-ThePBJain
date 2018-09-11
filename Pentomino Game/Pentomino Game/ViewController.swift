@@ -12,6 +12,7 @@ class ViewController: UIViewController {
    
     
     @IBOutlet weak var bottomView: UIView!
+    @IBOutlet weak var invisibleView: UIView!
     @IBOutlet weak var solveButton: UIButton!
     @IBOutlet weak var resetButton: UIButton!
     @IBOutlet weak var mainBoard: UIImageView!
@@ -52,7 +53,7 @@ class ViewController: UIViewController {
         mainBoard.image = UIImage(named: pentominoModel.boardNames(index: button.tag))
     }
     
-    //gotten from Move Views
+    //gotten from Move Views that Dr. Hannan made
     func moveView(_ view:UIView, toSuperview superView: UIView) {
         let newCenter = superView.convert(view.center, from: view.superview)
         view.center = newCenter
@@ -101,14 +102,13 @@ class ViewController: UIViewController {
             let _y = counterY * ((pieceDimension+2)*pieceBlockPixel)
             counterX += 1
             aView.frame.origin = CGPoint(x: _x, y: _y)
-            //self.bottomView.addSubview(aView)
         }
     }
     
     @IBAction func resetBoard(_ sender: Any) {
         
         for piece in pieces.values{
-            moveView(piece, toSuperview: bottomView)
+            moveView(piece, toSuperview: self.invisibleView)
             UIView.animate(withDuration: 1.0, animations: { () -> Void in
                 //reset transforms
                 piece.transform = CGAffineTransform.identity
