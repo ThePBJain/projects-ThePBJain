@@ -85,6 +85,14 @@ class ViewController: UIViewController {
         self.currentGame = button.tag
         mainBoard.image = UIImage(named: pentominoModel.boardNames(index: button.tag))
     }
+    
+    //gotten from Move Views
+    func moveView(_ view:UIView, toSuperview superView: UIView) {
+        let newCenter = superView.convert(view.center, from: view.superview)
+        view.center = newCenter
+        superView.addSubview(view)
+    }
+    
     @IBAction func solveBoard(_ sender: Any) {
         if(currentGame != 0){
             let currentSolution = pentominoModel.allSolutions[self.currentGame-1]
@@ -94,14 +102,17 @@ class ViewController: UIViewController {
                 let _rotate = 1.0*CGFloat(value.rotations) * (CGFloat.pi/2.0);
                 let _isFlipped = value.isFlipped
                 if let pieceView = pieces[key]{
-                    pieceView.transform = pieceView.transform.rotated(by: _rotate)
-                    if(_isFlipped){
-                        if let pieceImage = pieceView.image{
-                            pieceView.image = pieceImage.withHorizontallyFlippedOrientation()
+                    moveView(pieceView, toSuperview: mainBoard)
+                    UIView.animate(withDuration: 1.0, animations: { () -> Void in
+                        pieceView.transform = pieceView.transform.rotated(by: _rotate)
+                        if(_isFlipped){
+                            if let pieceImage = pieceView.image{
+                                pieceView.image = pieceImage.withHorizontallyFlippedOrientation()
+                            }
                         }
-                    }
-                    pieceView.frame.origin = CGPoint(x: _x, y: _y)
-                    self.mainBoard.addSubview(pieceView)
+                        pieceView.frame.origin = CGPoint(x: _x, y: _y)
+                        //self.mainBoard.addSubview(pieceView)
+                    })
                 }
             }
             for button in boardButtons{
