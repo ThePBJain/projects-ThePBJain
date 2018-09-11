@@ -104,6 +104,9 @@ class ViewController: UIViewController {
                     self.mainBoard.addSubview(pieceView)
                 }
             }
+            for button in boardButtons{
+                button.isEnabled = false
+            }
             solveButton.isEnabled = false
             resetButton.isEnabled = true
         }
@@ -111,6 +114,9 @@ class ViewController: UIViewController {
     @IBAction func resetBoard(_ sender: Any) {
         resetTransforms()
         layoutPieces()
+        for button in boardButtons{
+            button.isEnabled = true
+        }
         solveButton.isEnabled = true
         resetButton.isEnabled = false
     }
