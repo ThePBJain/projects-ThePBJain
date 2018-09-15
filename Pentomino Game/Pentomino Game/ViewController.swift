@@ -24,6 +24,8 @@ class ViewController: UIViewController {
     var currentGame = 0
     let animationTime = 1.0
     let standardRotation = CGFloat.pi/2.0
+    let shadowSize : CGFloat = 5.0
+    //MARK: - View Controller Methods
     
     required init?(coder aDecoder: NSCoder) {
         var _pieces = [String:UIImageView]()
@@ -42,12 +44,37 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        for piece in pieces.values{
+            //TODO: get the tap recognizers only work in mainBoard
+            let singleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.rotatePiece(_:)))
+            piece.addGestureRecognizer(singleTapRecognizer)
+            
+            let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.flipPiece(_:)))
+            doubleTapRecognizer.numberOfTapsRequired = 2
+            singleTapRecognizer.require(toFail: doubleTapRecognizer)
+            piece.addGestureRecognizer(doubleTapRecognizer)
+            
+            let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(ViewController.movePiece(_:)))
+            piece.addGestureRecognizer(panRecognizer)
+            
+            //OMG SERIOUSLY DONT FORGET THIS! ITS WHAT ALLOWS THE GESTURES TO BE RECOGNIZED IN THE FIRST PLACE
+            piece.isUserInteractionEnabled = true
+            
+        }
+        
+        //Reset does not belong here, needs to happen after views have been laid out, but did layout subviews gets called too much causing boards to be reset unessessarily find a singleton
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        //found it!
+        resetBoard(UIButton())
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         //write pieceviews down
-        resetBoard(UIButton())
+        //resetting unnessessarily because of new subviews being laid out when moving
         
         
     }
@@ -56,6 +83,8 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    //MARK: - Custom Methods
     
     func layoutPieces(){
         let numPiecesPerRow: Int = Int(self.bottomView.frame.size.width)/(pieceDimension*pieceBlockPixel)
@@ -77,6 +106,80 @@ class ViewController: UIViewController {
         view.center = newCenter
         superView.addSubview(view)
     }
+    
+    //gotten from Squares sample code Dr. Hannan made
+    func dropShadow(To view:UIView, Add isAdding:Bool) {
+        if isAdding {
+            view.layer.masksToBounds = false
+            view.layer.shadowColor = UIColor.black.cgColor
+            view.layer.shadowOpacity = 0.7
+            view.layer.shadowOffset = CGSize(width: shadowSize, height: shadowSize)
+            view.layer.shadowRadius = shadowSize
+        }else{
+            view.layer.shadowOpacity = 0.0
+            view.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+            view.layer.shadowRadius = 0.0
+        }
+    }
+    
+    //MARK: - Gesture Recognizer Actions
+    
+    @objc func rotatePiece(_ sender: UITapGestureRecognizer) {
+        print("inRotate")
+        let pieceView = sender.view as? UIImageView
+        if let piece = pieceView {
+            var stackedTransform = piece.transform
+            stackedTransform = stackedTransform.rotated(by: standardRotation)
+            piece.transform = stackedTransform
+        }
+        //otherwise do nothing
+    }
+    
+    @objc func flipPiece(_ sender: UITapGestureRecognizer) {
+        print("inFlip")
+        let pieceView = sender.view as? UIImageView
+        if let piece = pieceView {
+            var stackedTransform = piece.transform
+            stackedTransform = stackedTransform.scaledBy(x: -1, y: 1)
+            piece.transform = stackedTransform
+        }
+    }
+    
+    @objc func movePiece(_ sender: UIPanGestureRecognizer) {
+        print("inMove")
+        let pieceView = sender.view!
+        
+        switch sender.state {
+        case .began:
+            //moveView(pieceView, toSuperview: self.view)
+            self.view.bringSubview(toFront: pieceView)
+            var pieceTransform = pieceView.transform
+            pieceTransform = pieceTransform.scaledBy(x: 1.1, y: 1.1)
+            pieceView.transform = pieceTransform
+            dropShadow(To: pieceView, Add: true)
+            //moveView(pieceView, toSuperview: self.view)
+        case .changed:
+            let location = sender.location(in: pieceView.superview)
+            pieceView.center = location
+        case .ended:
+            moveView(pieceView, toSuperview: self.view)
+            // Should not reset everything.
+            pieceView.transform = pieceView.transform.scaledBy(x: 10.0/11.0, y: 10.0/11.0)
+            dropShadow(To: pieceView, Add: false)
+            if self.mainBoard.frame.contains(pieceView.frame) {
+                //move to mainBoard
+                print("IN HERE-------")
+                //fix this to allow you to move it back out of mainboard...or maybe its fine
+                moveView(pieceView, toSuperview: self.mainBoard)
+                //TODO: have piece snap into place
+            }
+        default:
+            break
+        }
+    }
+    
+    
+    //MARK: - Action Methods
 
     @IBAction func setPlayingBoard(_ sender: UIButton) {
         self.currentGame = sender.tag
@@ -112,7 +215,6 @@ class ViewController: UIViewController {
                 button.isEnabled = false
             }
             solveButton.isEnabled = false
-            resetButton.isEnabled = true
         }
     }
     
@@ -132,7 +234,6 @@ class ViewController: UIViewController {
             button.isEnabled = true
         }
         solveButton.isEnabled = true
-        resetButton.isEnabled = false
     }
 
 }
