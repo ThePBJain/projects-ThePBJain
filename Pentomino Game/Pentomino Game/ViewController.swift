@@ -23,6 +23,7 @@ class ViewController: UIViewController {
     let pieceBlockPixel: Int
     var currentGame = 0
     let animationTime = 1.0
+    let quickAnimationTime = 0.4
     let standardRotation = CGFloat.pi/2.0
     let shadowSize : CGFloat = 5.0
     //MARK: - View Controller Methods
@@ -128,9 +129,11 @@ class ViewController: UIViewController {
         print("inRotate")
         let pieceView = sender.view as? UIImageView
         if let piece = pieceView {
-            var stackedTransform = piece.transform
-            stackedTransform = stackedTransform.rotated(by: standardRotation)
-            piece.transform = stackedTransform
+            UIView.animate(withDuration: quickAnimationTime, animations: { () -> Void in
+                var stackedTransform = piece.transform
+                stackedTransform = stackedTransform.rotated(by: self.standardRotation)
+                piece.transform = stackedTransform
+            })
         }
         //otherwise do nothing
     }
@@ -139,9 +142,11 @@ class ViewController: UIViewController {
         print("inFlip")
         let pieceView = sender.view as? UIImageView
         if let piece = pieceView {
-            var stackedTransform = piece.transform
-            stackedTransform = stackedTransform.scaledBy(x: -1, y: 1)
-            piece.transform = stackedTransform
+            UIView.animate(withDuration: quickAnimationTime, animations: { () -> Void in
+                var stackedTransform = piece.transform
+                stackedTransform = stackedTransform.scaledBy(x: -1, y: 1)
+                piece.transform = stackedTransform
+            })
         }
     }
     
