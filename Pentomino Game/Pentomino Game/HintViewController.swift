@@ -67,7 +67,6 @@ class HintViewController: UIViewController {
     func configure(with currentGame:Int, currentHint:Int) {
         self.currentGame = currentGame
         self.currentHint = currentHint
-        print(currentHint)
     }
 
     override func didReceiveMemoryWarning() {
