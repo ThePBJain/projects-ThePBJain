@@ -15,6 +15,7 @@
 		6A1A20A7214187A70084BC28 /* Pentomino_GameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1A20A6214187A70084BC28 /* Pentomino_GameTests.swift */; };
 		6A744596214432B6008757A2 /* PentominoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A744595214432B6008757A2 /* PentominoModel.swift */; };
 		6A744598214448E7008757A2 /* Solutions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6A744597214448E7008757A2 /* Solutions.plist */; };
+		6A7AC82A2150E7E700531F21 /* HintViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7AC8292150E7E700531F21 /* HintViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,7 @@
 		6A1A20A8214187A70084BC28 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6A744595214432B6008757A2 /* PentominoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PentominoModel.swift; sourceTree = "<group>"; };
 		6A744597214448E7008757A2 /* Solutions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Solutions.plist; sourceTree = "<group>"; };
+		6A7AC8292150E7E700531F21 /* HintViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 				6A1A2098214187A70084BC28 /* Assets.xcassets */,
 				6A1A209A214187A70084BC28 /* LaunchScreen.storyboard */,
 				6A1A209D214187A70084BC28 /* Info.plist */,
+				6A7AC8292150E7E700531F21 /* HintViewController.swift */,
 			);
 			path = "Pentomino Game";
 			sourceTree = "<group>";
@@ -205,6 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6A1A2094214187A60084BC28 /* ViewController.swift in Sources */,
+				6A7AC82A2150E7E700531F21 /* HintViewController.swift in Sources */,
 				6A1A2092214187A60084BC28 /* AppDelegate.swift in Sources */,
 				6A744596214432B6008757A2 /* PentominoModel.swift in Sources */,
 			);

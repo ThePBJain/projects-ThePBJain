@@ -25,6 +25,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var invisibleView: UIView!
     @IBOutlet weak var solveButton: UIButton!
     @IBOutlet weak var resetButton: UIButton!
+    @IBOutlet weak var hintButton: UIButton!
     @IBOutlet weak var mainBoard: UIImageView!
     @IBOutlet var boardButtons: [UIButton]!
     let pentominoModel = PentominoModel()
@@ -38,6 +39,8 @@ class ViewController: UIViewController {
     let liftScale : CGFloat = 1.1
     var selectionOffset : CGPoint?
     var currentGame = 0
+    var currentHint = 0
+    var didCallback = false
     //MARK: - View Controller Methods
     
     required init?(coder aDecoder: NSCoder) {
@@ -81,20 +84,11 @@ class ViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         //found it!
-        resetBoard(UIButton())
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        //write pieceviews down
-        //resetting unnessessarily because of new subviews being laid out when moving
-        
-        
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        if(self.didCallback){
+            self.didCallback = false
+        }else{
+            resetBoard(UIButton())
+        }
     }
     
     //MARK: - Custom Methods
@@ -201,7 +195,14 @@ class ViewController: UIViewController {
 
     @IBAction func setPlayingBoard(_ sender: UIButton) {
         self.currentGame = sender.tag
+        self.currentHint = 0
         mainBoard.image = UIImage(named: pentominoModel.boardNames(index: sender.tag))
+        if(currentGame != 0){
+            //hint is enabled
+            hintButton.isEnabled = true
+        }else{
+            hintButton.isEnabled = false
+        }
     }
     
     @IBAction func solveBoard(_ sender: Any) {
@@ -252,6 +253,19 @@ class ViewController: UIViewController {
             button.isEnabled = true
         }
         solveButton.isEnabled = true
+    }
+    
+    //MARK: - Segues
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        self.currentHint+=1
+        let hintViewController = segue.destination as! HintViewController
+        hintViewController.configure(with: currentGame, currentHint: currentHint)
+        //hintViewController.delegate = self
+        self.didCallback = true
+        hintViewController.completionBlock = {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
 
 }
