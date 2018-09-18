@@ -8,6 +8,16 @@
 
 import UIKit
 
+//extending Operator Methods https://docs.swift.org/swift-book/LanguageGuide/AdvancedOperators.html
+extension CGPoint{
+    static func -(left:CGPoint, right:CGPoint) -> CGPoint{
+        return CGPoint(x: left.x-right.x, y: left.y-right.y)
+    }
+    static func +(left:CGPoint, right:CGPoint) -> CGPoint{
+        return CGPoint(x: left.x+right.x, y: left.y+right.y)
+    }
+}
+
 class ViewController: UIViewController {
    
     
@@ -21,11 +31,13 @@ class ViewController: UIViewController {
     let pieces : [String:UIImageView]
     let pieceDimension: Int
     let pieceBlockPixel: Int
-    var currentGame = 0
     let animationTime = 1.0
-    let quickAnimationTime = 0.4
+    let quickAnimationTime = 0.3
     let standardRotation = CGFloat.pi/2.0
     let shadowSize : CGFloat = 5.0
+    let liftScale : CGFloat = 1.1
+    var selectionOffset : CGPoint?
+    var currentGame = 0
     //MARK: - View Controller Methods
     
     required init?(coder aDecoder: NSCoder) {
@@ -126,7 +138,6 @@ class ViewController: UIViewController {
     //MARK: - Gesture Recognizer Actions
     
     @objc func rotatePiece(_ sender: UITapGestureRecognizer) {
-        print("inRotate")
         let pieceView = sender.view as? UIImageView
         if let piece = pieceView {
             UIView.animate(withDuration: quickAnimationTime, animations: { () -> Void in
@@ -139,7 +150,6 @@ class ViewController: UIViewController {
     }
     
     @objc func flipPiece(_ sender: UITapGestureRecognizer) {
-        print("inFlip")
         let pieceView = sender.view as? UIImageView
         if let piece = pieceView {
             UIView.animate(withDuration: quickAnimationTime, animations: { () -> Void in
@@ -151,7 +161,6 @@ class ViewController: UIViewController {
     }
     
     @objc func movePiece(_ sender: UIPanGestureRecognizer) {
-        print("inMove")
         let pieceView = sender.view!
         
         switch sender.state {
@@ -159,24 +168,28 @@ class ViewController: UIViewController {
             //moveView(pieceView, toSuperview: self.view)
             self.view.bringSubview(toFront: pieceView)
             var pieceTransform = pieceView.transform
-            pieceTransform = pieceTransform.scaledBy(x: 1.1, y: 1.1)
+            pieceTransform = pieceTransform.scaledBy(x: liftScale, y: liftScale)
             pieceView.transform = pieceTransform
             dropShadow(To: pieceView, Add: true)
+            selectionOffset = sender.location(in: pieceView.superview) - pieceView.center
             //moveView(pieceView, toSuperview: self.view)
         case .changed:
             let location = sender.location(in: pieceView.superview)
-            pieceView.center = location
+            pieceView.center = location - selectionOffset!
         case .ended:
             moveView(pieceView, toSuperview: self.view)
             // Should not reset everything.
-            pieceView.transform = pieceView.transform.scaledBy(x: 10.0/11.0, y: 10.0/11.0)
+            pieceView.transform = pieceView.transform.scaledBy(x: 1.0/liftScale, y: 1.0/liftScale)
             dropShadow(To: pieceView, Add: false)
             if self.mainBoard.frame.contains(pieceView.frame) {
                 //move to mainBoard
-                print("IN HERE-------")
                 //fix this to allow you to move it back out of mainboard...or maybe its fine
                 moveView(pieceView, toSuperview: self.mainBoard)
-                //TODO: have piece snap into place
+                //int cast to closest block
+                let _x = Int((pieceView.frame.origin.x/CGFloat(pieceBlockPixel)).rounded())*pieceBlockPixel
+                let _y = Int((pieceView.frame.origin.y/CGFloat(pieceBlockPixel)).rounded())*pieceBlockPixel
+                pieceView.frame.origin = CGPoint(x: _x, y: _y)
+                
             }
         default:
             break
