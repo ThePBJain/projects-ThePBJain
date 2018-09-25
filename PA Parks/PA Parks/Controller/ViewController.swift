@@ -25,11 +25,13 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var parksScrollView: UIScrollView!
     let parkModel = ParkModel()
     let standardRotation = CGFloat.pi/2
+    let invisibleAlpha: CGFloat = 0.0
+    let visibleAlpha: CGFloat = 1.0
+    let animationTime = 0.5
+    let animationDelay = 1.0
     var buttons = [UIButton]()
     var parks = [UIView]()
-    
     var parkGallery : [String:[(UIScrollView, UIImageView)]]
-    
     var parkNumber = 0
     var currentParkImage = 0
     
@@ -70,19 +72,19 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         //rotate button images
         //downButton.transform = CGAffineTransform(rotationAngle: standardRotation)
         downButton.isEnabled = true
-        downButton.alpha = 0.0
+        downButton.alpha = invisibleAlpha
         buttons.append(downButton)
         leftButton.transform = CGAffineTransform(rotationAngle: standardRotation)
         leftButton.isEnabled = false
-        leftButton.alpha = 0.0
+        leftButton.alpha = invisibleAlpha
         buttons.append(leftButton)
         upButton.transform = CGAffineTransform(rotationAngle: standardRotation*2.0)
         upButton.isEnabled = false
-        upButton.alpha = 0.0
+        upButton.alpha = invisibleAlpha
         buttons.append(upButton)
         rightButton.transform = CGAffineTransform(rotationAngle: standardRotation*3.0)
         rightButton.isEnabled = true
-        rightButton.alpha = 0.0
+        rightButton.alpha = invisibleAlpha
         buttons.append(rightButton)
         configureScrollView()
     }
@@ -131,38 +133,38 @@ class ViewController: UIViewController, UIScrollViewDelegate {
             //set buttons
             if currentParkImage == 0 {
                 upButton.isEnabled = false
-                upButton.alpha = 0.0
+                upButton.alpha = invisibleAlpha
                 downButton.isEnabled = true
-                downButton.alpha = 1.0
+                downButton.alpha = visibleAlpha
                 
                 if parkNumber == 0 {
                     leftButton.isEnabled = false
-                    leftButton.alpha = 0.0
+                    leftButton.alpha = invisibleAlpha
                 }else{
                     leftButton.isEnabled = true
-                    leftButton.alpha = 1.0
+                    leftButton.alpha = visibleAlpha
                 }
                 if parkNumber == parkModel.numParks - 1 {
                     rightButton.isEnabled = false
-                    rightButton.alpha = 0.0
+                    rightButton.alpha = invisibleAlpha
                 }else{
                     rightButton.isEnabled = true
-                    rightButton.alpha = 1.0
+                    rightButton.alpha = visibleAlpha
                 }
             }else{
                 leftButton.isEnabled = false
-                leftButton.alpha = 0.0
+                leftButton.alpha = invisibleAlpha
                 rightButton.isEnabled = false
-                rightButton.alpha = 0.0
+                rightButton.alpha = invisibleAlpha
                 
                 upButton.isEnabled = true
-                upButton.alpha = 1.0
+                upButton.alpha = visibleAlpha
                 if currentParkImage == parkModel.parkImageCount(index: parkNumber) - 1 {
                     downButton.isEnabled = false
-                    downButton.alpha = 0.0
+                    downButton.alpha = invisibleAlpha
                 }else{
                     downButton.isEnabled = true
-                    downButton.alpha = 1.0
+                    downButton.alpha = visibleAlpha
                 }
             }
             
@@ -172,10 +174,15 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     //MARK: - ScrollView Delegate Methods
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        UIButton.animate(withDuration: 0.5) {
-            for button in self.buttons {
-                if button.isEnabled {
-                    button.alpha = 1.0
+        if scrollView == parksScrollView {
+            let currentPark = parkModel.parkNames(index: parkNumber)
+            let currentScrollView = parkGallery[currentPark]?[currentParkImage].0
+            currentScrollView?.setZoomScale(0.0, animated: true)
+            UIButton.animate(withDuration: animationTime) {
+                for button in self.buttons {
+                    if button.isEnabled {
+                        button.alpha = self.visibleAlpha
+                    }
                 }
             }
         }
@@ -197,16 +204,11 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if scrollView == parksScrollView {
             updateValues(scrollView)
-            UIView.animate(withDuration: 0.5, delay: 1.0, options: .transitionCrossDissolve, animations: {
+            UIView.animate(withDuration: animationTime, delay: animationDelay, options: .transitionCrossDissolve, animations: {
                 for button in self.buttons {
-                    button.alpha = 0.0
+                    button.alpha = self.invisibleAlpha
                 }
             }){ (completed) in
-                /*for (_, images) in self.parkGallery {
-                    for (scrollView, _) in images {
-                        scrollView.setZoomScale(0.0, animated: false)
-                    }
-                }*/
             }
         }
         
@@ -214,9 +216,9 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         updateValues(scrollView)
-        UIView.animate(withDuration: 0.5, delay: 1.0, options: .transitionCrossDissolve, animations: {
+        UIView.animate(withDuration: animationTime, delay: animationDelay, options: .transitionCrossDissolve, animations: {
             for button in self.buttons {
-                button.alpha = 0.0
+                button.alpha = self.invisibleAlpha
             }
         }){ (completed) in
             

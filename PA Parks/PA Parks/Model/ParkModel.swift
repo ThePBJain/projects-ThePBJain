@@ -8,7 +8,6 @@
 
 import Foundation
 
-// identifies placement of a single pentomino on a board
 struct ParkData : Codable {
     var name : String
     var count : Int
@@ -19,7 +18,7 @@ typealias Park = ParkData
 typealias Parks = [Park]
 
 class ParkModel {
-    //all variables to handle board layout
+    //all variables to handle layout
     let numParks = 6
     let allParks : Parks
     private let images : [String:[String]]
