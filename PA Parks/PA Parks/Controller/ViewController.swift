@@ -42,6 +42,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
             var _imgViews = [UIImageView]()
             for image in images {
                 let imageView = UIImageView(image: UIImage(named: image))
+                imageView.isUserInteractionEnabled = true
                 _imgViews.append(imageView)
             }
             _parkGallery[name] = _imgViews
@@ -52,6 +53,8 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         //configurePageControl()
+        parksScrollView.minimumZoomScale = 1.0
+        parksScrollView.maximumZoomScale = 5.0
     }
     
 
@@ -65,19 +68,19 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         //rotate button images
         //downButton.transform = CGAffineTransform(rotationAngle: standardRotation)
         downButton.isEnabled = true
-        downButton.isHidden = false
+        downButton.alpha = 0.0
         buttons.append(downButton)
         leftButton.transform = CGAffineTransform(rotationAngle: standardRotation)
         leftButton.isEnabled = false
-        leftButton.isHidden = true
+        leftButton.alpha = 0.0
         buttons.append(leftButton)
         upButton.transform = CGAffineTransform(rotationAngle: standardRotation*2.0)
         upButton.isEnabled = false
-        upButton.isHidden = true
+        upButton.alpha = 0.0
         buttons.append(upButton)
         rightButton.transform = CGAffineTransform(rotationAngle: standardRotation*3.0)
         rightButton.isEnabled = true
-        rightButton.isHidden = false
+        rightButton.alpha = 0.0
         buttons.append(rightButton)
         configureScrollView()
     }
@@ -122,38 +125,38 @@ class ViewController: UIViewController, UIScrollViewDelegate {
             //set buttons
             if currentParkImage == 0 {
                 upButton.isEnabled = false
-                upButton.isHidden = true
+                upButton.alpha = 0.0
                 downButton.isEnabled = true
-                downButton.isHidden = false
+                downButton.alpha = 1.0
                 
                 if parkNumber == 0 {
                     leftButton.isEnabled = false
-                    leftButton.isHidden = true
+                    leftButton.alpha = 0.0
                 }else{
                     leftButton.isEnabled = true
-                    leftButton.isHidden = false
+                    leftButton.alpha = 1.0
                 }
                 if parkNumber == parkModel.numParks - 1 {
                     rightButton.isEnabled = false
-                    rightButton.isHidden = true
+                    rightButton.alpha = 0.0
                 }else{
                     rightButton.isEnabled = true
-                    rightButton.isHidden = false
+                    rightButton.alpha = 1.0
                 }
             }else{
                 leftButton.isEnabled = false
-                leftButton.isHidden = true
+                leftButton.alpha = 0.0
                 rightButton.isEnabled = false
-                rightButton.isHidden = true
+                rightButton.alpha = 0.0
                 
                 upButton.isEnabled = true
-                upButton.isHidden = false
+                upButton.alpha = 1.0
                 if currentParkImage == parkModel.parkImageCount(index: parkNumber) - 1 {
                     downButton.isEnabled = false
-                    downButton.isHidden = true
+                    downButton.alpha = 0.0
                 }else{
                     downButton.isEnabled = true
-                    downButton.isHidden = false
+                    downButton.alpha = 1.0
                 }
             }
             
@@ -161,12 +164,12 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     }
     
     //MARK: - ScrollView Delegate Methods
+    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         UIButton.animate(withDuration: 0.5) {
             for button in self.buttons {
                 if button.isEnabled {
-                    button.isHidden = false
-                    button.isHighlighted = true
+                    button.alpha = 1.0
                 }
             }
         }
@@ -186,25 +189,45 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        print("didDecelerate")
         updateValues(scrollView)
-        
-        UIButton.animate(withDuration: 0.5) {
+        UIView.animate(withDuration: 0.5, delay: 1.0, options: .transitionCrossDissolve, animations: {
             for button in self.buttons {
-                button.isHidden = true
+                button.alpha = 0.0
             }
+        }){ (completed) in
+            
         }
+        
     }
     
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        print("test")
         updateValues(scrollView)
-        UIButton.animate(withDuration: 0.5) {
+        UIView.animate(withDuration: 0.5, delay: 1.0, options: .transitionCrossDissolve, animations: {
             for button in self.buttons {
-                button.isHidden = true
+                button.alpha = 0.0
             }
+        }){ (completed) in
+            
         }
     }
+    
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        //find imageView needed to scale
+        let currentPark = parkModel.parkNames(index: parkNumber)
+        let currentView = parkGallery[currentPark]?[currentParkImage]
+        return currentView
+    }
+    
+    /*func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        if scrollView == parksScrollView {
+            if(scrollView.contentOffset.y > 0.0){
+                scrollView.contentOffset.x = CGFloat(parkNumber) * scrollView.bounds.size.width
+                scrollView.contentSize.width = scrollView.bounds.size.width
+            }else{
+                scrollView.contentSize.width = scrollView.bounds.size.width * CGFloat(parkModel.numParks)
+            }
+        }
+    }*/
     
     // MARK: Button Action Methods
     
