@@ -55,7 +55,7 @@ class ParkModel {
         return allParks[i].name
     }
     
-    func parkCount(index i:Int) -> Int {
+    func parkImageCount(index i:Int) -> Int {
         return allParks[i].count
     }
     

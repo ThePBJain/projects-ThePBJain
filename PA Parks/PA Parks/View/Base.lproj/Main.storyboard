@@ -24,18 +24,86 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="elV-Jl-eDh"/>
                                 </connections>
                             </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lqS-uJ-b0z" userLabel="downButton">
+                                <rect key="frame" x="150" y="572" width="75" height="75"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="75" id="gi4-SN-s8b"/>
+                                    <constraint firstAttribute="height" constant="75" id="ucg-5Y-MYF"/>
+                                </constraints>
+                                <state key="normal" title="Button" image="arrow-button"/>
+                                <connections>
+                                    <action selector="moveScrollView:" destination="BYZ-38-t0r" eventType="touchUpInside" id="8F9-hB-0Ek"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MkN-ME-lkE" userLabel="leftButton">
+                                <rect key="frame" x="20" y="296" width="75" height="75"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="75" id="A9T-im-LZR"/>
+                                    <constraint firstAttribute="height" constant="75" id="P98-3N-YFB"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="75" id="h5U-fh-PL8"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="75" id="tTe-MO-MAn"/>
+                                </constraints>
+                                <state key="normal" title="Button" image="arrow-button"/>
+                                <connections>
+                                    <action selector="moveScrollView:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Y4f-7b-naj"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ocm-Yg-kfg" userLabel="rightButton">
+                                <rect key="frame" x="280" y="296" width="75" height="75"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="75" id="280-a1-FEs"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="75" id="2oy-In-BLy"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="75" id="Dim-Ny-Dlp"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="75" id="RxP-n5-bDr"/>
+                                    <constraint firstAttribute="width" constant="75" id="boQ-gy-ZUO"/>
+                                    <constraint firstAttribute="height" constant="75" id="vfj-OJ-5QH"/>
+                                </constraints>
+                                <state key="normal" title="Button" image="arrow-button"/>
+                                <connections>
+                                    <action selector="moveScrollView:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PP6-ZJ-ubQ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="68O-VQ-zbe" userLabel="upButton">
+                                <rect key="frame" x="150" y="40" width="75" height="75"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="75" id="AwK-Jt-tTG"/>
+                                    <constraint firstAttribute="height" constant="75" id="Qke-yg-je1"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="75" id="VkD-VE-dt8"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="75" id="W9D-e2-grJ"/>
+                                    <constraint firstAttribute="width" constant="75" id="c8A-lU-S7D"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="75" id="iKd-JX-bqK"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="75" id="tZm-JQ-b9z"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="75" id="wKo-0h-rjF"/>
+                                </constraints>
+                                <state key="normal" title="Button" image="arrow-button"/>
+                                <connections>
+                                    <action selector="moveScrollView:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iiZ-YU-cw4"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.2650748318906182" green="0.86151649746192893" blue="0.080064380512563232" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="MkN-ME-lkE" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="5r0-2K-0so"/>
                             <constraint firstItem="6Ao-rp-bGC" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="FcK-T8-JEX"/>
+                            <constraint firstItem="MkN-ME-lkE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="KjW-Wq-wU0"/>
                             <constraint firstItem="6Ao-rp-bGC" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="OZF-cA-m8p"/>
+                            <constraint firstItem="Ocm-Yg-kfg" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="PpH-AF-eKr"/>
+                            <constraint firstItem="68O-VQ-zbe" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="UEF-OP-ijA"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Ocm-Yg-kfg" secondAttribute="trailing" constant="20" id="YGQ-EF-NHA"/>
+                            <constraint firstItem="lqS-uJ-b0z" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="b0P-qx-w8O"/>
                             <constraint firstItem="6Ao-rp-bGC" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="jeq-HW-MWd"/>
                             <constraint firstAttribute="trailing" secondItem="6Ao-rp-bGC" secondAttribute="trailing" id="plM-YS-pou"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="lqS-uJ-b0z" secondAttribute="bottom" constant="20" id="q6b-jU-uev"/>
+                            <constraint firstItem="68O-VQ-zbe" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="yF7-sy-Kya"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="downButton" destination="lqS-uJ-b0z" id="zsT-B1-gEo"/>
+                        <outlet property="leftButton" destination="MkN-ME-lkE" id="Pj6-Uc-pbf"/>
                         <outlet property="parksScrollView" destination="6Ao-rp-bGC" id="UZG-JZ-OFQ"/>
+                        <outlet property="rightButton" destination="Ocm-Yg-kfg" id="4Ba-kG-jZk"/>
+                        <outlet property="upButton" destination="68O-VQ-zbe" id="bdt-no-QAY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -43,4 +111,7 @@
             <point key="canvasLocation" x="136.80000000000001" y="95.802098950524751"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="arrow-button" width="1600" height="1600"/>
+    </resources>
 </document>
