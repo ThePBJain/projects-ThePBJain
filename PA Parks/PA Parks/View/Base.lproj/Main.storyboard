@@ -40,8 +40,6 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="75" id="A9T-im-LZR"/>
                                     <constraint firstAttribute="height" constant="75" id="P98-3N-YFB"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="75" id="h5U-fh-PL8"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="75" id="tTe-MO-MAn"/>
                                 </constraints>
                                 <state key="normal" title="Button" image="arrow-button"/>
                                 <connections>
@@ -51,10 +49,6 @@
                             <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ocm-Yg-kfg" userLabel="rightButton">
                                 <rect key="frame" x="280" y="296" width="75" height="75"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="75" id="280-a1-FEs"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="75" id="2oy-In-BLy"/>
-                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="75" id="Dim-Ny-Dlp"/>
-                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="75" id="RxP-n5-bDr"/>
                                     <constraint firstAttribute="width" constant="75" id="boQ-gy-ZUO"/>
                                     <constraint firstAttribute="height" constant="75" id="vfj-OJ-5QH"/>
                                 </constraints>
@@ -66,14 +60,8 @@
                             <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="68O-VQ-zbe" userLabel="upButton">
                                 <rect key="frame" x="150" y="40" width="75" height="75"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="75" id="AwK-Jt-tTG"/>
                                     <constraint firstAttribute="height" constant="75" id="Qke-yg-je1"/>
-                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="75" id="VkD-VE-dt8"/>
-                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="75" id="W9D-e2-grJ"/>
                                     <constraint firstAttribute="width" constant="75" id="c8A-lU-S7D"/>
-                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="75" id="iKd-JX-bqK"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="75" id="tZm-JQ-b9z"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="75" id="wKo-0h-rjF"/>
                                 </constraints>
                                 <state key="normal" title="Button" image="arrow-button"/>
                                 <connections>
