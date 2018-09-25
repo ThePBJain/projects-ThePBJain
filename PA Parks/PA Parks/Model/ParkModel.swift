@@ -35,7 +35,6 @@ class ParkModel {
             print(error)
             allParks = []
         }
-        print(allParks)
         var _images = [String:[String]]()
         for park in allParks{
             let name = park.name

@@ -29,6 +29,8 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     let visibleAlpha: CGFloat = 1.0
     let animationTime = 0.5
     let animationDelay = 1.0
+    let minZoomScale: CGFloat = 1.0
+    let maxZoomScale: CGFloat = 5.0
     var buttons = [UIButton]()
     var parks = [UIView]()
     var parkGallery : [String:[(UIScrollView, UIImageView)]]
@@ -47,8 +49,8 @@ class ViewController: UIViewController, UIScrollViewDelegate {
                 let imageView = UIImageView(image: UIImage(named: image))
                 imageView.isUserInteractionEnabled = true
                 let scrollImg = UIScrollView(frame: CGRect.zero)
-                scrollImg.minimumZoomScale = 1.0
-                scrollImg.maximumZoomScale = 5.0
+                scrollImg.minimumZoomScale = minZoomScale
+                scrollImg.maximumZoomScale = maxZoomScale
                 _imgViews.append((scrollImg, imageView))
             }
             _parkGallery[name] = _imgViews
@@ -58,7 +60,6 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        //configurePageControl()
     }
     
 
