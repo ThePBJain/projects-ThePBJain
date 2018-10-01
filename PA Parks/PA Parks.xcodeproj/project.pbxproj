@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A15F15B2161C7C700AF9CD0 /* TableCollectionViews.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6A15F15A2161C7C700AF9CD0 /* TableCollectionViews.storyboard */; };
+		6A15F15D2161CF8B00AF9CD0 /* ParkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A15F15C2161CF8B00AF9CD0 /* ParkTableViewCell.swift */; };
+		6A15F15F2161CFB600AF9CD0 /* ParkCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A15F15E2161CFB600AF9CD0 /* ParkCollectionViewCell.swift */; };
+		6A15F1612161D39300AF9CD0 /* StateParks.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6A15F1602161D39300AF9CD0 /* StateParks.plist */; };
 		6A21A6E921580B5800D66C9E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A21A6E821580B5800D66C9E /* AppDelegate.swift */; };
 		6A21A6EB21580B5800D66C9E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A21A6EA21580B5800D66C9E /* ViewController.swift */; };
 		6A21A6EE21580B5800D66C9E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6A21A6EC21580B5800D66C9E /* Main.storyboard */; };
@@ -28,6 +32,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6A15F15A2161C7C700AF9CD0 /* TableCollectionViews.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TableCollectionViews.storyboard; sourceTree = "<group>"; };
+		6A15F15C2161CF8B00AF9CD0 /* ParkTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParkTableViewCell.swift; sourceTree = "<group>"; };
+		6A15F15E2161CFB600AF9CD0 /* ParkCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParkCollectionViewCell.swift; sourceTree = "<group>"; };
+		6A15F1602161D39300AF9CD0 /* StateParks.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = StateParks.plist; sourceTree = "<group>"; };
 		6A21A6E521580B5800D66C9E /* PA Parks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PA Parks.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A21A6E821580B5800D66C9E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6A21A6EA21580B5800D66C9E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -102,6 +110,7 @@
 		6A21A70821580D3A00D66C9E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				6A15F1602161D39300AF9CD0 /* StateParks.plist */,
 				6A21A70C21580EBB00D66C9E /* Parks.plist */,
 				6A21A70E21580F3300D66C9E /* ParkModel.swift */,
 			);
@@ -114,6 +123,9 @@
 				6A21A6EF21580B5900D66C9E /* Assets.xcassets */,
 				6A21A6EC21580B5800D66C9E /* Main.storyboard */,
 				6A21A6F121580B5900D66C9E /* LaunchScreen.storyboard */,
+				6A15F15A2161C7C700AF9CD0 /* TableCollectionViews.storyboard */,
+				6A15F15C2161CF8B00AF9CD0 /* ParkTableViewCell.swift */,
+				6A15F15E2161CFB600AF9CD0 /* ParkCollectionViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -209,6 +221,8 @@
 			files = (
 				6A21A6F321580B5900D66C9E /* LaunchScreen.storyboard in Resources */,
 				6A21A6F021580B5900D66C9E /* Assets.xcassets in Resources */,
+				6A15F1612161D39300AF9CD0 /* StateParks.plist in Resources */,
+				6A15F15B2161C7C700AF9CD0 /* TableCollectionViews.storyboard in Resources */,
 				6A21A70D21580EBB00D66C9E /* Parks.plist in Resources */,
 				6A21A6EE21580B5800D66C9E /* Main.storyboard in Resources */,
 			);
@@ -228,9 +242,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A15F15F2161CFB600AF9CD0 /* ParkCollectionViewCell.swift in Sources */,
 				6A21A6EB21580B5800D66C9E /* ViewController.swift in Sources */,
 				6A21A70F21580F3300D66C9E /* ParkModel.swift in Sources */,
 				6A21A6E921580B5800D66C9E /* AppDelegate.swift in Sources */,
+				6A15F15D2161CF8B00AF9CD0 /* ParkTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
