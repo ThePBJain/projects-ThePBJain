@@ -8,11 +8,17 @@
 
 import UIKit
 
+protocol ParkImageDelegate : class {
+    func dismissMe()
+}
+
 class ParkImageViewController: UIViewController, UIScrollViewDelegate, UIGestureRecognizerDelegate {
 
     
     @IBOutlet weak var imageScrollView: UIScrollView!
     @IBOutlet weak var parkImageView: UIImageView!
+    
+    weak var delegate : ParkImageDelegate?
     
     var parkImage : UIImage?
     var completionBlock : (() -> Void)?
@@ -60,6 +66,10 @@ class ParkImageViewController: UIViewController, UIScrollViewDelegate, UIGesture
                 completionBlock()
             }
         }
+    }
+    
+    @objc func dismissByDelegate(_ sender: Any) {
+        delegate?.dismissMe()
     }
     
     
