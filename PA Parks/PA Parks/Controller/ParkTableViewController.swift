@@ -13,9 +13,7 @@ private let reuseIdentifier = "ParkCell"
 class ParkTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate{
     
     let parkModel = ParkModel.sharedInstance
-    let minZoomScale: CGFloat = 1.0
-    let maxZoomScale: CGFloat = 5.0
-    
+    let cellHeight : CGFloat = 95.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,7 +63,7 @@ class ParkTableViewController: UITableViewController, UIPopoverPresentationContr
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 95.0
+        return cellHeight
     }
     
     override var prefersStatusBarHidden: Bool {
