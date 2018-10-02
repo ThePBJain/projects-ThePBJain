@@ -83,13 +83,13 @@
         <scene sceneID="HB3-bN-les">
             <objects>
                 <tableViewController title="TableView" id="zbD-d4-hVM" customClass="ParkTableViewController" customModule="PA_Parks" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="MFt-iS-dFe">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="40" sectionFooterHeight="28" id="MFt-iS-dFe">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ParkCell" rowHeight="95" id="VfE-SW-fJF" userLabel="ParkCell" customClass="ParkTableViewCell" customModule="PA_Parks" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="95"/>
+                                <rect key="frame" x="0.0" y="40" width="375" height="95"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VfE-SW-fJF" id="nXj-C0-Zeg">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="94.5"/>

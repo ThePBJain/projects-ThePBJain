@@ -10,16 +10,22 @@ import UIKit
 
 private let reuseIdentifier = "ParkCell"
 
-class ParkTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate{
+class ParkTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate, UIGestureRecognizerDelegate {
     
-    let parkModel = ParkModel.sharedInstance
     let cellHeight : CGFloat = 95.0
+    let parkModel = ParkModel.sharedInstance
+    
+    var collapsedHeaders : [Bool]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.collapsedHeaders = Array(repeating: false, count: parkModel.numberOfParks)
+        
         tableView.contentInsetAdjustmentBehavior = .never
         tableView.sectionIndexColor = UIColor.darkTan
         tableView.sectionIndexBackgroundColor = UIColor.lightTan
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -59,24 +65,33 @@ class ParkTableViewController: UITableViewController, UIPopoverPresentationContr
         if let headerView = view as? UITableViewHeaderFooterView {
             headerView.contentView.backgroundColor = UIColor.darkTan
             headerView.textLabel?.textColor = UIColor.lightTan
+            headerView.tag = section
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ParkTableViewController.headerWasTouched(_:)))
+            headerView.addGestureRecognizer(tapGesture)
         }
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return cellHeight
+        if !collapsedHeaders[indexPath.section]{
+            return cellHeight
+        }else{
+            return 0
+        }
     }
     
     override var prefersStatusBarHidden: Bool {
         return true
     }
     
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    // MARK: - Custom Methods
+    
+    @objc func headerWasTouched(_ sender: UITapGestureRecognizer){
+        let header = sender.view as! UITableViewHeaderFooterView
+        let section = header.tag
+        collapsedHeaders[section] = !collapsedHeaders[section]
+        tableView.reloadSections(IndexSet(arrayLiteral: section), with: .automatic)
+        
     }
-    */
 
 
     
