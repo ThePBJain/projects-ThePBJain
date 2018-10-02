@@ -67,7 +67,7 @@ class ParkCollectionViewController: UICollectionViewController {
     //layout taken from Dr. Hannan's US States app
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         switch kind {
-        case UICollectionElementKindSectionHeader:
+        case UICollectionView.elementKindSectionHeader:
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "ParkHeader", for: indexPath) as! ParkCollectionReusableView
             headerView.backgroundColor = UIColor.darkTan
             headerView.ParkName.text = parkModel.parkNames(index: indexPath.section)

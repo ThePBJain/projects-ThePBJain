@@ -203,9 +203,11 @@
 				TargetAttributes = {
 					6A21A6E421580B5800D66C9E = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1000;
 					};
 					6A21A6F821580B5900D66C9E = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1000;
 						TestTargetID = 6A21A6E421580B5800D66C9E;
 					};
 				};
@@ -435,7 +437,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.psu.cse.AccessID.PA-Parks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -453,7 +455,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.psu.cse.AccessID.PA-Parks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -473,7 +475,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.psu.cse.AccessID.PA-ParksTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PA Parks.app/PA Parks";
 			};
@@ -494,7 +496,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.psu.cse.AccessID.PA-ParksTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PA Parks.app/PA Parks";
 			};

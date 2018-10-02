@@ -121,7 +121,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
             parksScrollView.contentSize = CGSize(width: size.width*CGFloat(parkModel.numParks), height: size.height*CGFloat(parkModel.parkImageCount(index: 0)))
         }
         for button in buttons {
-            self.view.bringSubview(toFront: button)
+            self.view.bringSubviewToFront(button)
         }
     }
     
