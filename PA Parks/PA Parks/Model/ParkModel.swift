@@ -8,24 +8,29 @@
 
 import Foundation
 
-struct ParkData : Codable {
+struct Image : Codable {
+    var imageName : String
+    var caption : String
+}
+struct Park : Codable {
     var name : String
-    var count : Int
+    var photos : [Image]
 }
 
 // All Parks are read in and maintained in an array
-typealias Park = ParkData
 typealias Parks = [Park]
 
 class ParkModel {
+    static let sharedInstance = ParkModel()
+    
     //all variables to handle layout
     let numParks = 6
     let allParks : Parks
-    private let images : [String:[String]]
+    private let parkImages : [String:[Image]]
     
     init () {
         let mainBundle = Bundle.main
-        let solutionURL = mainBundle.url(forResource: "Parks", withExtension: "plist")
+        let solutionURL = mainBundle.url(forResource: "StateParks", withExtension: "plist")
         
         do {
             let data = try Data(contentsOf: solutionURL!)
@@ -35,18 +40,12 @@ class ParkModel {
             print(error)
             allParks = []
         }
-        var _images = [String:[String]]()
+        var _parkImages = [String:[Image]]()
         for park in allParks{
             let name = park.name
-            let count = park.count
-            var _imageNames = [String]()
-            for i in 1...count{
-                //TODO: fix this for when over 10
-                _imageNames.append("\(name)0\(i)")
-            }
-            _images[name] = _imageNames
+            _parkImages[name] = park.photos
         }
-        images = _images
+        parkImages = _parkImages
     }
     
     func parkNames(index i:Int) -> String {
@@ -54,16 +53,46 @@ class ParkModel {
     }
     
     func parkImageCount(index i:Int) -> Int {
-        return allParks[i].count
+        return allParks[i].photos.count
     }
     
-    func parkImages(park s:String) -> [String] {
-        if let images = images[s] {
+    func parkImageNames(park s:String) -> [String] {
+        if let images = parkImages[s]?.map({ (image) -> String in
+            image.imageName
+        }) {
+            return images
+        }else{
+            return []
+        }
+        
+    }
+    
+    func parkImages(park s:String) -> [Image] {
+        if let images = parkImages[s] {
             return images
         }else{
             return []
         }
     }
+    
+    func parkImage(at indexPath:IndexPath) -> Image {
+        let key = allParks[indexPath.section].name
+        let images = parkImages[key]!
+        let image = images[indexPath.row]
+        return image
+    }
+    
+    func parkImageCaption(at indexPath:IndexPath) -> String {
+        let image = parkImage(at: indexPath)
+        return image.caption
+    }
+    
+    func parkImageName(at indexPath:IndexPath) -> String {
+        let image = parkImage(at: indexPath)
+        return image.imageName
+    }
+    
+    var numberOfParks : Int {return allParks.count }
     
     
 }

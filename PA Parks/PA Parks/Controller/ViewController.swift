@@ -46,7 +46,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
             let images = parkModel.parkImages(park: name)
             var _imgViews = [(UIScrollView, UIImageView)]()
             for image in images {
-                let imageView = UIImageView(image: UIImage(named: image))
+                let imageView = UIImageView(image: UIImage(named: image.imageName))
                 imageView.isUserInteractionEnabled = true
                 let scrollImg = UIScrollView(frame: CGRect.zero)
                 scrollImg.minimumZoomScale = minZoomScale

@@ -9,5 +9,7 @@
 import UIKit
 
 class ParkCollectionViewCell: UICollectionViewCell {
+    @IBOutlet weak var parkImageView: UIImageView!
+    
     
 }

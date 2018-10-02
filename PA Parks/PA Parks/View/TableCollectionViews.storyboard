@@ -1,38 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="c4D-IB-9Pg">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--State Parks Collection-->
         <scene sceneID="EU0-Ld-Dxy">
             <objects>
-                <collectionViewController id="bg2-7n-fmE" sceneMemberID="viewController">
+                <collectionViewController id="bg2-7n-fmE" customClass="ParkCollectionViewController" customModule="PA_Parks" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="Ax7-fE-W9t">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="TUb-J4-Xw7">
-                            <size key="itemSize" width="50" height="50"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="itemSize" width="108" height="97"/>
+                            <size key="headerReferenceSize" width="50" height="53"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="H9J-n1-cE6">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ParkCollectionViewCell" id="H9J-n1-cE6" customClass="ParkCollectionViewCell" customModule="PA_Parks" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="53" width="108" height="97"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="108" height="97"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="V1h-OF-FJq">
+                                            <rect key="frame" x="0.0" y="0.0" width="108" height="97"/>
+                                        </imageView>
+                                    </subviews>
                                 </view>
+                                <constraints>
+                                    <constraint firstItem="V1h-OF-FJq" firstAttribute="leading" secondItem="H9J-n1-cE6" secondAttribute="leading" id="Hjk-VN-qO5"/>
+                                    <constraint firstItem="V1h-OF-FJq" firstAttribute="top" secondItem="H9J-n1-cE6" secondAttribute="top" id="Kje-el-QxT"/>
+                                    <constraint firstAttribute="trailing" secondItem="V1h-OF-FJq" secondAttribute="trailing" id="Yf7-zB-wX6"/>
+                                    <constraint firstAttribute="bottom" secondItem="V1h-OF-FJq" secondAttribute="bottom" id="eGl-av-5Y5"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="parkImageView" destination="V1h-OF-FJq" id="gWj-NZ-4GL"/>
+                                    <segue destination="dUh-Qi-FBi" kind="presentation" identifier="CollectionSegue" id="Q4x-NW-M5t"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
+                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ParkHeader" id="FJN-IL-oBP" customClass="ParkCollectionReusableView" customModule="PA_Parks" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="53"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="Aa2-Rx-JRO">
+                                    <rect key="frame" x="148.5" y="7" width="78" height="39.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="33"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="Aa2-Rx-JRO" firstAttribute="centerY" secondItem="FJN-IL-oBP" secondAttribute="centerY" id="0Xw-vq-IlS"/>
+                                <constraint firstItem="Aa2-Rx-JRO" firstAttribute="centerX" secondItem="FJN-IL-oBP" secondAttribute="centerX" id="RaY-U9-MAF"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="ParkName" destination="Aa2-Rx-JRO" id="6Pr-eI-O02"/>
+                            </connections>
+                        </collectionReusableView>
                         <connections>
                             <outlet property="dataSource" destination="bg2-7n-fmE" id="eFo-mS-mIc"/>
                             <outlet property="delegate" destination="bg2-7n-fmE" id="n7s-Oh-H0Q"/>
@@ -42,18 +77,18 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UdY-V3-gAv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="993" y="180"/>
+            <point key="canvasLocation" x="992.79999999999995" y="179.46026986506749"/>
         </scene>
         <!--TableView-->
         <scene sceneID="HB3-bN-les">
             <objects>
-                <tableViewController title="TableView" id="zbD-d4-hVM" sceneMemberID="viewController">
+                <tableViewController title="TableView" id="zbD-d4-hVM" customClass="ParkTableViewController" customModule="PA_Parks" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="MFt-iS-dFe">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="93" id="VfE-SW-fJF" userLabel="ParkCell" customClass="ParkTableViewCell" customModule="PA_Parks" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ParkCell" rowHeight="93" id="VfE-SW-fJF" userLabel="ParkCell" customClass="ParkTableViewCell" customModule="PA_Parks" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="93"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VfE-SW-fJF" id="nXj-C0-Zeg">
@@ -66,7 +101,7 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FN0-Xj-MGa">
+                                        <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FN0-Xj-MGa">
                                             <rect key="frame" x="155" y="10" width="200" height="72.5"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="200" id="hyH-5a-0q9"/>
@@ -86,6 +121,7 @@
                                 <connections>
                                     <outlet property="captionLabel" destination="0Y3-G6-sck" id="jtv-xQ-48e"/>
                                     <outlet property="parkImageView" destination="FN0-Xj-MGa" id="tuE-BJ-Lqb"/>
+                                    <segue destination="dUh-Qi-FBi" kind="presentation" identifier="TableSegue" id="fmf-Kv-KED"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -100,10 +136,54 @@
             </objects>
             <point key="canvasLocation" x="997.60000000000002" y="-485.30734632683664"/>
         </scene>
+        <!--Park Image View Controller-->
+        <scene sceneID="Eap-Bc-uYj">
+            <objects>
+                <viewController modalTransitionStyle="crossDissolve" modalPresentationStyle="overCurrentContext" id="dUh-Qi-FBi" customClass="ParkImageViewController" customModule="PA_Parks" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="i0N-h2-HEf">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6KC-vT-aar">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zb6-0t-BIB">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="zb6-0t-BIB" firstAttribute="leading" secondItem="6KC-vT-aar" secondAttribute="leading" id="04g-9M-X0M"/>
+                                    <constraint firstAttribute="trailing" secondItem="zb6-0t-BIB" secondAttribute="trailing" id="Cwl-sq-Ozf"/>
+                                    <constraint firstItem="zb6-0t-BIB" firstAttribute="centerX" secondItem="6KC-vT-aar" secondAttribute="centerX" id="Cye-U1-t00"/>
+                                    <constraint firstItem="zb6-0t-BIB" firstAttribute="top" secondItem="6KC-vT-aar" secondAttribute="top" id="JUL-bs-FJt"/>
+                                    <constraint firstItem="zb6-0t-BIB" firstAttribute="centerY" secondItem="6KC-vT-aar" secondAttribute="centerY" id="VtI-TK-CRE"/>
+                                    <constraint firstAttribute="bottom" secondItem="zb6-0t-BIB" secondAttribute="bottom" id="cn7-CL-kNf"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="6KC-vT-aar" firstAttribute="trailing" secondItem="cW1-GB-pPB" secondAttribute="trailing" id="CRE-5x-lfO"/>
+                            <constraint firstItem="6KC-vT-aar" firstAttribute="bottom" secondItem="cW1-GB-pPB" secondAttribute="bottom" id="Evx-Vd-JiV"/>
+                            <constraint firstItem="6KC-vT-aar" firstAttribute="top" secondItem="i0N-h2-HEf" secondAttribute="top" id="XBR-BR-zqT"/>
+                            <constraint firstItem="6KC-vT-aar" firstAttribute="leading" secondItem="cW1-GB-pPB" secondAttribute="leading" id="sYf-of-e2x"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="cW1-GB-pPB"/>
+                    </view>
+                    <connections>
+                        <outlet property="imageScrollView" destination="6KC-vT-aar" id="4uW-2F-ITW"/>
+                        <outlet property="parkImageView" destination="zb6-0t-BIB" id="9yj-hm-yNF"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mTg-Fc-4XY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2065" y="-111"/>
+        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Fde-xq-kld">
             <objects>
                 <tabBarController id="c4D-IB-9Pg" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="why-Ta-ZcB">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -123,4 +203,7 @@
         <image name="icon-collection" width="42" height="42"/>
         <image name="icon-table" width="42" height="34"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="Q4x-NW-M5t"/>
+    </inferredMetricsTieBreakers>
 </document>
