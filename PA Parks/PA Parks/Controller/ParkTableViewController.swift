@@ -8,6 +8,8 @@
 
 import UIKit
 
+private let reuseIdentifier = "ParkCell"
+
 class ParkTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate{
     
     let parkModel = ParkModel.sharedInstance
@@ -40,7 +42,7 @@ class ParkTableViewController: UITableViewController, UIPopoverPresentationContr
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ParkCell", for: indexPath) as! ParkTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! ParkTableViewCell
 
         // Configure the cell...
         cell.captionLabel.text = parkModel.parkImageCaption(at: indexPath)
@@ -60,6 +62,10 @@ class ParkTableViewController: UITableViewController, UIPopoverPresentationContr
             headerView.contentView.backgroundColor = UIColor.darkTan
             headerView.textLabel?.textColor = UIColor.lightTan
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 95.0
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -90,6 +96,7 @@ class ParkTableViewController: UITableViewController, UIPopoverPresentationContr
         parkImageViewController.completionBlock = {
             self.dismiss(animated: true, completion: nil)
         }
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
 

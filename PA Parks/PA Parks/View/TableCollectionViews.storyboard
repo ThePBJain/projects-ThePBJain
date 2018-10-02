@@ -88,21 +88,21 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ParkCell" rowHeight="93" id="VfE-SW-fJF" userLabel="ParkCell" customClass="ParkTableViewCell" customModule="PA_Parks" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="93"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ParkCell" rowHeight="95" id="VfE-SW-fJF" userLabel="ParkCell" customClass="ParkTableViewCell" customModule="PA_Parks" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="95"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VfE-SW-fJF" id="nXj-C0-Zeg">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="92.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="94.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Y3-G6-sck" userLabel="Caption">
-                                            <rect key="frame" x="16" y="21" width="42" height="51"/>
+                                            <rect key="frame" x="16" y="21" width="42" height="53"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FN0-Xj-MGa">
-                                            <rect key="frame" x="155" y="10" width="200" height="72.5"/>
+                                            <rect key="frame" x="155" y="10" width="200" height="74.5"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="200" id="hyH-5a-0q9"/>
                                             </constraints>

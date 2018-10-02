@@ -55,19 +55,13 @@ class ParkImageViewController: UIViewController, UIScrollViewDelegate, UIGesture
     }
     
     @objc func dismissByCompletionBlock(_ sender: Any) {
-        if let completionBlock = completionBlock {
-            completionBlock()
+        if imageScrollView.zoomScale == 1.0 {
+            if let completionBlock = completionBlock {
+                completionBlock()
+            }
         }
     }
     
-    //MARK: - Gesture Recognizer Actions
-    
-    
-    @objc func returnToTableView(_ sender: UITapGestureRecognizer) {
-        self.navigationController?.isNavigationBarHidden = false
-        self.tabBarController?.tabBar.isHidden = false
-        sender.view?.removeFromSuperview()
-    }
     
     //MARK: - ScrollView Delegate Methods
     
