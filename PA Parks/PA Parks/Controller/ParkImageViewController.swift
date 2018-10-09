@@ -21,6 +21,7 @@ class ParkImageViewController: UIViewController, UIScrollViewDelegate, UIGesture
     weak var delegate : ParkImageDelegate?
     
     var parkImage : UIImage?
+    var parkTitle : String?
     var completionBlock : (() -> Void)?
     
     let minZoomScale: CGFloat = 1.0
@@ -28,18 +29,15 @@ class ParkImageViewController: UIViewController, UIScrollViewDelegate, UIGesture
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor(white: 0, alpha: 0.7)
         //self.view.backgroundColor?.withAlphaComponent(0.7)
         //self.view.isOpaque = false
         //self.view.alpha = 0.7
-        parkImageView.backgroundColor = .clear
         parkImageView.isUserInteractionEnabled = true
-        imageScrollView.backgroundColor = .clear
-        imageScrollView.isOpaque = false
         // Do any additional setup after loading the view.
         imageScrollView.minimumZoomScale = minZoomScale
         imageScrollView.maximumZoomScale = maxZoomScale
         imageScrollView.delegate = self
+        self.title = parkTitle
     }
     
     //MARK: - Auto Layout
@@ -56,8 +54,9 @@ class ParkImageViewController: UIViewController, UIScrollViewDelegate, UIGesture
     }
     
     //from Dr. Hannan's Squares App
-    func configure(with image:UIImage?) {
+    func configure(with image:UIImage?, title:String) {
         self.parkImage = image
+        self.parkTitle = title
     }
     
     @objc func dismissByCompletionBlock(_ sender: Any) {

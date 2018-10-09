@@ -10,7 +10,7 @@ import UIKit
 
 private let reuseIdentifier = "ParkCell"
 
-class ParkTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate, UIGestureRecognizerDelegate, ParkImageDelegate {
+class ParkTableViewController: UITableViewController, UIGestureRecognizerDelegate, ParkImageDelegate {
     
     let cellHeight : CGFloat = 95.0
     let parkModel = ParkModel.sharedInstance
@@ -152,25 +152,21 @@ class ParkTableViewController: UITableViewController, UIPopoverPresentationContr
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
         let indexPath = tableView.indexPathForSelectedRow!
-        //Disabled because it looks ugly
-        /*if let cell = sender as? ParkTableViewCell {
-            animateOpenImage(imageView: cell.parkImageView, at: indexPath)
-        }*/
-        let parkImageViewController = segue.destination as! ParkImageViewController
-        parkImageViewController.modalPresentationStyle = .overCurrentContext
-        let selectedImage = UIImage(named: parkModel.parkImageName(at: indexPath))
-        parkImageViewController.configure(with: selectedImage)
-        parkImageViewController.delegate = self
-        parkImageViewController.completionBlock = {
-            self.dismiss(animated: true, completion: nil)
+        switch segue.identifier {
+        case "TableSegue":
+            let navController = segue.destination as! UINavigationController
+            let parkImageViewController = navController.topViewController! as! ParkImageViewController
+            let selectedImage = UIImage(named: parkModel.parkImageName(at: indexPath))
+            parkImageViewController.configure(with: selectedImage, title: parkModel.parkNames(index: indexPath.section))
+            parkImageViewController.delegate = self
+            parkImageViewController.completionBlock = {
+                self.dismiss(animated: true, completion: nil)
+            }
+            tableView.deselectRow(at: indexPath, animated: true)
+        default:
+            assert(false, "Unhandled Segue")
         }
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
-    
-
-    
-    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        return UIModalPresentationStyle.none
+        
     }
     
 
