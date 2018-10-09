@@ -22,10 +22,12 @@ class ParkImageViewController: UIViewController, UIScrollViewDelegate, UIGesture
     
     var parkImage : UIImage?
     var parkTitle : String?
+    var imageIndex : Int?
     var completionBlock : (() -> Void)?
     
     let minZoomScale: CGFloat = 1.0
     let maxZoomScale: CGFloat = 5.0
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +40,9 @@ class ParkImageViewController: UIViewController, UIScrollViewDelegate, UIGesture
         imageScrollView.maximumZoomScale = maxZoomScale
         imageScrollView.delegate = self
         self.title = parkTitle
+        
+        navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+        navigationItem.leftItemsSupplementBackButton = true
     }
     
     //MARK: - Auto Layout

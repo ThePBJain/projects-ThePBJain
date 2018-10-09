@@ -19,6 +19,7 @@ class ParkTableViewController: UITableViewController, UIGestureRecognizerDelegat
     var openedImage : UIImageView?
     var openedIndex : IndexPath?
     var openedBounds: CGRect?
+    var didShowTutorial = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,8 +33,14 @@ class ParkTableViewController: UITableViewController, UIGestureRecognizerDelegat
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if !didShowTutorial {
+            //show tutorial
+            self.performSegue(withIdentifier: "TutorialSegue", sender: self)
+        }
     }
 
     // MARK: - Table view data source
@@ -138,9 +145,8 @@ class ParkTableViewController: UITableViewController, UIGestureRecognizerDelegat
     // MARK: - Park Image Delegate Methods
     //Disabled because it looks ugly
     func dismissMe() {
+        didShowTutorial = true
         self.dismiss(animated: true, completion: nil)
-        tableView.deselectRow(at: self.openedIndex!, animated: true)
-        animateCloseImage(imageView: self.openedImage!, at: self.openedIndex!)
     }
 
 
@@ -151,9 +157,9 @@ class ParkTableViewController: UITableViewController, UIGestureRecognizerDelegat
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
-        let indexPath = tableView.indexPathForSelectedRow!
         switch segue.identifier {
         case "TableSegue":
+            let indexPath = tableView.indexPathForSelectedRow!
             let navController = segue.destination as! UINavigationController
             let parkImageViewController = navController.topViewController! as! ParkImageViewController
             let selectedImage = UIImage(named: parkModel.parkImageName(at: indexPath))
@@ -163,7 +169,12 @@ class ParkTableViewController: UITableViewController, UIGestureRecognizerDelegat
                 self.dismiss(animated: true, completion: nil)
             }
             tableView.deselectRow(at: indexPath, animated: true)
+        case "TutorialSegue":
+            let tutorialView = segue.destination as! TutorialViewController
+            tutorialView.delegate = self
+            
         default:
+            //check if this is casued by tutorial
             assert(false, "Unhandled Segue")
         }
         

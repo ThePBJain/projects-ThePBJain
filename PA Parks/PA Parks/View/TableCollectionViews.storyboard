@@ -13,7 +13,7 @@
         <!--TableView-->
         <scene sceneID="HB3-bN-les">
             <objects>
-                <tableViewController title="TableView" id="zbD-d4-hVM" customClass="ParkTableViewController" customModule="PA_Parks" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="TableViewController" title="TableView" id="zbD-d4-hVM" customClass="ParkTableViewController" customModule="PA_Parks" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="40" sectionFooterHeight="28" id="MFt-iS-dFe">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -63,7 +63,10 @@
                     </tableView>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" title="State Parks Table" image="icon-table" id="ptq-at-6kH"/>
-                    <navigationItem key="navigationItem" title="National Parks" id="9wk-0v-nnX"/>
+                    <navigationItem key="navigationItem" title="Parks" id="9wk-0v-nnX"/>
+                    <connections>
+                        <segue destination="eGE-Bb-wpz" kind="presentation" identifier="TutorialSegue" id="gXw-f0-a6p"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fS8-ub-n4p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -91,7 +94,7 @@
         <!--Title-->
         <scene sceneID="Eap-Bc-uYj">
             <objects>
-                <viewController modalTransitionStyle="crossDissolve" modalPresentationStyle="overCurrentContext" id="dUh-Qi-FBi" customClass="ParkImageViewController" customModule="PA_Parks" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ParkImageViewController" modalTransitionStyle="crossDissolve" modalPresentationStyle="overCurrentContext" id="dUh-Qi-FBi" customClass="ParkImageViewController" customModule="PA_Parks" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="i0N-h2-HEf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -123,6 +126,7 @@
                         <viewLayoutGuide key="safeArea" id="cW1-GB-pPB"/>
                     </view>
                     <navigationItem key="navigationItem" title="Title" id="cRK-1i-1m2">
+                        <barButtonItem key="backBarButtonItem" title="Parks" id="Myi-7T-8lD"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="uAn-BZ-kWB"/>
                     </navigationItem>
                     <connections>
@@ -150,6 +154,88 @@
             </objects>
             <point key="canvasLocation" x="-335" y="-9"/>
         </scene>
+        <!--Tutorial View Controller-->
+        <scene sceneID="dyx-g5-T08">
+            <objects>
+                <viewController storyboardIdentifier="TutorialView" id="eGE-Bb-wpz" customClass="TutorialViewController" customModule="PA_Parks" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="E33-a2-XcY">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="2dt-ey-CAu">
+                                <rect key="frame" x="50" y="590" width="275" height="37"/>
+                            </pageControl>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DGM-MA-KdD">
+                                <rect key="frame" x="50" y="627" width="275" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="ixX-ek-s26"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <state key="normal" title="Finish Tutorial">
+                                    <color key="titleColor" red="1" green="0.80919555590000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="exitTutorial:" destination="eGE-Bb-wpz" eventType="touchUpInside" id="q91-4b-FDW"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="DGM-MA-KdD" firstAttribute="leading" secondItem="Jq1-7q-msh" secondAttribute="leading" constant="50" id="064-NT-VuO"/>
+                            <constraint firstItem="Jq1-7q-msh" firstAttribute="trailing" secondItem="DGM-MA-KdD" secondAttribute="trailing" constant="50" id="9LP-KI-qcO"/>
+                            <constraint firstItem="Jq1-7q-msh" firstAttribute="trailing" secondItem="2dt-ey-CAu" secondAttribute="trailing" constant="50" id="Iol-jY-x7x"/>
+                            <constraint firstItem="Jq1-7q-msh" firstAttribute="bottom" secondItem="2dt-ey-CAu" secondAttribute="bottom" constant="40" id="gXn-ru-bW0"/>
+                            <constraint firstItem="2dt-ey-CAu" firstAttribute="leading" secondItem="Jq1-7q-msh" secondAttribute="leading" constant="50" id="jKb-sB-png"/>
+                            <constraint firstItem="DGM-MA-KdD" firstAttribute="bottom" secondItem="Jq1-7q-msh" secondAttribute="bottom" constant="-10" id="uHj-1f-cZN"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Jq1-7q-msh"/>
+                    </view>
+                    <connections>
+                        <outlet property="finishTutorialButton" destination="DGM-MA-KdD" id="X0U-4Z-XSq"/>
+                        <outlet property="pageController" destination="2dt-ey-CAu" id="UWI-6x-KHJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OER-3f-Aqg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1509.5999999999999" y="-9.4452773613193415"/>
+        </scene>
+        <!--Page View Controller-->
+        <scene sceneID="dzY-W6-xDN">
+            <objects>
+                <pageViewController storyboardIdentifier="PageViewController" autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="THj-A3-6rq" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mXS-kF-Lce" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2234" y="-9"/>
+        </scene>
+        <!--Tutorial Page Controller-->
+        <scene sceneID="aQl-4e-CW0">
+            <objects>
+                <viewController storyboardIdentifier="TutorialImageView" id="dNR-xX-BbN" customClass="TutorialPageController" customModule="PA_Parks" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="1Hi-D0-lEl">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Vz3-Nq-V8d">
+                                <rect key="frame" x="50" y="50" width="275" height="567"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Vz3-Nq-V8d" firstAttribute="top" secondItem="1Hi-D0-lEl" secondAttribute="top" constant="50" id="2Wr-2e-SFN"/>
+                            <constraint firstItem="Vz3-Nq-V8d" firstAttribute="bottom" secondItem="afA-JR-8OE" secondAttribute="bottom" constant="-50" id="B48-tU-ELX"/>
+                            <constraint firstItem="Vz3-Nq-V8d" firstAttribute="leading" secondItem="afA-JR-8OE" secondAttribute="leading" constant="50" id="LtC-rm-xqe"/>
+                            <constraint firstItem="Vz3-Nq-V8d" firstAttribute="trailing" secondItem="afA-JR-8OE" secondAttribute="trailing" constant="-50" id="uLk-RT-prw"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="afA-JR-8OE"/>
+                    </view>
+                    <connections>
+                        <outlet property="tutorialImageView" destination="Vz3-Nq-V8d" id="rN6-T1-5Su"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Vi2-iz-JYL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2981.5999999999999" y="-9.4452773613193415"/>
+        </scene>
         <!--Split View Controller-->
         <scene sceneID="mSg-Jr-8Po">
             <objects>
@@ -168,6 +254,6 @@
         <image name="icon-table" width="42" height="34"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="SP1-eA-4LV"/>
+        <segue reference="xEa-4I-k0V"/>
     </inferredMetricsTieBreakers>
 </document>

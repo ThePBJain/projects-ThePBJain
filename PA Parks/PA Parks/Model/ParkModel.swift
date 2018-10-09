@@ -27,7 +27,7 @@ class ParkModel {
     let numParks = 6
     let allParks : Parks
     private let parkImages : [String:[Image]]
-    
+    private let tutorialImageNames = ["Tutorial1", "Tutorial2", "Tutorial3"]
     init () {
         let mainBundle = Bundle.main
         let solutionURL = mainBundle.url(forResource: "StateParks", withExtension: "plist")
@@ -92,7 +92,14 @@ class ParkModel {
         return image.imageName
     }
     
+    func parkTutorialImageNames(at i:Int) -> String {
+        return tutorialImageNames[i]
+    }
+    
+    var numberOfTutorialImages : Int {return tutorialImageNames.count}
+    
     var numberOfParks : Int {return allParks.count }
+    
     
     
 }
