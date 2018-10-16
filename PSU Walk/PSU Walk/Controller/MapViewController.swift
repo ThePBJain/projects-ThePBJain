@@ -127,18 +127,6 @@ class MapViewController: UIViewController, BuildingTableViewDelegate, MKMapViewD
     
     //MARK: - Map Type Controller
     
-    /*@IBAction func changeMapType(_ segment: UISegmentedControl) {
-        switch segment.selectedSegmentIndex{
-        case 0:
-            mapView.mapType = .standard
-        case 1:
-            mapView.mapType = .satellite
-        case 2:
-            mapView.mapType = .hybrid
-        default:
-            mapView.mapType = .standard
-        }
-    }*/
     
     @IBAction func changeMapType(_ sender: Any) {
         if let segment = sender as? UISegmentedControl {
