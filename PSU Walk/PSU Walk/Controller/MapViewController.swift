@@ -107,6 +107,10 @@ class MapViewController: UIViewController, BuildingTableViewDelegate, MKMapViewD
     }
     
     // MARK: - Building Table View Delegate Methods
+    func dismissMe() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     func dismissMe(with indexPath:IndexPath) {
         
         /*let allAnnotations = self.mapView.annotations
@@ -154,6 +158,10 @@ class MapViewController: UIViewController, BuildingTableViewDelegate, MKMapViewD
         case "BuildingSegue":
             let navController = segue.destination as! UINavigationController
             let buildingTableViewController = navController.topViewController! as! BuildingViewController
+            buildingTableViewController.delegate = self
+        case "FavoriteSegue":
+            let navController = segue.destination as! UINavigationController
+            let buildingTableViewController = navController.topViewController! as! FavoriteViewController
             buildingTableViewController.delegate = self
         default:
             //check if this is casued by tutorial

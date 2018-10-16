@@ -11,13 +11,8 @@ import MapKit
 
 private let reuseIdentifier = "BuildingCell"
 
-protocol BuildingTableViewDelegate : class {
-    func dismissMe()
-    func dismissMe(with indexPath:IndexPath)
-}
-
-class BuildingViewController: UITableViewController {
-
+class FavoriteViewController: UITableViewController {
+    
     
     weak var delegate : BuildingTableViewDelegate?
     
@@ -26,31 +21,31 @@ class BuildingViewController: UITableViewController {
     let cellHeight : CGFloat = 100.0
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-
+        
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-
+    
     // MARK: - Table view data source
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return walkModel.numberOfInitials
+        return walkModel.numberOfFavoriteInitials
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return walkModel.numberOfValuesForKey(atIndex: section)
+        return walkModel.numberOfFavoritesForKey(atIndex: section)
     }
-
+    
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return walkModel.buildingIndexTitles[section]
+        return walkModel.favoriteIndexTitles[section]
     }
     override  func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        return walkModel.buildingIndexTitles
+        return walkModel.favoriteIndexTitles
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -61,13 +56,13 @@ class BuildingViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! BuildingViewCell
         
-
+        
         // Configure the cell...
-        cell.name.text = walkModel.buildingName(at: indexPath)
-        cell.code.text = "\(walkModel.buildingCode(at: indexPath))"
-        cell.year.text = "\(walkModel.buildingYear(at: indexPath))"
+        cell.name.text = walkModel.favoriteBuildingName(at: indexPath)
+        cell.code.text = "\(walkModel.favoriteBuildingCode(at: indexPath))"
+        cell.year.text = "\(walkModel.favoriteBuildingYear(at: indexPath))"
         cell.indexPath = indexPath
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(BuildingViewController.dismissByDelegate(_:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(FavoriteViewController.dismissByDelegate(_:)))
         cell.addGestureRecognizer(tapGesture)
         return cell
     }
@@ -76,8 +71,8 @@ class BuildingViewController: UITableViewController {
         return cellHeight
         
     }
-
-
+    
+    
     @IBAction func doneWithView(_ sender: Any) {
         delegate?.dismissMe()
     }
@@ -94,11 +89,11 @@ class BuildingViewController: UITableViewController {
     
     
     /*
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }

@@ -27,10 +27,11 @@ class WalkModel {
     
     static let sharedInstance = WalkModel()
     let allBuildings : Buildings
-    
     fileprivate let buildingByInitial: [String:[Building]]
     fileprivate let buildingKeys : [String]
-    
+    var favoriteBuildings : Buildings
+    fileprivate var favoriteBuildingByInitial: [String:[Building]]
+    fileprivate var favoriteBuildingKeys : [String]
     fileprivate init() {
         
         let mainBundle = Bundle.main
@@ -61,6 +62,9 @@ class WalkModel {
             buildingByInitial = [:]
             buildingKeys = []
         }
+        favoriteBuildings = []
+        favoriteBuildingByInitial = [:]
+        favoriteBuildingKeys = []
         print(allBuildings)
     }
     
@@ -75,7 +79,6 @@ class WalkModel {
         return buildings.count
         
     }
-    
     
     
     
@@ -132,18 +135,99 @@ class WalkModel {
     
     
     
-    //MARK: - Search Categories
-    fileprivate let categories = ["Airport", "Bar", "Coffee", "Dining", "Gas Station", "Grocery", "Hospital", "Hotel", "Laundry", "Library", "Movies", "Parking", "Pizza", "Shopping"]
+    //MARK: - Edit Favorites
     
-    var categoryCount : Int {return categories.count}
+    var numberOfFavoriteBuildings : Int {return favoriteBuildings.count }
     
-    func category(atIndex index:Int) -> String? {
-        guard categories.indices.contains(index) else {return nil}
-        return categories[index]
+    var numberOfFavoriteInitials : Int {return favoriteBuildingKeys.count}
+    
+    var favoriteIndexTitles : [String] {return favoriteBuildingKeys}
+    func favoriteIndexTitle(forIndex index:Int) -> String {
+        return favoriteBuildingKeys[index]
     }
     
-    func imageNameFor(category:String) -> String {
-        return category
+    func addToFavorites(with indexPath:IndexPath) -> Bool {
+        //return true if successfully added
+        let building = theBuilding(at: indexPath)
+        if favoriteBuildings.contains(where: { (element) -> Bool in
+            return element.name == building.name && element.latitude == building.latitude && element.longitude == building.longitude
+        }) {
+            return false
+        }else{
+            favoriteBuildings.append(building)
+            let letter = String(building.name.first!)
+            if favoriteBuildingByInitial[letter]?.append(building) == nil {
+                favoriteBuildingByInitial[letter] = [building]
+            }
+            favoriteBuildingKeys = favoriteBuildingByInitial.keys.sorted()
+            
+            return true
+        }
+    }
+    
+    func removeFromFavorites(with indexPath:IndexPath) ->Bool {
+        let building = theBuilding(at: indexPath)
+        
+        let index = favoriteBuildings.firstIndex(where: { (element) -> Bool in
+            return element.name == building.name && element.latitude == building.latitude && element.longitude == building.longitude
+        })
+        if let i = index {
+            favoriteBuildings.remove(at: i)
+            let letter = String(building.name.first!)
+            let letterIndex = favoriteBuildingByInitial[letter]?.firstIndex(where: { (element) -> Bool in
+                return element.name == building.name && element.latitude == building.latitude && element.longitude == building.longitude
+            })
+            if letterIndex != nil {
+                favoriteBuildingByInitial[letter]?.remove(at: letterIndex!)
+            }
+            favoriteBuildingKeys = favoriteBuildingByInitial.keys.sorted()
+            return true
+        }
+        
+        return false
+    }
+    
+    func numberOfFavoritesForKey(atIndex index:Int) -> Int {
+        let key = favoriteBuildingKeys[index]
+        let buildings = favoriteBuildingByInitial[key]!
+        return buildings.count
+        
+    }
+    
+    func returnFavorites(with index:Int) -> Building {
+        let building = favoriteBuildings[index]
+        
+        return building
+    }
+    
+    func favoriteBuilding(at indexPath:IndexPath) -> Building {
+        let key = favoriteBuildingKeys[indexPath.section]
+        let buildings = favoriteBuildingByInitial[key]!
+        let building = buildings[indexPath.row]
+        return building
+    }
+    
+    func favoriteBuildingName(at indexPath:IndexPath) -> String {
+        let building = favoriteBuilding(at: indexPath)
+        return building.name
+    }
+    
+    func favoriteBuildingCode(at indexPath:IndexPath) -> Int {
+        let building = favoriteBuilding(at: indexPath)
+        
+        return building.opp_bldg_code
+    }
+    
+    func favoriteBuildingYear(at indexPath:IndexPath) -> Int {
+        let building = favoriteBuilding(at: indexPath)
+        
+        return building.year_constructed
+    }
+    
+    func favoriteBuildingLocation(at indexPath:IndexPath) -> CLLocationCoordinate2D {
+        let building = favoriteBuilding(at: indexPath)
+        
+        return CLLocationCoordinate2D(latitude: building.latitude, longitude: building.longitude)
     }
     
     
