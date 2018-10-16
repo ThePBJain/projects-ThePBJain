@@ -1,0 +1,506 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6A2155DA2173F5AB00C1E81E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2155D92173F5AB00C1E81E /* AppDelegate.swift */; };
+		6A2155DC2173F5AB00C1E81E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2155DB2173F5AB00C1E81E /* ViewController.swift */; };
+		6A2155DF2173F5AB00C1E81E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6A2155DD2173F5AB00C1E81E /* Main.storyboard */; };
+		6A2155E12173F5AD00C1E81E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A2155E02173F5AD00C1E81E /* Assets.xcassets */; };
+		6A2155E42173F5AD00C1E81E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6A2155E22173F5AD00C1E81E /* LaunchScreen.storyboard */; };
+		6A2155EF2173F5AD00C1E81E /* PSU_WalkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2155EE2173F5AD00C1E81E /* PSU_WalkTests.swift */; };
+		6A2155FE2173F67F00C1E81E /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2155FD2173F67F00C1E81E /* MapViewController.swift */; };
+		6A2156002173F6AB00C1E81E /* WalkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2155FF2173F6AB00C1E81E /* WalkModel.swift */; };
+		6A2156022175712400C1E81E /* buildings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6A2156012175712400C1E81E /* buildings.plist */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6A2155EB2173F5AD00C1E81E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6A2155CE2173F5AB00C1E81E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6A2155D52173F5AB00C1E81E;
+			remoteInfo = "PSU Walk";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		6A2155D62173F5AB00C1E81E /* PSU Walk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PSU Walk.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A2155D92173F5AB00C1E81E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		6A2155DB2173F5AB00C1E81E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		6A2155DE2173F5AB00C1E81E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		6A2155E02173F5AD00C1E81E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6A2155E32173F5AD00C1E81E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		6A2155E52173F5AD00C1E81E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6A2155EA2173F5AD00C1E81E /* PSU WalkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "PSU WalkTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A2155EE2173F5AD00C1E81E /* PSU_WalkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSU_WalkTests.swift; sourceTree = "<group>"; };
+		6A2155F02173F5AD00C1E81E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6A2155FD2173F67F00C1E81E /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		6A2155FF2173F6AB00C1E81E /* WalkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkModel.swift; sourceTree = "<group>"; };
+		6A2156012175712400C1E81E /* buildings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = buildings.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6A2155D32173F5AB00C1E81E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6A2155E72173F5AD00C1E81E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6A2155CD2173F5AB00C1E81E = {
+			isa = PBXGroup;
+			children = (
+				6A2155D82173F5AB00C1E81E /* PSU Walk */,
+				6A2155ED2173F5AD00C1E81E /* PSU WalkTests */,
+				6A2155D72173F5AB00C1E81E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6A2155D72173F5AB00C1E81E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6A2155D62173F5AB00C1E81E /* PSU Walk.app */,
+				6A2155EA2173F5AD00C1E81E /* PSU WalkTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6A2155D82173F5AB00C1E81E /* PSU Walk */ = {
+			isa = PBXGroup;
+			children = (
+				6A2155FC2173F65300C1E81E /* Controller */,
+				6A2155FB2173F64F00C1E81E /* View */,
+				6A2155F92173F64100C1E81E /* Model */,
+				6A2155D92173F5AB00C1E81E /* AppDelegate.swift */,
+				6A2155E02173F5AD00C1E81E /* Assets.xcassets */,
+				6A2155E52173F5AD00C1E81E /* Info.plist */,
+			);
+			path = "PSU Walk";
+			sourceTree = "<group>";
+		};
+		6A2155ED2173F5AD00C1E81E /* PSU WalkTests */ = {
+			isa = PBXGroup;
+			children = (
+				6A2155EE2173F5AD00C1E81E /* PSU_WalkTests.swift */,
+				6A2155F02173F5AD00C1E81E /* Info.plist */,
+			);
+			path = "PSU WalkTests";
+			sourceTree = "<group>";
+		};
+		6A2155F92173F64100C1E81E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				6A2156012175712400C1E81E /* buildings.plist */,
+				6A2155FF2173F6AB00C1E81E /* WalkModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		6A2155FB2173F64F00C1E81E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6A2155E22173F5AD00C1E81E /* LaunchScreen.storyboard */,
+				6A2155DD2173F5AB00C1E81E /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		6A2155FC2173F65300C1E81E /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				6A2155DB2173F5AB00C1E81E /* ViewController.swift */,
+				6A2155FD2173F67F00C1E81E /* MapViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6A2155D52173F5AB00C1E81E /* PSU Walk */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6A2155F32173F5AD00C1E81E /* Build configuration list for PBXNativeTarget "PSU Walk" */;
+			buildPhases = (
+				6A2155D22173F5AB00C1E81E /* Sources */,
+				6A2155D32173F5AB00C1E81E /* Frameworks */,
+				6A2155D42173F5AB00C1E81E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "PSU Walk";
+			productName = "PSU Walk";
+			productReference = 6A2155D62173F5AB00C1E81E /* PSU Walk.app */;
+			productType = "com.apple.product-type.application";
+		};
+		6A2155E92173F5AD00C1E81E /* PSU WalkTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6A2155F62173F5AD00C1E81E /* Build configuration list for PBXNativeTarget "PSU WalkTests" */;
+			buildPhases = (
+				6A2155E62173F5AD00C1E81E /* Sources */,
+				6A2155E72173F5AD00C1E81E /* Frameworks */,
+				6A2155E82173F5AD00C1E81E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6A2155EC2173F5AD00C1E81E /* PBXTargetDependency */,
+			);
+			name = "PSU WalkTests";
+			productName = "PSU WalkTests";
+			productReference = 6A2155EA2173F5AD00C1E81E /* PSU WalkTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6A2155CE2173F5AB00C1E81E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1000;
+				LastUpgradeCheck = 1000;
+				ORGANIZATIONNAME = "Pranav Jain";
+				TargetAttributes = {
+					6A2155D52173F5AB00C1E81E = {
+						CreatedOnToolsVersion = 10.0;
+					};
+					6A2155E92173F5AD00C1E81E = {
+						CreatedOnToolsVersion = 10.0;
+						TestTargetID = 6A2155D52173F5AB00C1E81E;
+					};
+				};
+			};
+			buildConfigurationList = 6A2155D12173F5AB00C1E81E /* Build configuration list for PBXProject "PSU Walk" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 6A2155CD2173F5AB00C1E81E;
+			productRefGroup = 6A2155D72173F5AB00C1E81E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6A2155D52173F5AB00C1E81E /* PSU Walk */,
+				6A2155E92173F5AD00C1E81E /* PSU WalkTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6A2155D42173F5AB00C1E81E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A2155E42173F5AD00C1E81E /* LaunchScreen.storyboard in Resources */,
+				6A2155E12173F5AD00C1E81E /* Assets.xcassets in Resources */,
+				6A2156022175712400C1E81E /* buildings.plist in Resources */,
+				6A2155DF2173F5AB00C1E81E /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6A2155E82173F5AD00C1E81E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6A2155D22173F5AB00C1E81E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A2155DC2173F5AB00C1E81E /* ViewController.swift in Sources */,
+				6A2155FE2173F67F00C1E81E /* MapViewController.swift in Sources */,
+				6A2156002173F6AB00C1E81E /* WalkModel.swift in Sources */,
+				6A2155DA2173F5AB00C1E81E /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6A2155E62173F5AD00C1E81E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A2155EF2173F5AD00C1E81E /* PSU_WalkTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6A2155EC2173F5AD00C1E81E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6A2155D52173F5AB00C1E81E /* PSU Walk */;
+			targetProxy = 6A2155EB2173F5AD00C1E81E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		6A2155DD2173F5AB00C1E81E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6A2155DE2173F5AB00C1E81E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		6A2155E22173F5AD00C1E81E /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6A2155E32173F5AD00C1E81E /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6A2155F12173F5AD00C1E81E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		6A2155F22173F5AD00C1E81E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6A2155F42173F5AD00C1E81E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GRB7FB288F;
+				INFOPLIST_FILE = "PSU Walk/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.psu.cse.pxj5088.PSU-Walk";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6A2155F52173F5AD00C1E81E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GRB7FB288F;
+				INFOPLIST_FILE = "PSU Walk/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.psu.cse.pxj5088.PSU-Walk";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		6A2155F72173F5AD00C1E81E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GRB7FB288F;
+				INFOPLIST_FILE = "PSU WalkTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.psu.cse.pxj5088.PSU-WalkTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PSU Walk.app/PSU Walk";
+			};
+			name = Debug;
+		};
+		6A2155F82173F5AD00C1E81E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GRB7FB288F;
+				INFOPLIST_FILE = "PSU WalkTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.psu.cse.pxj5088.PSU-WalkTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PSU Walk.app/PSU Walk";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6A2155D12173F5AB00C1E81E /* Build configuration list for PBXProject "PSU Walk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A2155F12173F5AD00C1E81E /* Debug */,
+				6A2155F22173F5AD00C1E81E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6A2155F32173F5AD00C1E81E /* Build configuration list for PBXNativeTarget "PSU Walk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A2155F42173F5AD00C1E81E /* Debug */,
+				6A2155F52173F5AD00C1E81E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6A2155F62173F5AD00C1E81E /* Build configuration list for PBXNativeTarget "PSU WalkTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A2155F72173F5AD00C1E81E /* Debug */,
+				6A2155F82173F5AD00C1E81E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6A2155CE2173F5AB00C1E81E /* Project object */;
+}
