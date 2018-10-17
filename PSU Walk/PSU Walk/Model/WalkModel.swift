@@ -68,6 +68,8 @@ class WalkModel {
         print(allBuildings)
     }
     
+    //Designed and built apon Dr. Hannan's Around Town model.
+    
     //MARK: - Methods for TableView
     var numberOfBuildings : Int {return allBuildings.count }
     
@@ -126,11 +128,6 @@ class WalkModel {
     let initialLocation = CLLocation(latitude: 40.7982133, longitude: -77.8599084)
     let spanDeltaNormal = 0.03
     let spanDeltaZoomed = 0.015
-    // define 4 corner points of downtown State College
-    let downtownCoordinates = [(40.791831951313,-77.865203974557),
-                               (40.800364570711,-77.853778542571),
-                               (40.799476294037,-77.8525124806654),
-                               (40.7908968034537,-77.8638607142546)].map {(a,b) in CLLocationCoordinate2D(latitude: a, longitude: b)}
     
     
     
