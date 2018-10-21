@@ -26,7 +26,7 @@
                                     <constraint firstAttribute="height" constant="44" id="OrM-4h-3AX"/>
                                 </constraints>
                                 <items>
-                                    <barButtonItem title="Location" id="4H7-3b-nv3"/>
+                                    <barButtonItem title="Track" id="4H7-3b-nv3"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="t33-D6-3sq"/>
                                     <barButtonItem style="plain" id="5LT-cR-AXL">
                                         <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="tzN-DU-gjq">

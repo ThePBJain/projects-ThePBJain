@@ -16,8 +16,7 @@ protocol BuildingTableViewDelegate : class {
     func dismissMe(with indexPath:IndexPath)
 }
 
-class BuildingViewController: UITableViewController {
-
+class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     weak var delegate : BuildingTableViewDelegate?
     
@@ -54,7 +53,46 @@ class BuildingViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        return nil
+        let delete = UITableViewRowAction(style: .normal, title: "Favorite") { (action, indexPath) in
+            // delete item at indexPath
+            if self.walkModel.addToFavorites(with: indexPath) {
+                //remove from tableviewrowactions
+            }
+        }
+        delete.backgroundColor = UIColor.orange
+        
+        let navTo = UITableViewRowAction(style: .default, title: "Navigate Here") { (action, indexPath) in
+            // navTo item at indexPath
+            //have it pull something up (Action sheet in main map view to choose NavigateFrom
+            self.addAlert()
+        }
+        
+        let navFrom = UITableViewRowAction(style: .default, title: "Navigate Here") { (action, indexPath) in
+            // navTo item at indexPath
+            //have it pull something up (Action sheet in main map view to choose NavigateFrom
+        }
+        
+        navTo.backgroundColor = UIColor.psuBlue
+        
+        return [delete, navTo]
+    }
+    
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        /*let navFrom = UITableViewRowAction(style: .default, title: "Navigate Here") { (action, indexPath) in
+            // navTo item at indexPath
+            //have it pull something up (Action sheet in main map view to choose NavigateFrom
+            print("RowAction")
+        }*/
+        
+        let navFrom = UIContextualAction(style: .normal, title:  "Nav here", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+            print("OK, marked as Closed")
+            self.addAlert()
+            success(true)
+        })
+        navFrom.backgroundColor = .purple
+        
+        return UISwipeActionsConfiguration(actions: [navFrom])
+        
     }
     
     
@@ -76,6 +114,7 @@ class BuildingViewController: UITableViewController {
         return cellHeight
         
     }
+    
 
 
     @IBAction func doneWithView(_ sender: Any) {
@@ -83,6 +122,7 @@ class BuildingViewController: UITableViewController {
     }
     
     // MARK: - Navigation
+    
     
     @objc func dismissByDelegate(_ sender: UITapGestureRecognizer) {
         if let cell = sender.view as? BuildingViewCell {
@@ -100,5 +140,54 @@ class BuildingViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    // MARK: - Picker View Methods
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 0
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 0
+    }
+    
+    func addAlert(){
+        
+        // create the alert
+        let title = "This is the title"
+        let message = "This is the message"
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .actionSheet);
+        alert.isModalInPopover = true;
+        
+        // add an action button
+        let nextAction: UIAlertAction = UIAlertAction(title: "Choose", style: .default){action->Void in
+            // do something
+        }
+        alert.addAction(nextAction)
+        
+        // now create our custom view - we are using a container view which can contain other views
+        let containerViewWidth = 250
+        let containerViewHeight = 120
+        let containerFrame = CGRect(x:10, y: 70, width: CGFloat(containerViewWidth), height: CGFloat(containerViewHeight))
+        //let containerView: UIView = UIView(frame: containerFrame);
+        let containerPicker : UIPickerView = UIPickerView(frame: containerFrame)
+        containerPicker.delegate = self
+        containerPicker.dataSource = self
+        
+        alert.view.addSubview(containerPicker)
+        
+        // now add some constraints to make sure that the alert resizes itself
+        let cons:NSLayoutConstraint = NSLayoutConstraint(item: alert.view, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: containerPicker, attribute: NSLayoutConstraint.Attribute.height, multiplier: 1.00, constant: 130)
+        
+        alert.view.addConstraint(cons)
+        
+        let cons2:NSLayoutConstraint = NSLayoutConstraint(item: alert.view, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: containerPicker, attribute: NSLayoutConstraint.Attribute.width, multiplier: 1.00, constant: 20)
+        
+        alert.view.addConstraint(cons2)
+        
+        // present with our view controller
+        present(alert, animated: true, completion: nil)
+        
+    }
 
 }

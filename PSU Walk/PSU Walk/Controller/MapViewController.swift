@@ -147,6 +147,25 @@ class MapViewController: UIViewController, BuildingTableViewDelegate, MKMapViewD
         }
     }
     
+    //taken from Around Town
+    /*func requestDirections(_ place:Place) {
+        let walkingRouteRequest = MKDirections.Request()
+        walkingRouteRequest.source = MKMapItem.forCurrentLocation()
+        walkingRouteRequest.destination = place.mapItem
+        walkingRouteRequest.transportType = .walking
+        walkingRouteRequest.requestsAlternateRoutes = false
+        
+        let directions = MKDirections(request: walkingRouteRequest)
+        directions.calculate { (response, error) in
+            guard error == nil else {print(error?.localizedDescription); return}
+            
+            let route = response?.routes.first!
+            self.mapView.addOverlay((route?.polyline)!)
+            
+            
+        }
+    }*/
+    
     
     // MARK: - Navigation
 

@@ -48,6 +48,18 @@ class FavoriteViewController: UITableViewController {
         return walkModel.favoriteIndexTitles
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            self.tableView.beginUpdates()
+            if walkModel.removeFromFavorites(with: indexPath) {
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+            //tableView.headerView(forSection: indexPath.section)?.textLabel
+            //tableView.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
+            self.tableView.endUpdates()
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         return nil
     }

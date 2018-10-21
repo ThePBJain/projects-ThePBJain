@@ -11,6 +11,30 @@ import MapKit
 
 
 
+
+class Place : NSObject, MKAnnotation {
+    let coordinate: CLLocationCoordinate2D
+    let title : String?
+    let phoneNumber : String?
+    let url : URL?
+    let category : String
+    
+    init(title:String?, category:String, coordinate:CLLocationCoordinate2D, phoneNumber: String?, url: URL?) {
+        self.title = title
+        self.coordinate = coordinate
+        self.phoneNumber = phoneNumber
+        self.url = url
+        self.category = category
+    }
+    
+    var mapItem : MKMapItem {
+        let placeMark = MKPlacemark(coordinate: coordinate)
+        let item = MKMapItem(placemark: placeMark)
+        return item
+    }
+}
+
+
 struct Building : Codable {
     var name : String
     var opp_bldg_code : Int
@@ -65,7 +89,6 @@ class WalkModel {
         favoriteBuildings = []
         favoriteBuildingByInitial = [:]
         favoriteBuildingKeys = []
-        print(allBuildings)
     }
     
     //Designed and built apon Dr. Hannan's Around Town model.
@@ -138,6 +161,13 @@ class WalkModel {
     
     var numberOfFavoriteInitials : Int {return favoriteBuildingKeys.count}
     
+    func favoriteBuilding(at indexPath:IndexPath) -> Building {
+        let key = favoriteBuildingKeys[indexPath.section]
+        let buildings = favoriteBuildingByInitial[key]!
+        let building = buildings[indexPath.row]
+        return building
+    }
+    
     var favoriteIndexTitles : [String] {return favoriteBuildingKeys}
     func favoriteIndexTitle(forIndex index:Int) -> String {
         return favoriteBuildingKeys[index]
@@ -162,8 +192,8 @@ class WalkModel {
         }
     }
     
-    func removeFromFavorites(with indexPath:IndexPath) ->Bool {
-        let building = theBuilding(at: indexPath)
+    func removeFromFavorites(with indexPath:IndexPath) -> Bool {
+        let building = favoriteBuilding(at: indexPath)
         
         let index = favoriteBuildings.firstIndex(where: { (element) -> Bool in
             return element.name == building.name && element.latitude == building.latitude && element.longitude == building.longitude
@@ -197,12 +227,6 @@ class WalkModel {
         return building
     }
     
-    func favoriteBuilding(at indexPath:IndexPath) -> Building {
-        let key = favoriteBuildingKeys[indexPath.section]
-        let buildings = favoriteBuildingByInitial[key]!
-        let building = buildings[indexPath.row]
-        return building
-    }
     
     func favoriteBuildingName(at indexPath:IndexPath) -> String {
         let building = favoriteBuilding(at: indexPath)
