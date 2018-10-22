@@ -13,7 +13,6 @@ class BuildingViewCell: UITableViewCell {
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var year: UILabel!
     @IBOutlet weak var code: UILabel!
-    @IBOutlet weak var favoriteButton: UIButton!
     
     var indexPath : IndexPath?
     
@@ -23,14 +22,7 @@ class BuildingViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-
-    @IBAction func setFavorite(_ sender: Any) {
-        if walkModel.addToFavorites(with: indexPath!) {
-            self.favoriteButton.titleLabel?.text = "Favorited"
-            favoriteButton.isEnabled = false
-        }
-        
-    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

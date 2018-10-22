@@ -118,34 +118,20 @@
                                             <color key="textColor" red="0.46504826570000002" green="0.46504826570000002" blue="0.46504826570000002" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NR6-P3-jTI" userLabel="Favorite">
-                                            <rect key="frame" x="194" y="40" width="80" height="30"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="Ccn-VR-PEZ"/>
-                                            </constraints>
-                                            <state key="normal" title="Favorite"/>
-                                            <connections>
-                                                <action selector="setFavorite:" destination="X3g-mc-6pc" eventType="touchUpInside" id="wzN-IQ-Nlf"/>
-                                            </connections>
-                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="nse-sV-GXC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5Th-W5-lGs" secondAttribute="trailing" constant="100" id="1yz-9t-q5w"/>
-                                        <constraint firstItem="nse-sV-GXC" firstAttribute="leading" secondItem="NR6-P3-jTI" secondAttribute="trailing" constant="20" id="7QF-sE-M7G"/>
                                         <constraint firstItem="nse-sV-GXC" firstAttribute="centerY" secondItem="PrR-Dn-tNf" secondAttribute="centerY" id="HEm-mT-NTd"/>
                                         <constraint firstItem="9A3-E0-rW5" firstAttribute="trailing" secondItem="5Th-W5-lGs" secondAttribute="trailing" id="TBc-1D-0ge"/>
-                                        <constraint firstItem="NR6-P3-jTI" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5Th-W5-lGs" secondAttribute="trailing" constant="8" symbolic="YES" id="TGk-5b-zIC"/>
                                         <constraint firstItem="9A3-E0-rW5" firstAttribute="leading" secondItem="PrR-Dn-tNf" secondAttribute="leadingMargin" constant="50" id="UoD-2m-P76"/>
                                         <constraint firstItem="nse-sV-GXC" firstAttribute="trailing" secondItem="PrR-Dn-tNf" secondAttribute="trailingMargin" id="WOH-W3-qXW"/>
                                         <constraint firstItem="9A3-E0-rW5" firstAttribute="top" secondItem="5Th-W5-lGs" secondAttribute="bottom" id="Z6W-Vv-FlD"/>
                                         <constraint firstItem="5Th-W5-lGs" firstAttribute="leading" secondItem="PrR-Dn-tNf" secondAttribute="leadingMargin" constant="25" id="aMW-uV-JxZ"/>
-                                        <constraint firstItem="NR6-P3-jTI" firstAttribute="centerY" secondItem="PrR-Dn-tNf" secondAttribute="centerY" id="gxB-0B-0mY"/>
                                         <constraint firstItem="5Th-W5-lGs" firstAttribute="centerY" secondItem="PrR-Dn-tNf" secondAttribute="centerY" id="mt3-wc-Zb9"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="code" destination="9A3-E0-rW5" id="V0W-Cp-ESv"/>
-                                    <outlet property="favoriteButton" destination="NR6-P3-jTI" id="0i7-39-I3Y"/>
                                     <outlet property="name" destination="5Th-W5-lGs" id="TPe-52-nGx"/>
                                     <outlet property="year" destination="nse-sV-GXC" id="5AV-wM-rtV"/>
                                 </connections>

@@ -9,6 +9,17 @@
 import UIKit
 import MapKit
 
+extension CLLocationCoordinate2D {
+    static func + (left: CLLocationCoordinate2D, right: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: left.latitude+right.latitude, longitude: left.longitude+right.longitude)
+    }
+    static func - (left: CLLocationCoordinate2D, right: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: left.latitude-right.latitude, longitude: left.longitude-right.longitude)
+    }
+    static func / (left: CLLocationCoordinate2D, right: Double) -> CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: left.latitude/right, longitude: left.longitude/right)
+    }
+}
 class MapViewController: UIViewController, BuildingTableViewDelegate, MKMapViewDelegate, CLLocationManagerDelegate{
 
     
@@ -106,7 +117,8 @@ class MapViewController: UIViewController, BuildingTableViewDelegate, MKMapViewD
         }
     }
     
-    // MARK: - Building Table View Delegate Methods
+    // MARK: - TableView Delegate Dismiss Functions
+    
     func dismissMe() {
         self.dismiss(animated: true, completion: nil)
     }
@@ -126,6 +138,39 @@ class MapViewController: UIViewController, BuildingTableViewDelegate, MKMapViewD
         let span = MKCoordinateSpan(latitudeDelta: walkModel.spanDeltaZoomed, longitudeDelta: walkModel.spanDeltaZoomed)
         let region = MKCoordinateRegion(center: coordinate, span: span)
         mapView.setRegion(region, animated: true)
+    }
+    
+    func addDirectionPins(withSource indexPathSource:IndexPath, withDestination indexPathDest:IndexPath) {
+        
+        /*let allAnnotations = self.mapView.annotations
+         self.mapView.removeAnnotations(allAnnotations)*/
+        self.dismiss(animated: true, completion: nil)
+        
+        var sourceCoordinate = MKMapItem.forCurrentLocation().placemark.coordinate
+        if indexPathSource.row >= 0 {
+            sourceCoordinate = walkModel.buildingLocation(at: indexPathSource)
+        }
+        
+        let sourceAnnotation = BuildingPin(title: walkModel.buildingName(at: indexPathSource), coordinate: sourceCoordinate, favorite: nil)
+        
+        var destCoordinate = MKMapItem.forCurrentLocation().placemark.coordinate
+        if indexPathDest.row >= 0 {
+            destCoordinate = walkModel.buildingLocation(at: indexPathDest)
+        }
+        
+        let destAnnotation = BuildingPin(title: walkModel.buildingName(at: indexPathDest), coordinate: destCoordinate, favorite: nil)
+        
+        mapView.addAnnotation(sourceAnnotation)
+        mapView.addAnnotation(destAnnotation)
+        
+        //distance formula
+        let centerPoint = (sourceCoordinate + destCoordinate)/2.0
+        let latDelta = (sourceAnnotation.coordinate.latitude - destAnnotation.coordinate.latitude) * 1.3
+        let longDelta = (sourceAnnotation.coordinate.longitude - destAnnotation.coordinate.longitude) * 1.3
+        let span = MKCoordinateSpan(latitudeDelta: latDelta.magnitude, longitudeDelta: longDelta.magnitude)
+        let region = MKCoordinateRegion(center: centerPoint, span: span)
+        mapView.setRegion(region, animated: true)
+        requestDirections(source: sourceAnnotation, destination: destAnnotation)
     }
     
     
@@ -148,10 +193,10 @@ class MapViewController: UIViewController, BuildingTableViewDelegate, MKMapViewD
     }
     
     //taken from Around Town
-    /*func requestDirections(_ place:Place) {
+    func requestDirections(source: BuildingPin, destination:BuildingPin) {
         let walkingRouteRequest = MKDirections.Request()
-        walkingRouteRequest.source = MKMapItem.forCurrentLocation()
-        walkingRouteRequest.destination = place.mapItem
+        walkingRouteRequest.source = MKMapItem(placemark: MKPlacemark(coordinate: source.coordinate))
+        walkingRouteRequest.destination = MKMapItem(placemark: MKPlacemark(coordinate: destination.coordinate))
         walkingRouteRequest.transportType = .walking
         walkingRouteRequest.requestsAlternateRoutes = false
         
@@ -164,7 +209,7 @@ class MapViewController: UIViewController, BuildingTableViewDelegate, MKMapViewD
             
             
         }
-    }*/
+    }
     
     
     // MARK: - Navigation

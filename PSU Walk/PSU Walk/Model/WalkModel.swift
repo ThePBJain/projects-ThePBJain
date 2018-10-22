@@ -34,14 +34,19 @@ class Place : NSObject, MKAnnotation {
     }
 }
 
-
-struct Building : Codable {
+//Learned about Equatable from Apple Docs: https://developer.apple.com/documentation/swift/equatable
+struct Building : Codable , Equatable{
     var name : String
     var opp_bldg_code : Int
     var year_constructed: Int
     var latitude: CLLocationDegrees
     var longitude: CLLocationDegrees
     var photo : String
+    
+    static func == (lhs: Building, rhs: Building) -> Bool {
+        return lhs.name == rhs.name && lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
+    }
+    
 }
 
 // All Parks are read in and maintained in an array
@@ -114,14 +119,39 @@ class WalkModel {
         return building
     }
     
+    func buildingIndexToIndexPath(at index:Int) -> IndexPath? {
+        let building = allBuildings[index]
+        let letter = String(building.name.first!)
+        let _row = buildingByInitial[letter]?.firstIndex(of: building)
+        
+        let _section = buildingKeys.firstIndex(of: letter)
+        if let row = _row, let section = _section {
+            let indexPath = IndexPath(row: row, section: section)
+            return indexPath
+        }
+        
+        return nil
+    }
+    
     func buildingName(at indexPath:IndexPath) -> String {
         let building = theBuilding(at: indexPath)
         return building.name
     }
     
+    func buildingName(at index:Int) -> String? {
+        let building = allBuildings[index]
+        return building.name
+        
+    }
+    
     func buildingCode(at indexPath:IndexPath) -> Int {
         let building = theBuilding(at: indexPath)
         
+        return building.opp_bldg_code
+    }
+    
+    func buildingCode(at index:Int) -> Int {
+        let building = allBuildings[index]
         return building.opp_bldg_code
     }
     
@@ -131,9 +161,19 @@ class WalkModel {
         return building.year_constructed
     }
     
+    func buildingYear(at index:Int) -> Int {
+        let building = allBuildings[index]
+        return building.year_constructed
+    }
+    
     func buildingLocation(at indexPath:IndexPath) -> CLLocationCoordinate2D {
         let building = theBuilding(at: indexPath)
         
+        return CLLocationCoordinate2D(latitude: building.latitude, longitude: building.longitude)
+    }
+    
+    func buildingYear(at index:Int) -> CLLocationCoordinate2D {
+        let building = allBuildings[index]
         return CLLocationCoordinate2D(latitude: building.latitude, longitude: building.longitude)
     }
     
@@ -176,9 +216,8 @@ class WalkModel {
     func addToFavorites(with indexPath:IndexPath) -> Bool {
         //return true if successfully added
         let building = theBuilding(at: indexPath)
-        if favoriteBuildings.contains(where: { (element) -> Bool in
-            return element.name == building.name && element.latitude == building.latitude && element.longitude == building.longitude
-        }) {
+        
+        if favoriteBuildings.contains(building) {
             return false
         }else{
             favoriteBuildings.append(building)
@@ -194,16 +233,11 @@ class WalkModel {
     
     func removeFromFavorites(with indexPath:IndexPath) -> Bool {
         let building = favoriteBuilding(at: indexPath)
-        
-        let index = favoriteBuildings.firstIndex(where: { (element) -> Bool in
-            return element.name == building.name && element.latitude == building.latitude && element.longitude == building.longitude
-        })
+        let index = favoriteBuildings.firstIndex(of: building)
         if let i = index {
             favoriteBuildings.remove(at: i)
             let letter = String(building.name.first!)
-            let letterIndex = favoriteBuildingByInitial[letter]?.firstIndex(where: { (element) -> Bool in
-                return element.name == building.name && element.latitude == building.latitude && element.longitude == building.longitude
-            })
+            let letterIndex = favoriteBuildingByInitial[letter]?.firstIndex(of: building)
             if letterIndex != nil {
                 favoriteBuildingByInitial[letter]?.remove(at: letterIndex!)
             }

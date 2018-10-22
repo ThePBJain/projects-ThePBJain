@@ -14,6 +14,7 @@ private let reuseIdentifier = "BuildingCell"
 protocol BuildingTableViewDelegate : class {
     func dismissMe()
     func dismissMe(with indexPath:IndexPath)
+    func addDirectionPins(withSource indexPathSource:IndexPath, withDestination indexPathDest:IndexPath)
 }
 
 class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource {
@@ -23,6 +24,8 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
     
     let walkModel = WalkModel.sharedInstance
     let cellHeight : CGFloat = 100.0
+    
+    var selectedBuilding : Int?
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -64,13 +67,9 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
         let navTo = UITableViewRowAction(style: .default, title: "Navigate Here") { (action, indexPath) in
             // navTo item at indexPath
             //have it pull something up (Action sheet in main map view to choose NavigateFrom
-            self.addAlert()
+            self.addAlert(title: "Navigate From", isSource: false, indexPath: indexPath)
         }
         
-        let navFrom = UITableViewRowAction(style: .default, title: "Navigate Here") { (action, indexPath) in
-            // navTo item at indexPath
-            //have it pull something up (Action sheet in main map view to choose NavigateFrom
-        }
         
         navTo.backgroundColor = UIColor.psuBlue
         
@@ -86,7 +85,7 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
         
         let navFrom = UIContextualAction(style: .normal, title:  "Nav here", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
             print("OK, marked as Closed")
-            self.addAlert()
+            self.addAlert(title: "Navigate To", isSource: true, indexPath: indexPath )
             success(true)
         })
         navFrom.backgroundColor = .purple
@@ -144,29 +143,67 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
     // MARK: - Picker View Methods
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 0
+        return 1
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 0
+        return walkModel.numberOfBuildings+1
     }
     
-    func addAlert(){
+    
+    // Return the title of each row in your picker ... In my case that will be the profile name or the username string
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if row == 0 {
+            return "Current Location"
+        }else{
+            return walkModel.buildingName(at: row - 1)
+        }
+        
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        self.selectedBuilding = row - 1
+    }
+    
+    func addAlert(title:String, isSource:Bool, indexPath:IndexPath){
         
         // create the alert
-        let title = "This is the title"
-        let message = "This is the message"
+        let message = "Choose where your starting/ending point will be."
         let alert = UIAlertController(title: title, message: message, preferredStyle: .actionSheet);
         alert.isModalInPopover = true;
         
         // add an action button
         let nextAction: UIAlertAction = UIAlertAction(title: "Choose", style: .default){action->Void in
-            // do something
+            // check if passed in indexPath is source or not
+            //TODO: index paths wont work with current location...
+            if isSource && self.selectedBuilding != nil {
+                let sourceIndexPath = indexPath
+                let destinationIndexPath = self.walkModel.buildingIndexToIndexPath(at: self.selectedBuilding!)
+                if let destIndexPath = destinationIndexPath {
+                    self.delegate?.addDirectionPins(withSource: sourceIndexPath, withDestination: destIndexPath)
+                }else{
+                    //for current location
+                    let destIndexPath = IndexPath(row: -1, section: -1)
+                    self.delegate?.addDirectionPins(withSource: sourceIndexPath, withDestination: destIndexPath)
+                }
+                
+            }else if self.selectedBuilding != nil {
+                let sourceIndexPath = self.walkModel.buildingIndexToIndexPath(at: self.selectedBuilding!)
+                let destinationIndexPath = indexPath
+                
+                if let sourcePath = sourceIndexPath {
+                    self.delegate?.addDirectionPins(withSource: sourcePath, withDestination: destinationIndexPath)
+                }else{
+                    //for current location
+                    let sourcePath = IndexPath(row: -1, section: -1)
+                    self.delegate?.addDirectionPins(withSource: sourcePath, withDestination: destinationIndexPath)
+                }
+            }
         }
         alert.addAction(nextAction)
         
         // now create our custom view - we are using a container view which can contain other views
-        let containerViewWidth = 250
+        let containerViewWidth = alert.view.bounds.width
         let containerViewHeight = 120
         let containerFrame = CGRect(x:10, y: 70, width: CGFloat(containerViewWidth), height: CGFloat(containerViewHeight))
         //let containerView: UIView = UIView(frame: containerFrame);
