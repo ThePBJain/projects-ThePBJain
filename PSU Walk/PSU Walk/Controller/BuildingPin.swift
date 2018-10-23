@@ -13,10 +13,11 @@ class BuildingPin : NSObject, MKAnnotation {
     var coordinate: CLLocationCoordinate2D
     var title : String?
     var favorite : Bool?
-    
-    init(title: String, coordinate: CLLocationCoordinate2D, favorite: Bool?) {
+    var indexPath : IndexPath
+    init(title: String, coordinate: CLLocationCoordinate2D, favorite: Bool?, indexPath: IndexPath) {
         self.title = title
         self.coordinate = coordinate
         self.favorite = favorite
+        self.indexPath = indexPath
     }
 }

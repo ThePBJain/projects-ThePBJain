@@ -11,29 +11,6 @@ import MapKit
 
 
 
-
-class Place : NSObject, MKAnnotation {
-    let coordinate: CLLocationCoordinate2D
-    let title : String?
-    let phoneNumber : String?
-    let url : URL?
-    let category : String
-    
-    init(title:String?, category:String, coordinate:CLLocationCoordinate2D, phoneNumber: String?, url: URL?) {
-        self.title = title
-        self.coordinate = coordinate
-        self.phoneNumber = phoneNumber
-        self.url = url
-        self.category = category
-    }
-    
-    var mapItem : MKMapItem {
-        let placeMark = MKPlacemark(coordinate: coordinate)
-        let item = MKMapItem(placemark: placeMark)
-        return item
-    }
-}
-
 //Learned about Equatable from Apple Docs: https://developer.apple.com/documentation/swift/equatable
 struct Building : Codable , Equatable{
     var name : String
@@ -112,7 +89,10 @@ class WalkModel {
     
     
     
-    func theBuilding(at indexPath:IndexPath) -> Building {
+    func theBuilding(at indexPath:IndexPath) -> Building? {
+        if indexPath.section < 0 || indexPath.row < 0 {
+            return nil
+        }
         let key = buildingKeys[indexPath.section]
         let buildings = buildingByInitial[key]!
         let building = buildings[indexPath.row]
@@ -120,6 +100,9 @@ class WalkModel {
     }
     
     func buildingIndexToIndexPath(at index:Int) -> IndexPath? {
+        if index < 0 {
+            return nil
+        }
         let building = allBuildings[index]
         let letter = String(building.name.first!)
         let _row = buildingByInitial[letter]?.firstIndex(of: building)
@@ -133,9 +116,9 @@ class WalkModel {
         return nil
     }
     
-    func buildingName(at indexPath:IndexPath) -> String {
+    func buildingName(at indexPath:IndexPath) -> String? {
         let building = theBuilding(at: indexPath)
-        return building.name
+        return building?.name
     }
     
     func buildingName(at index:Int) -> String? {
@@ -144,10 +127,10 @@ class WalkModel {
         
     }
     
-    func buildingCode(at indexPath:IndexPath) -> Int {
+    func buildingCode(at indexPath:IndexPath) -> Int? {
         let building = theBuilding(at: indexPath)
         
-        return building.opp_bldg_code
+        return building?.opp_bldg_code
     }
     
     func buildingCode(at index:Int) -> Int {
@@ -155,10 +138,10 @@ class WalkModel {
         return building.opp_bldg_code
     }
     
-    func buildingYear(at indexPath:IndexPath) -> Int {
+    func buildingYear(at indexPath:IndexPath) -> Int? {
         let building = theBuilding(at: indexPath)
         
-        return building.year_constructed
+        return building?.year_constructed
     }
     
     func buildingYear(at index:Int) -> Int {
@@ -166,16 +149,14 @@ class WalkModel {
         return building.year_constructed
     }
     
-    func buildingLocation(at indexPath:IndexPath) -> CLLocationCoordinate2D {
+    func buildingLocation(at indexPath:IndexPath) -> CLLocationCoordinate2D? {
         let building = theBuilding(at: indexPath)
-        
-        return CLLocationCoordinate2D(latitude: building.latitude, longitude: building.longitude)
+        if let blding = building {
+            return CLLocationCoordinate2D(latitude: blding.latitude, longitude: blding.longitude)
+        }
+        return nil
     }
     
-    func buildingYear(at index:Int) -> CLLocationCoordinate2D {
-        let building = allBuildings[index]
-        return CLLocationCoordinate2D(latitude: building.latitude, longitude: building.longitude)
-    }
     
     var buildingIndexTitles : [String] {return buildingKeys}
     func buildingIndexTitle(forIndex index:Int) -> String {
@@ -187,10 +168,10 @@ class WalkModel {
     
     
     //MARK: - Locations
-    // Centered in Penn State Main
     let initialLocation = CLLocation(latitude: 40.7982133, longitude: -77.8599084)
     let spanDeltaNormal = 0.03
     let spanDeltaZoomed = 0.015
+    let spanBuffer = 1.7
     
     
     
@@ -215,7 +196,7 @@ class WalkModel {
     
     func addToFavorites(with indexPath:IndexPath) -> Bool {
         //return true if successfully added
-        let building = theBuilding(at: indexPath)
+        let building = theBuilding(at: indexPath)!
         
         if favoriteBuildings.contains(building) {
             return false
@@ -290,6 +271,10 @@ class WalkModel {
     
     func deleteImage() -> UIImage? {
         return UIImage(named: "delete_sign")
+    }
+    
+    func imageNotFound() -> UIImage? {
+        return UIImage(named: "image-not-found")
     }
     
     

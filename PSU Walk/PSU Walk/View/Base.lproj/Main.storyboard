@@ -26,7 +26,16 @@
                                     <constraint firstAttribute="height" constant="44" id="OrM-4h-3AX"/>
                                 </constraints>
                                 <items>
-                                    <barButtonItem title="Track" id="4H7-3b-nv3"/>
+                                    <barButtonItem title="Track" id="4H7-3b-nv3">
+                                        <connections>
+                                            <action selector="trackUserLocation:" destination="BYZ-38-t0r" id="UkO-f1-XVQ"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="done" id="f5N-eR-qhY">
+                                        <connections>
+                                            <action selector="cancelNavigation:" destination="BYZ-38-t0r" id="EMo-Wo-0vO"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="t33-D6-3sq"/>
                                     <barButtonItem style="plain" id="5LT-cR-AXL">
                                         <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="tzN-DU-gjq">
@@ -47,9 +56,40 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CKv-H5-rK4">
+                                <rect key="frame" x="0.0" y="64" width="375" height="80"/>
+                                <subviews>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dHo-lw-XqA">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
+                                    </scrollView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETA: " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="nEm-q3-NXu">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="nEm-q3-NXu" secondAttribute="height" multiplier="15:2" id="6Rj-W6-MGW"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HiraginoSans-W6" family="Hiragino Sans" pointSize="35"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="CKv-H5-rK4" secondAttribute="height" multiplier="75:16" id="6ri-oB-TeY"/>
+                                    <constraint firstItem="dHo-lw-XqA" firstAttribute="leading" secondItem="CKv-H5-rK4" secondAttribute="leading" id="LHv-dR-Gqq"/>
+                                    <constraint firstAttribute="trailing" secondItem="dHo-lw-XqA" secondAttribute="trailing" id="ig1-v8-dIp"/>
+                                    <constraint firstItem="nEm-q3-NXu" firstAttribute="leading" secondItem="CKv-H5-rK4" secondAttribute="leading" id="mAW-yG-P6A"/>
+                                    <constraint firstItem="nEm-q3-NXu" firstAttribute="top" secondItem="CKv-H5-rK4" secondAttribute="top" id="nhB-TK-f8x"/>
+                                    <constraint firstAttribute="trailing" secondItem="nEm-q3-NXu" secondAttribute="trailing" id="njC-de-UHG"/>
+                                    <constraint firstAttribute="bottom" secondItem="dHo-lw-XqA" secondAttribute="bottom" id="wJO-6s-3lN"/>
+                                    <constraint firstItem="dHo-lw-XqA" firstAttribute="top" secondItem="CKv-H5-rK4" secondAttribute="top" id="z2J-qf-Reb"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="CKv-H5-rK4" firstAttribute="trailing" secondItem="xZ8-4j-kuJ" secondAttribute="trailing" id="3eS-vD-kK6"/>
+                            <constraint firstItem="CKv-H5-rK4" firstAttribute="top" secondItem="xZ8-4j-kuJ" secondAttribute="top" id="4C6-Vd-pBA"/>
+                            <constraint firstItem="CKv-H5-rK4" firstAttribute="leading" secondItem="xZ8-4j-kuJ" secondAttribute="leading" id="AoU-04-z6H"/>
                             <constraint firstItem="X7i-dg-rLB" firstAttribute="trailing" secondItem="xZ8-4j-kuJ" secondAttribute="trailing" id="NmX-5Z-102"/>
                             <constraint firstItem="X7i-dg-rLB" firstAttribute="bottom" secondItem="xZ8-4j-kuJ" secondAttribute="bottom" id="OUI-E8-DhQ"/>
                             <constraint firstItem="9AS-1o-RDY" firstAttribute="trailing" secondItem="xZ8-4j-kuJ" secondAttribute="trailing" id="ceJ-Tf-QwR"/>
@@ -77,7 +117,11 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="cancelButton" destination="f5N-eR-qhY" id="AgN-eK-YKv"/>
+                        <outlet property="directionsView" destination="CKv-H5-rK4" id="Ulq-g7-unY"/>
+                        <outlet property="etaLabel" destination="nEm-q3-NXu" id="7pB-QP-s1C"/>
                         <outlet property="mapView" destination="9AS-1o-RDY" id="VL2-tB-kac"/>
+                        <outlet property="navScrollView" destination="dHo-lw-XqA" id="thw-yw-MRd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

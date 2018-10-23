@@ -13,4 +13,6 @@ import UIKit
 extension UIColor {
     
     static var psuBlue : UIColor { return UIColor(red: 30/255.0, green: 64/255.0, blue: 123/255.0, alpha: 1.0)}
+    
+    static var lightGreen : UIColor { return UIColor(red: 52/255.0, green: 166/255.0, blue: 103/255.0, alpha: 1.0)}
 }

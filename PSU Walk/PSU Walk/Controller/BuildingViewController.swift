@@ -15,6 +15,7 @@ protocol BuildingTableViewDelegate : class {
     func dismissMe()
     func dismissMe(with indexPath:IndexPath)
     func addDirectionPins(withSource indexPathSource:IndexPath, withDestination indexPathDest:IndexPath)
+    var view: UIView! {get set}
 }
 
 class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource {
@@ -64,7 +65,7 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
         }
         delete.backgroundColor = UIColor.orange
         
-        let navTo = UITableViewRowAction(style: .default, title: "Navigate Here") { (action, indexPath) in
+        let navTo = UITableViewRowAction(style: .default, title: "Navigate To") { (action, indexPath) in
             // navTo item at indexPath
             //have it pull something up (Action sheet in main map view to choose NavigateFrom
             self.addAlert(title: "Navigate From", isSource: false, indexPath: indexPath)
@@ -83,7 +84,7 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
             print("RowAction")
         }*/
         
-        let navFrom = UIContextualAction(style: .normal, title:  "Nav here", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+        let navFrom = UIContextualAction(style: .normal, title:  "Navigate From", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
             print("OK, marked as Closed")
             self.addAlert(title: "Navigate To", isSource: true, indexPath: indexPath )
             success(true)
@@ -101,8 +102,8 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
 
         // Configure the cell...
         cell.name.text = walkModel.buildingName(at: indexPath)
-        cell.code.text = "\(walkModel.buildingCode(at: indexPath))"
-        cell.year.text = "\(walkModel.buildingYear(at: indexPath))"
+        cell.code.text = "\(walkModel.buildingCode(at: indexPath) ?? 0)"
+        cell.year.text = "\(walkModel.buildingYear(at: indexPath) ?? 0)"
         cell.indexPath = indexPath
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(BuildingViewController.dismissByDelegate(_:)))
         cell.addGestureRecognizer(tapGesture)
@@ -132,13 +133,6 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
     }
     
     
-    /*
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     // MARK: - Picker View Methods
     
@@ -172,7 +166,6 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
         let alert = UIAlertController(title: title, message: message, preferredStyle: .actionSheet);
         alert.isModalInPopover = true;
         
-        // add an action button
         let nextAction: UIAlertAction = UIAlertAction(title: "Choose", style: .default){action->Void in
             // check if passed in indexPath is source or not
             //TODO: index paths wont work with current location...
@@ -202,18 +195,16 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
         }
         alert.addAction(nextAction)
         
-        // now create our custom view - we are using a container view which can contain other views
         let containerViewWidth = alert.view.bounds.width
         let containerViewHeight = 120
         let containerFrame = CGRect(x:10, y: 70, width: CGFloat(containerViewWidth), height: CGFloat(containerViewHeight))
-        //let containerView: UIView = UIView(frame: containerFrame);
         let containerPicker : UIPickerView = UIPickerView(frame: containerFrame)
         containerPicker.delegate = self
         containerPicker.dataSource = self
         
         alert.view.addSubview(containerPicker)
         
-        // now add some constraints to make sure that the alert resizes itself
+        // Got constraints from online, really helped with making this look nice.
         let cons:NSLayoutConstraint = NSLayoutConstraint(item: alert.view, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: containerPicker, attribute: NSLayoutConstraint.Attribute.height, multiplier: 1.00, constant: 130)
         
         alert.view.addConstraint(cons)
@@ -222,8 +213,14 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
         
         alert.view.addConstraint(cons2)
         
+        if let popoverPresentationController = alert.popoverPresentationController {
+            popoverPresentationController.sourceView = delegate?.view
+            let height = (delegate?.view.frame)!.height
+            popoverPresentationController.sourceRect = CGRect(origin: CGPoint(x: 0, y: height), size: alert.view.frame.size)
+            //alert
+        }
         // present with our view controller
-        present(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
         
     }
 
