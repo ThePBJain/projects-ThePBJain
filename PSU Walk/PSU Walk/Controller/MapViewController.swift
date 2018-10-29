@@ -183,14 +183,6 @@ class MapViewController: UIViewController, BuildingTableViewDelegate, MKMapViewD
         
     }
     
-    @objc func addPin(recognizer:UILongPressGestureRecognizer) {
-        switch recognizer.state {
-        case .began:
-            break
-        default:
-            break
-        }
-    }
     
     // MARK: - TableView Delegate Dismiss Functions
     

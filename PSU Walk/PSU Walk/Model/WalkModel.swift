@@ -87,6 +87,16 @@ class WalkModel {
         
     }
     
+    func numBuildings(in buildings:[Building], for section:Int) -> Int {
+        var count = 0
+        let key = buildingKeys[section]
+        for building in buildingByInitial[key] ?? [] {
+            if buildings.contains(building) {
+                count += 1
+            }
+        }
+        return count
+    }
     
     
     func theBuilding(at indexPath:IndexPath) -> Building? {
@@ -113,6 +123,14 @@ class WalkModel {
             return indexPath
         }
         
+        return nil
+    }
+    
+    func indexPath(of building:Building) -> IndexPath? {
+        let index = allBuildings.firstIndex(of: building)
+        if let i = index {
+            return buildingIndexToIndexPath(at: i)
+        }
         return nil
     }
     
@@ -156,6 +174,8 @@ class WalkModel {
         }
         return nil
     }
+    
+
     
     
     var buildingIndexTitles : [String] {return buildingKeys}

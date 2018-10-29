@@ -193,8 +193,19 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="searchDisplayController" destination="b1h-pF-JbB" id="PHP-Pu-h1l"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3SZ-t8-cEy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="b1h-pF-JbB">
+                    <connections>
+                        <outlet property="delegate" destination="YFr-6c-XCq" id="iY6-58-TPc"/>
+                        <outlet property="searchContentsController" destination="YFr-6c-XCq" id="v1T-wr-Dre"/>
+                        <outlet property="searchResultsDataSource" destination="YFr-6c-XCq" id="ezV-6f-z9O"/>
+                        <outlet property="searchResultsDelegate" destination="YFr-6c-XCq" id="W3z-lw-cTH"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="2224.8000000000002" y="-241.52923538230885"/>
         </scene>
