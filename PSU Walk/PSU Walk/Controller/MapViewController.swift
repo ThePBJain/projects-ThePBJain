@@ -140,21 +140,31 @@ class MapViewController: UIViewController, BuildingTableViewDelegate, MKMapViewD
                 message = "Building built in \(year)."
             }
             let alert = UIAlertController(title: buildingPin.title, message: message, preferredStyle: .actionSheet)
+            let info = UIAlertAction(title: "Show Info", style: .default){action->Void in
+                self.performSegue(withIdentifier: "InfoSegue", sender: buildingPin)
+            }
             let close = UIAlertAction(title: "Done", style: .cancel, handler: nil)
             
+            alert.addAction(info)
             alert.addAction(close)
             
             let containerViewWidth = 200
             let containerViewHeight = 200
             let containerFrame = CGRect(x:10, y: 70, width: CGFloat(containerViewWidth), height: CGFloat(containerViewHeight))
             let imageView : UIImageView = UIImageView(image: walkModel.imageNotFound())
+            imageView.contentMode = .scaleAspectFit
+            if walkModel.buildingImage(at: buildingPin.indexPath) != nil {
+                imageView.image = walkModel.buildingImage(at: buildingPin.indexPath)
+            }else if !walkModel.buildingPhoto(at: buildingPin.indexPath)!.isEmpty {
+                imageView.image = UIImage(named: walkModel.buildingPhoto(at: buildingPin.indexPath)!)
+            }
             imageView.frame = containerFrame
             imageView.center = CGPoint(x: alert.view.center.x, y: imageView.center.y)
             
             alert.view.addSubview(imageView)
             
             // Got constraints from online, really helped with making this look nice.
-            let cons:NSLayoutConstraint = NSLayoutConstraint(item: alert.view, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: imageView, attribute: NSLayoutConstraint.Attribute.height, multiplier: 1.00, constant: 130)
+            let cons:NSLayoutConstraint = NSLayoutConstraint(item: alert.view, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.greaterThanOrEqual, toItem: imageView, attribute: NSLayoutConstraint.Attribute.height, multiplier: 1.00, constant: 200)
             
             alert.view.addConstraint(cons)
             
@@ -388,6 +398,13 @@ class MapViewController: UIViewController, BuildingTableViewDelegate, MKMapViewD
             let buildingTableViewController = navController.topViewController! as! FavoriteViewController
             buildingTableViewController.delegate = self
             buildingTableViewController.delegate?.view = self.view
+        case "InfoSegue":
+            let navController = segue.destination as! UINavigationController
+            let infoViewController = navController.topViewController! as! InfoViewController
+            let buildingPin = sender as! BuildingPin
+            infoViewController.configureView(with: buildingPin.indexPath)
+            infoViewController.delegate = self
+            infoViewController.delegate?.view = self.view
         default:
             //check if this is casued by tutorial
             assert(false, "Unhandled Segue")

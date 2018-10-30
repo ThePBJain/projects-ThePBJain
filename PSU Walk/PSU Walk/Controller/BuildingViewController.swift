@@ -18,7 +18,7 @@ protocol BuildingTableViewDelegate : class {
     var view: UIView! {get set}
 }
 
-class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource, UISearchResultsUpdating {
+class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource, UISearchResultsUpdating, UISearchBarDelegate {
     
     
     weak var delegate : BuildingTableViewDelegate?
@@ -26,10 +26,12 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
     
     let walkModel = WalkModel.sharedInstance
     let cellHeight : CGFloat = 100.0
+    let yearRange = 5
     let searchController = UISearchController(searchResultsController: nil)
+    let scopeButtonTitles = ["All", "Name", "Year"]
+    var currentScope = "All"
     var isSearching : Bool {return searchController.isActive && !searchBarIsEmpty()}
     var selectedBuilding : Int?
-    var filteredBuildings = [Building]()
     
     
     override func viewDidLoad() {
@@ -39,12 +41,16 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search Buildings"
         searchController.searchBar.tintColor = .white
+        searchController.searchBar.scopeButtonTitles = scopeButtonTitles
+        searchController.searchBar.delegate = self
         navigationItem.searchController = searchController
         
         //Note: I have no idea why changing color of searchbar text is so difficult!!!
         //Found solution here: https://stackoverflow.com/questions/28499701/how-can-i-change-the-uisearchbar-search-text-color
         UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         definesPresentationContext = true
+        
+        self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
     // MARK: - Table view data source
@@ -59,7 +65,7 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isSearching {
             //return walkModel.numBuildings(in: filteredBuildings, for: section)
-            return filteredBuildings.count
+            return walkModel.numberOfFilteredBuildings
         }
         return walkModel.numberOfValuesForKey(atIndex: section)
     }
@@ -81,18 +87,18 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! BuildingViewCell
         
         if isSearching {
-            cell.name.text = filteredBuildings[indexPath.row].name
-            cell.code.text = "\(filteredBuildings[indexPath.row].opp_bldg_code)"
-            cell.year.text = "\(filteredBuildings[indexPath.row].year_constructed)"
-            cell.indexPath = walkModel.indexPath(of: filteredBuildings[indexPath.row])
+            cell.name.text = walkModel.buildingFilterName(at: indexPath.row)
+            cell.code.text = "\(walkModel.buildingFilterCode(at: indexPath.row))"
+            cell.year.text = "\(walkModel.buildingFilterYear(at: indexPath.row))"
+            cell.indexPath = walkModel.indexPath(of: walkModel.filteredBuildings[indexPath.row])
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(BuildingViewController.dismissByDelegate(_:)))
             cell.addGestureRecognizer(tapGesture)
             return cell
         }
         // Configure the cell...
         cell.name.text = walkModel.buildingName(at: indexPath)
-        cell.code.text = "\(walkModel.buildingCode(at: indexPath) ?? 0)"
-        cell.year.text = "\(walkModel.buildingYear(at: indexPath) ?? 0)"
+        cell.code.text = "\(walkModel.buildingCode(at: indexPath)!)"
+        cell.year.text = "\(walkModel.buildingYear(at: indexPath)!)"
         cell.indexPath = indexPath
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(BuildingViewController.dismissByDelegate(_:)))
         cell.addGestureRecognizer(tapGesture)
@@ -104,6 +110,33 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
         
     }
     
+    //MARK: - Editing
+    /*
+    //taken from Do it now app
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return UITableViewCell.EditingStyle.none
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        return "Done"
+    }
+    
+    // Override to support conditional editing of the table view.
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        // Return false if you do not want the specified item to be editable.
+        return true
+    }
+    
+    // Override to support editing the table view.
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            // Delete the row from the data source
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        } else if editingStyle == .insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        }
+    }
+    */
     //MARK: - TableView Cell Actions
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -176,8 +209,23 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
     
     // MARK: - Search bar methods
     
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        self.currentScope = self.scopeButtonTitles[selectedScope]
+        switch selectedScope {
+        case 0:
+            searchController.searchBar.keyboardType = .default
+        case 1:
+            searchController.searchBar.keyboardType = .alphabet
+        case 2:
+            searchController.searchBar.keyboardType = .numberPad
+        default:
+            assert(true, "Failed")
+        }
+        searchController.searchBar.reloadInputViews()
+    }
+    
     func updateSearchResults(for searchController: UISearchController) {
-        filterContentForSearchText(searchController.searchBar.text!)
+        filterContentForSearchText(searchController.searchBar.text!, scope: self.currentScope)
     }
     
     func searchBarIsEmpty() -> Bool {
@@ -186,9 +234,32 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
     }
     
     func filterContentForSearchText(_ searchText: String, scope: String = "All") {
-        filteredBuildings = walkModel.allBuildings.filter({( building : Building) -> Bool in
-            return building.name.lowercased().contains(searchText.lowercased())
-        })
+        var filter : ((Building) -> Bool)?
+        switch scope {
+        case "All":
+            filter = { (building : Building) -> Bool in
+                var match = false
+                if Int(searchText) != nil {
+                    match = match || abs(building.year_constructed.distance(to: Int(searchText)!)) < self.yearRange
+                }
+                match = match || building.name.lowercased().contains(searchText.lowercased())
+                return match
+            }
+            
+        case "Name":
+            filter = { (building : Building) -> Bool in
+                return building.name.lowercased().contains(searchText.lowercased())
+            }
+        case "Year":
+            //Returns buildings within the yearRange of inputted year
+            filter = { (building : Building) -> Bool in
+                return abs(building.year_constructed.distance(to: Int(searchText) ?? 0)) < self.yearRange
+            }
+        default:
+            assert(true, "Invalid scope")
+        }
+        walkModel.updateFilter(filter: filter!)
+        
         
         tableView.reloadData()
     }
@@ -242,7 +313,7 @@ class BuildingViewController: UITableViewController, UIPickerViewDelegate, UIPic
                     }
                     
                 }else {
-                    let sourceIndexPath = self.walkModel.buildingIndexToIndexPath(at: self.selectedBuilding!)
+                    let sourceIndexPath = self.walkModel.buildingIndexToIndexPath(at: self.selectedBuilding ?? 0)
                     let destinationIndexPath = indexPath
                     
                     if let sourcePath = sourceIndexPath {

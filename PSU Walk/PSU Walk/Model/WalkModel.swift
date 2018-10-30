@@ -12,16 +12,26 @@ import MapKit
 
 
 //Learned about Equatable from Apple Docs: https://developer.apple.com/documentation/swift/equatable
-struct Building : Codable , Equatable{
+class Building : Codable , Equatable{
     var name : String
     var opp_bldg_code : Int
     var year_constructed: Int
     var latitude: CLLocationDegrees
     var longitude: CLLocationDegrees
     var photo : String
+    var image : UIImage?
+    var text : String = "Insert Notes Here."
     
     static func == (lhs: Building, rhs: Building) -> Bool {
         return lhs.name == rhs.name && lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
+    }
+    private enum CodingKeys: String, CodingKey {
+        case name
+        case opp_bldg_code
+        case year_constructed
+        case latitude
+        case longitude
+        case photo
     }
     
 }
@@ -32,7 +42,9 @@ typealias Buildings = [Building]
 class WalkModel {
     
     static let sharedInstance = WalkModel()
-    let allBuildings : Buildings
+    var allBuildings : Buildings
+    var filteredBuildings = Buildings()
+    
     fileprivate let buildingByInitial: [String:[Building]]
     fileprivate let buildingKeys : [String]
     var favoriteBuildings : Buildings
@@ -100,11 +112,14 @@ class WalkModel {
     
     
     func theBuilding(at indexPath:IndexPath) -> Building? {
-        if indexPath.section < 0 || indexPath.row < 0 {
+        if indexPath.section < 0 || indexPath.section >= buildingKeys.count || indexPath.row < 0 {
             return nil
         }
         let key = buildingKeys[indexPath.section]
         let buildings = buildingByInitial[key]!
+        if(indexPath.row >= buildings.count){
+            return nil
+        }
         let building = buildings[indexPath.row]
         return building
     }
@@ -173,6 +188,21 @@ class WalkModel {
             return CLLocationCoordinate2D(latitude: blding.latitude, longitude: blding.longitude)
         }
         return nil
+    }
+    
+    func buildingText(at indexPath:IndexPath) -> String? {
+        let building = theBuilding(at: indexPath)
+        return building?.text
+    }
+    
+    func buildingPhoto(at indexPath: IndexPath) -> String? {
+        let building = theBuilding(at: indexPath)
+        return building?.photo
+    }
+    
+    func buildingImage(at indexPath: IndexPath) -> UIImage? {
+        let building = theBuilding(at: indexPath)
+        return building?.image
     }
     
 
@@ -298,6 +328,119 @@ class WalkModel {
     }
     
     
-    //MARK: -Visits
+    //MARK: - Edit Building Information
+    
+    func editBuildingName(at indexPath:IndexPath, with name:String) -> Bool {
+        
+        let building = theBuilding(at: indexPath)
+        if (building?.name = name) != nil {
+            return true
+        }
+        return false
+    }
+    
+    func editBuildingName(at index:Int, with name:String) -> Bool {
+        if index >= allBuildings.count {
+            return false
+        }
+        let building = allBuildings[index]
+        building.name = name
+        return true
+        
+    }
+    
+    func editBuildingCode(at indexPath:IndexPath, with building_code:Int) -> Bool {
+        let building = theBuilding(at: indexPath)
+        if (building?.opp_bldg_code = building_code) != nil {
+            return true
+        }
+        return false
+    }
+    
+    func editBuildingCode(at index:Int, with building_code:Int) -> Bool {
+        if index >= allBuildings.count {
+            return false
+        }
+        let building = allBuildings[index]
+        building.opp_bldg_code = building_code
+        return true
+    }
+    
+    func editBuildingYear(at indexPath:IndexPath, with year:Int) -> Bool {
+        let building = theBuilding(at: indexPath)
+        if (building?.year_constructed = year) != nil {
+            return true
+        }
+        return false
+    }
+    
+    func editBuildingYear(at index:Int, with year:Int) -> Bool {
+        if index >= allBuildings.count {
+            return false
+        }
+        let building = allBuildings[index]
+        building.year_constructed = year
+        return true
+    }
+    
+    func editBuildingLocation(at indexPath:IndexPath, with coordinate:CLLocationCoordinate2D) -> Bool {
+        let building = theBuilding(at: indexPath)
+        if (building?.latitude = coordinate.latitude) != nil {
+            if (building?.longitude = coordinate.longitude) != nil {
+                return true
+            }
+            return false
+        }
+        return false
+    }
+    
+    func editBuildingText(at indexPath:IndexPath, with text:String) -> Bool {
+        let building = theBuilding(at: indexPath)
+        if (building?.text = text) != nil {
+            return true
+        }
+        return false
+    }
+    
+    func editBuildingImage(at indexPath: IndexPath, with image:UIImage) -> Bool {
+        let building = theBuilding(at: indexPath)
+        if (building?.image = image) != nil {
+            return true
+        }
+        return false
+    }
+    
+    //MARK: - Filtered Buildings
+    
+    var numberOfFilteredBuildings : Int {return filteredBuildings.count }
+    
+    func updateFilter(filter: (Building) -> Bool){
+        
+        filteredBuildings = allBuildings.filter(filter)
+        for building in filteredBuildings{
+            print(building.name)
+        }
+    }
+    
+    func buildingFilterName(at index:Int) -> String? {
+        let building = filteredBuildings[index]
+        return building.name
+        
+    }
+    
+    func buildingFilterCode(at index:Int) -> Int {
+        let building = filteredBuildings[index]
+        return building.opp_bldg_code
+    }
+    
+    func buildingFilterYear(at index:Int) -> Int {
+        let building = filteredBuildings[index]
+        return building.year_constructed
+    }
+    
+    func buildingFilterLocation(at index:Int) -> CLLocationCoordinate2D? {
+        let building = filteredBuildings[index]
+        return CLLocationCoordinate2D(latitude: building.latitude, longitude: building.longitude)
+    }
     
 }
