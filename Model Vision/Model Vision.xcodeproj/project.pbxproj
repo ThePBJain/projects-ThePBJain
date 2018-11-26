@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		6A387207219A53EB00CFAFE2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A387206219A53EB00CFAFE2 /* Extensions.swift */; };
 		6AA61E1021A9E9E1002EE1E0 /* Plane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA61E0F21A9E9E1002EE1E0 /* Plane.swift */; };
+		6ACA549521AB9A8A0029A160 /* MultipeerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ACA549421AB9A8A0029A160 /* MultipeerSession.swift */; };
 		6ADDD637218FEDBD00187DA8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ADDD636218FEDBD00187DA8 /* AppDelegate.swift */; };
 		6ADDD639218FEDBD00187DA8 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 6ADDD638218FEDBD00187DA8 /* art.scnassets */; };
 		6ADDD63B218FEDBD00187DA8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ADDD63A218FEDBD00187DA8 /* ViewController.swift */; };
@@ -31,6 +32,7 @@
 /* Begin PBXFileReference section */
 		6A387206219A53EB00CFAFE2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		6AA61E0F21A9E9E1002EE1E0 /* Plane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plane.swift; sourceTree = "<group>"; };
+		6ACA549421AB9A8A0029A160 /* MultipeerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerSession.swift; sourceTree = "<group>"; };
 		6ADDD633218FEDBD00187DA8 /* Model Vision.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Model Vision.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6ADDD636218FEDBD00187DA8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6ADDD638218FEDBD00187DA8 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 			children = (
 				6AA61E0F21A9E9E1002EE1E0 /* Plane.swift */,
 				6A387206219A53EB00CFAFE2 /* Extensions.swift */,
+				6ACA549421AB9A8A0029A160 /* MultipeerSession.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -233,6 +236,7 @@
 			files = (
 				6ADDD63B218FEDBD00187DA8 /* ViewController.swift in Sources */,
 				6A387207219A53EB00CFAFE2 /* Extensions.swift in Sources */,
+				6ACA549521AB9A8A0029A160 /* MultipeerSession.swift in Sources */,
 				6AA61E1021A9E9E1002EE1E0 /* Plane.swift in Sources */,
 				6ADDD637218FEDBD00187DA8 /* AppDelegate.swift in Sources */,
 			);
@@ -397,9 +401,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GRB7FB288F;
+				DEVELOPMENT_TEAM = WJDVJGMV64;
 				INFOPLIST_FILE = "Model Vision/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -416,9 +420,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GRB7FB288F;
+				DEVELOPMENT_TEAM = WJDVJGMV64;
 				INFOPLIST_FILE = "Model Vision/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

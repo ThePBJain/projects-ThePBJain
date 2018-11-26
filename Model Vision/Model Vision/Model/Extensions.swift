@@ -13,6 +13,7 @@ import ARKit
 extension SCNVector3 {
     
     init(_ vec: vector_float3) {
+        self.init()
         self.x = vec.x
         self.y = vec.y
         self.z = vec.z
@@ -20,6 +21,10 @@ extension SCNVector3 {
     
     func length() -> Float {
         return sqrtf(x * x + y * y + z * z)
+    }
+    
+    func distance(to vector: SCNVector3) -> Float {
+        return (self - vector).length()
     }
     
     mutating func setLength(_ length: Float) {
@@ -131,11 +136,13 @@ extension SCNMaterial {
 extension CGPoint {
     
     init(_ size: CGSize) {
+        self.init()
         self.x = size.width
         self.y = size.height
     }
     
     init(_ vector: SCNVector3) {
+        self.init()
         self.x = CGFloat(vector.x)
         self.y = CGFloat(vector.y)
     }
@@ -194,6 +201,7 @@ func *= (left: inout CGPoint, right: CGFloat) {
 extension CGSize {
     
     init(_ point: CGPoint) {
+        self.init()
         self.width = point.x
         self.height = point.y
     }

@@ -11,6 +11,7 @@ import SceneKit
 import ARKit
 import ModelIO
 import SceneKit.ModelIO
+import MultipeerConnectivity
 
 extension MDLMaterial {
     func setTextureProperties(_ textures: [MDLMaterialSemantic:String]) -> Void {
@@ -30,8 +31,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var planes : [ARPlaneAnchor] = []
     var object : MDLMesh!
     var setup = false
+    var buttonPressed = false
+    var previousPoint: SCNVector3?
+    @IBOutlet weak var drawLineButton: UIButton!
+    let lineColor = UIColor.red
+    
+    var multipeerSession: MultipeerSession!
+    var initalizedWorldMap: Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.multipeerSession = MultipeerSession(receivedDataHandler: receivedData)
         
         // Set the view's delegate
         sceneView.delegate = self
@@ -39,7 +49,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Show statistics such as fps and timing information
         sceneView.showsStatistics = true
         
-        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]//[ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         
         // Load the .OBJ file
         guard let url = Bundle.main.url(forResource: "Fighter", withExtension: "obj", subdirectory: "art.scnassets/xwing") else {
@@ -67,38 +77,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Wrap the ModelIO object in a SceneKit object
         self.object = object
-        let box = SCNBox(width: 0.2, height: 0.2, length: 0.2, chamferRadius: 0)
+        /*let box = SCNBox(width: 0.2, height: 0.2, length: 0.2, chamferRadius: 0)
         let mat = SCNMaterial()
         mat.diffuse.contents = UIColor.red
         box.materials = [mat]
         let boxNode = SCNNode(geometry: box)
         boxNode.position = SCNVector3(0,0,-0.5)
-        self.sceneView.scene.rootNode.addChildNode(boxNode)
+        self.sceneView.scene.rootNode.addChildNode(boxNode)*/
         
-        /*let session = ARSession()
-        guard let cameraTransform = session.currentFrame?.camera.transform else {
-                return
-        }
-        node.position = SCNVector3.positionFromTransform(cameraTransform)*/
-        /*
-        let scene = SCNScene()
-        scene.rootNode.addChildNode(node)
-        
-        // Set up the SceneView
-        sceneView.autoenablesDefaultLighting = true
-        sceneView.scene = scene
-        sceneView.backgroundColor = UIColor.black
-        /*let scnURL = URL(fileURLWithPath: "test")
-        do{
-            let sccene = try SCNScene(url: scnURL, options: nil)
-        }catch {
-            
-        }*/
-        */
-        // Create a new scene
-        //let scene = SCNScene(named: "art.scnassets/ship.scn")!
-        //let scene = SCNScene(named: "art.scnassets/xwing/Fighter.scn")!
-        // Set the scene to the view
     
     }
     
@@ -166,6 +152,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         node.addChildNode(plane)
     }
     
+    
     // Override to create and configure nodes for anchors added to the view's session.
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
         let node = SCNNode()
@@ -173,7 +160,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             planes.append(planeAnchor)
             if !setup {
                 self.setup = true
-                self.addNode()
+                //self.addNode()
             }
             
         }
@@ -184,6 +171,23 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let node = SCNNode(mdlObject: self.object)
         node.position = SCNVector3.positionFromTransform(planes[0].transform)
         self.sceneView.scene.rootNode.addChildNode(node)
+    }
+    
+    //MARK: - ARSessionDelegate
+    
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        switch frame.worldMappingStatus {
+        case .notAvailable, .limited:
+            print("unavaliable")
+        case .extending:
+            if !multipeerSession.connectedPeers.isEmpty {
+                self.shareSession()
+            }
+        case .mapped:
+            if !multipeerSession.connectedPeers.isEmpty {
+                self.shareSession()
+            }
+        }
     }
 
     
@@ -200,5 +204,125 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     func sessionInterruptionEnded(_ session: ARSession) {
         // Reset tracking and/or remove existing anchors if consistent tracking is required
         
+    }
+    
+    // MARK: - Hit Test detection
+    @objc func tapped(recognizer :UITapGestureRecognizer) {
+        let sceneView = recognizer.view as! ARSCNView
+        let touchLocation = recognizer.location(in: sceneView)
+        let hitResults = sceneView.hitTest(touchLocation, options: [:])
+        if !hitResults.isEmpty {
+            // this means the node has been touched
+        }
+    }
+    
+    // MARK: - Drawing Lines
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        DispatchQueue.main.async {
+            self.buttonPressed = self.drawLineButton.isHighlighted
+        }
+    }
+    func renderer(_ renderer: SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: TimeInterval) {
+        
+        guard let pointOfView = sceneView.pointOfView else { return }
+        
+        let mat = pointOfView.transform
+        let dir = SCNVector3(-1 * mat.m31, -1 * mat.m32, -1 * mat.m33)
+        let currentPosition = pointOfView.position + (dir * 0.1)
+        
+        if self.buttonPressed {
+            if let previousPoint = previousPoint {
+                let lineNode = lineFrom(vector: previousPoint, toVector: currentPosition)
+                //lineNode.position = midpoint(first: previousPoint, second: currentPosition)
+                sceneView.scene.rootNode.addChildNode(lineNode)
+                /*guard let hitTestResult = sceneView
+                    .hitTest(sceneView.center, types: [.existingPlaneUsingGeometry, .estimatedHorizontalPlane])
+                    .first
+                    else { return }
+                let anchor = sceneView.anchor(for: lineNode)*/
+                
+                // Send the anchor info to peers, so they can place the same content.
+                guard let data = try? NSKeyedArchiver.archivedData(withRootObject: lineNode, requiringSecureCoding: true)
+                    else { fatalError("can't encode anchor") }
+                self.multipeerSession.sendToAllPeers(data)
+                
+            }
+        }
+        previousPoint = currentPosition
+    }
+    func midpoint(first: SCNVector3, second: SCNVector3) -> SCNVector3 {
+        return SCNVector3Make((first.x + second.x) / 2, (first.y + second.y) / 2, (first.z + second.z) / 2)
+    }
+    
+    func lineFrom(vector vector1: SCNVector3, toVector vector2: SCNVector3) -> SCNNode {
+        
+        let cyl = SCNCylinder(radius: 0.002, height: CGFloat(vector1.distance(to: vector2)))
+        //return SCNGeometry(sources: [source], elements: [element])
+        let lineNode = SCNNode(geometry: cyl)
+        //lineNode.position = midpoint(first: previousPoint, second: currentPosition)
+        let distDiff = vector2 - vector1
+        let height = distDiff.length()
+        let y = distDiff.normalized()
+        let up = distDiff.cross(vector2).normalized()
+        let x = y.cross(up).normalized()
+        let z = x.cross(y).normalized()
+        
+        /* Matrix transform
+         x.x  x.y  x.z  0
+         y.x  y.y  y.z  0
+         z.x  z.y  z.z  0
+         w.x  w.y  w.z  1
+         */
+        let transform = SCNMatrix4(m11: x.x, m12: x.y, m13: x.z, m14: 0.0, m21: y.x, m22: y.y, m23: y.z, m24: 0.0, m31: z.x, m32: z.y, m33: z.z, m34: 0.0, m41: vector1.x, m42: vector1.y, m43: vector1.z, m44: 1.0)
+        lineNode.transform = SCNMatrix4Mult(SCNMatrix4MakeTranslation(0.0, height / 2.0, 0.0), transform)
+        lineNode.geometry?.firstMaterial?.diffuse.contents = lineColor
+        return lineNode
+        
+    }
+    
+    //MARK: - Multipeer functions
+    
+    /// - Tag: GetWorldMap
+    func shareSession() {
+        sceneView.session.getCurrentWorldMap { worldMap, error in
+            guard let map = worldMap
+                else { print("Error: \(error!.localizedDescription)"); return }
+            guard let data = try? NSKeyedArchiver.archivedData(withRootObject: map, requiringSecureCoding: true)
+                else { fatalError("can't encode map") }
+            self.multipeerSession.sendToAllPeers(data)
+            self.initalizedWorldMap = true
+        }
+    }
+    var mapProvider: MCPeerID?
+    /// - Tag: ReceiveData
+    func receivedData(_ data: Data, from peer: MCPeerID) {
+        
+        do {
+            if !self.initalizedWorldMap {
+                if let worldMap = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data) {
+                    // Run the session with the received world map.
+                    let configuration = ARWorldTrackingConfiguration()
+                    configuration.planeDetection = .horizontal
+                    configuration.initialWorldMap = worldMap
+                    sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+                    
+                    // Remember who provided the map for showing UI feedback.
+                    mapProvider = peer
+                    self.initalizedWorldMap = true
+                    
+                }
+            }
+            else
+                if let lineNode = try NSKeyedUnarchiver.unarchivedObject(ofClass: SCNNode.self, from: data) {
+                    // Add anchor to the session, ARSCNView delegate adds visible content.
+                    //sceneView.session.add(anchor: anchor)
+                    sceneView.scene.rootNode.addChildNode(lineNode)
+                }
+                else {
+                    print("unknown data recieved from \(peer)")
+            }
+        } catch {
+            print("can't decode data recieved from \(peer)")
+        }
     }
 }
