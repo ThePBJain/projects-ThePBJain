@@ -33,6 +33,7 @@
 		6A387206219A53EB00CFAFE2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		6AA61E0F21A9E9E1002EE1E0 /* Plane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plane.swift; sourceTree = "<group>"; };
 		6ACA549421AB9A8A0029A160 /* MultipeerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerSession.swift; sourceTree = "<group>"; };
+		6ACA549621ABB2B90029A160 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		6ADDD633218FEDBD00187DA8 /* Model Vision.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Model Vision.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6ADDD636218FEDBD00187DA8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6ADDD638218FEDBD00187DA8 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -67,6 +68,7 @@
 		6ADDD62A218FEDBD00187DA8 = {
 			isa = PBXGroup;
 			children = (
+				6ACA549621ABB2B90029A160 /* README.md */,
 				6ADDD635218FEDBD00187DA8 /* Model Vision */,
 				6ADDD64C218FEDBF00187DA8 /* Model VisionTests */,
 				6ADDD634218FEDBD00187DA8 /* Products */,
