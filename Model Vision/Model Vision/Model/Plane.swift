@@ -5,6 +5,8 @@ Abstract:
 Convenience class for visualizing Plane extent and geometry
 */
 
+//Bulk of plane.swift taken from Apple's ARKit Basics: https://developer.apple.com/documentation/arkit/building_your_first_ar_experience
+
 import ARKit
 
 // Convenience extension for colors defined in asset catalog.
@@ -18,13 +20,19 @@ class Plane: SCNNode {
     let extentNode: SCNNode
     var classificationNode: SCNNode?
     
+    var anchor: ARPlaneAnchor
+    var occlusionNode: SCNNode?
+    let occlusionPlaneVerticalOffset: Float = -0.01  // The occlusion plane should be placed 1 cm below the actual
+    
+    
+    
     /// - Tag: VisualizePlane
     init(anchor: ARPlaneAnchor, in sceneView: ARSCNView) {
         
         #if targetEnvironment(simulator)
         #error("ARKit is not supported in iOS Simulator. Connect a physical iOS device and select it as your Xcode run destination, or select Generic iOS Device as a build-only destination.")
         #else
-
+        self.anchor = anchor
         // Create a mesh to visualize the estimated shape of the plane.
         guard let meshGeometry = ARSCNPlaneGeometry(device: sceneView.device!)
             else { fatalError("Can't create plane geometry") }
@@ -39,15 +47,20 @@ class Plane: SCNNode {
         // `SCNPlane` is vertically oriented in its local coordinate space, so
         // rotate it to match the orientation of `ARPlaneAnchor`.
         extentNode.eulerAngles.x = -.pi / 2
+        
 
         super.init()
 
-        self.setupMeshVisualStyle()
+        
+        //self.setupMeshVisualStyle()
         self.setupExtentVisualStyle()
+        self.createOcclusionNode()
 
         // Add the plane extent and plane geometry as child nodes so they appear in the scene.
-        addChildNode(meshNode)
+        //addChildNode(meshNode)
         addChildNode(extentNode)
+        
+        
         
         // Display the plane's classification, if supported on the device
         if #available(iOS 12.0, *), ARPlaneAnchor.isClassificationSupported {
@@ -66,15 +79,49 @@ class Plane: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupMeshVisualStyle() {
-        // Make the plane visualization semitransparent to clearly show real-world placement.
-        meshNode.opacity = 0.25
-        
-        // Use color and blend mode to make planes stand out.
-        guard let material = meshNode.geometry?.firstMaterial
-            else { fatalError("ARSCNPlaneGeometry always has one material") }
-        material.diffuse.contents = UIColor.planeColor
+    //MARK: - Occlusion
+    
+    func update(_ anchor: ARPlaneAnchor) {
+        self.anchor = anchor
+        updateOcclusionNode()
     }
+
+    
+    func updateOcclusionSetting() {
+        if occlusionNode == nil {
+            createOcclusionNode()
+        }
+    }
+    
+    private func createOcclusionNode() {
+        // Make the occlusion geometry slightly smaller than the plane.
+        let occlusionPlane = SCNPlane(width: CGFloat(anchor.extent.x - 0.05), height: CGFloat(anchor.extent.z - 0.05))
+        let material = SCNMaterial()
+        material.colorBufferWriteMask = []
+        material.isDoubleSided = true
+        occlusionPlane.materials = [material]
+        
+        occlusionNode = SCNNode()
+        occlusionNode!.geometry = occlusionPlane
+        occlusionNode!.transform = SCNMatrix4MakeRotation(-Float.pi / 2.0, 1, 0, 0)
+        occlusionNode!.position = SCNVector3Make(anchor.center.x, occlusionPlaneVerticalOffset, anchor.center.z)
+        occlusionNode!.physicsBody = SCNPhysicsBody(type: .kinematic, shape: SCNPhysicsShape(geometry: occlusionPlane, options: nil))
+        self.addChildNode(occlusionNode!)
+    }
+    
+    private func updateOcclusionNode() {
+        guard let occlusionNode = occlusionNode, let occlusionPlane = occlusionNode.geometry as? SCNPlane else {
+            return
+        }
+        occlusionPlane.width = CGFloat(anchor.extent.x - 0.05)
+        occlusionPlane.height = CGFloat(anchor.extent.z - 0.05)
+        
+        occlusionNode.position = SCNVector3Make(anchor.center.x, occlusionPlaneVerticalOffset, anchor.center.z)
+        occlusionNode.physicsBody = SCNPhysicsBody(type: .kinematic, shape: SCNPhysicsShape(geometry: occlusionPlane, options: nil))
+    }
+    
+    //MARK: - Private
+    
     
     private func setupExtentVisualStyle() {
         // Make the extent visualization semitransparent to clearly show real-world placement.

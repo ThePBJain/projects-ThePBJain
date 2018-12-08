@@ -25,7 +25,7 @@ extension MDLMaterial {
     }
 }
 
-class ViewController: UIViewController, ARSCNViewDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
     var planes : [ARPlaneAnchor] = []
@@ -33,24 +33,40 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var setup = false
     var buttonPressed = false
     var previousPoint: SCNVector3?
+    @IBOutlet weak var shareMapButton: UIButton!
     @IBOutlet weak var drawLineButton: UIButton!
     let lineColor = UIColor.red
     
     var multipeerSession: MultipeerSession!
-    var initalizedWorldMap: Bool = false
+    var initalizedWorldMap: Bool = true
+    var hasSent = false
+    
+    /// Marks if the AR experience is available for restart.
+    var isRestartAvailable = true
+    
+    /// The view controller that displays the status and "restart experience" UI.
+    //taken from apple's best practices guide for arkit: https://developer.apple.com/documentation/arkit/handling_3d_interaction_and_ui_controls_in_augmented_reality
+    lazy var statusViewController: StatusViewController = {
+        return children.lazy.compactMap({ $0 as? StatusViewController }).first!
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.multipeerSession = MultipeerSession(receivedDataHandler: receivedData)
         
         // Set the view's delegate
-        sceneView.delegate = self
+        self.sceneView.delegate = self
+        self.sceneView.session.delegate = self
         
         // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
+        self.sceneView.showsStatistics = true
         
-        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]//[ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
-        
+        self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]//[ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+        // Hook up status view controller callback(s).
+        statusViewController.restartExperienceHandler = { [unowned self] in
+            self.restartExperience()
+        }
         // Load the .OBJ file
         guard let url = Bundle.main.url(forResource: "Fighter", withExtension: "obj", subdirectory: "art.scnassets/xwing") else {
             fatalError("Failed to find model file.")
@@ -77,6 +93,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Wrap the ModelIO object in a SceneKit object
         self.object = object
+        
+        //let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapped(recognizer:)))
+        //sceneView.addGestureRecognizer(tap)
         /*let box = SCNBox(width: 0.2, height: 0.2, length: 0.2, chamferRadius: 0)
         let mat = SCNMaterial()
         mat.diffuse.contents = UIColor.red
@@ -87,6 +106,26 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     
     }
+    func restartExperience() {
+        guard isRestartAvailable else { return }
+        isRestartAvailable = false
+        
+        statusViewController.cancelAllScheduledMessages()
+        
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = [.horizontal, .vertical]
+        if #available(iOS 12.0, *) {
+            configuration.environmentTexturing = .automatic
+        }
+        self.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        
+        statusViewController.scheduleMessage("FIND A SURFACE TO PLACE AN OBJECT", inSeconds: 7.5, messageType: .planeEstimation)
+        
+        // Disable restart for a while in order to give the session time to restart.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            self.isRestartAvailable = true
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -95,14 +134,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         // Run the view's session
-        sceneView.session.run(configuration)
+        self.sceneView.session.run(configuration)
+        statusViewController.scheduleMessage("TRY MOVING LEFT OR RIGHT", inSeconds: 5.0, messageType: .focusSquare)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         // Pause the view's session
-        sceneView.session.pause()
+        self.sceneView.session.pause()
     }
     
 
@@ -114,6 +154,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         guard let planeAnchor = anchor as? ARPlaneAnchor,
             let plane = node.childNodes.first as? Plane
             else { return }
+        
+        plane.update(planeAnchor)
         
         // Update ARSCNPlaneGeometry to the anchor's new estimated shape.
         if let planeGeometry = plane.meshNode.geometry as? ARSCNPlaneGeometry {
@@ -143,9 +185,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         // Place content only for anchors found by plane detection.
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-        
+        self.statusViewController.cancelScheduledMessage(for: .planeEstimation)
+        self.statusViewController.showMessage("SURFACE DETECTED")
         // Create a custom object to visualize the plane geometry and extent.
         let plane = Plane(anchor: planeAnchor, in: sceneView)
+        //plane.updateOcclusionSetting()
         
         // Add the visualization to the ARKit-managed node so that it tracks
         // changes in the plane anchor as plane estimation continues.
@@ -178,14 +222,16 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         switch frame.worldMappingStatus {
         case .notAvailable, .limited:
-            print("unavaliable")
+            self.shareMapButton.isEnabled = false
         case .extending:
             if !multipeerSession.connectedPeers.isEmpty {
-                self.shareSession()
+                self.hasSent = true
+                self.shareMapButton.isEnabled = true
             }
         case .mapped:
-            if !multipeerSession.connectedPeers.isEmpty {
-                self.shareSession()
+            if !multipeerSession.connectedPeers.isEmpty{
+                self.hasSent = true
+                self.shareMapButton.isEnabled = true
             }
         }
     }
@@ -207,12 +253,24 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     // MARK: - Hit Test detection
-    @objc func tapped(recognizer :UITapGestureRecognizer) {
+    @IBAction func tapped(recognizer :UITapGestureRecognizer) {
         let sceneView = recognizer.view as! ARSCNView
         let touchLocation = recognizer.location(in: sceneView)
         let hitResults = sceneView.hitTest(touchLocation, options: [:])
         if !hitResults.isEmpty {
             // this means the node has been touched
+            let hit = hitResults.first
+            let box = SCNBox(width: 0.2, height: 0.2, length: 0.2, chamferRadius: 0)
+            let mat = SCNMaterial()
+            mat.diffuse.contents = UIColor.red
+            box.materials = [mat]
+            let boxNode = SCNNode(geometry: box)
+            boxNode.position = hit?.worldCoordinates ?? SCNVector3(0,0,-0.5)
+            
+            boxNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
+            boxNode.physicsBody?.mass = 2.0
+            //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
+            sceneView.scene.rootNode.addChildNode(boxNode)
         }
     }
     
@@ -232,6 +290,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         if self.buttonPressed {
             if let previousPoint = previousPoint {
+                
                 let lineNode = lineFrom(vector: previousPoint, toVector: currentPosition)
                 //lineNode.position = midpoint(first: previousPoint, second: currentPosition)
                 sceneView.scene.rootNode.addChildNode(lineNode)
@@ -239,12 +298,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     .hitTest(sceneView.center, types: [.existingPlaneUsingGeometry, .estimatedHorizontalPlane])
                     .first
                     else { return }
-                let anchor = sceneView.anchor(for: lineNode)*/
-                
+                let anchor = ARAnchor(name: "line", transform: hitTestResult.worldTransform)
+                sceneView.session.add(anchor: anchor)*/
                 // Send the anchor info to peers, so they can place the same content.
-                guard let data = try? NSKeyedArchiver.archivedData(withRootObject: lineNode, requiringSecureCoding: true)
-                    else { fatalError("can't encode anchor") }
-                self.multipeerSession.sendToAllPeers(data)
+                if !self.multipeerSession.connectedPeers.isEmpty{
+                    guard let data = try? NSKeyedArchiver.archivedData(withRootObject: lineNode, requiringSecureCoding: true)
+                        else { fatalError("can't encode anchor") }
+                    self.multipeerSession.sendToAllPeers(data)
+                }
                 
             }
         }
@@ -255,7 +316,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func lineFrom(vector vector1: SCNVector3, toVector vector2: SCNVector3) -> SCNNode {
-        
+        //switch this to anchors
         let cyl = SCNCylinder(radius: 0.002, height: CGFloat(vector1.distance(to: vector2)))
         //return SCNGeometry(sources: [source], elements: [element])
         let lineNode = SCNNode(geometry: cyl)
@@ -283,16 +344,21 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     //MARK: - Multipeer functions
     
     /// - Tag: GetWorldMap
-    func shareSession() {
+    
+    @IBAction func shareSession(_ sender: Any) {
         sceneView.session.getCurrentWorldMap { worldMap, error in
-            guard let map = worldMap
-                else { print("Error: \(error!.localizedDescription)"); return }
-            guard let data = try? NSKeyedArchiver.archivedData(withRootObject: map, requiringSecureCoding: true)
-                else { fatalError("can't encode map") }
-            self.multipeerSession.sendToAllPeers(data)
-            self.initalizedWorldMap = true
+            DispatchQueue.main.async {
+                guard let map = worldMap
+                    else { print("Error: \(error!.localizedDescription)"); return }
+                guard let data = try? NSKeyedArchiver.archivedData(withRootObject: map, requiringSecureCoding: true)
+                    else { fatalError("can't encode map") }
+                self.multipeerSession.sendToAllPeers(data)
+                self.initalizedWorldMap = true
+            }
+            
         }
     }
+    
     var mapProvider: MCPeerID?
     /// - Tag: ReceiveData
     func receivedData(_ data: Data, from peer: MCPeerID) {
@@ -304,7 +370,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     let configuration = ARWorldTrackingConfiguration()
                     configuration.planeDetection = .horizontal
                     configuration.initialWorldMap = worldMap
-                    sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+                    self.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
                     
                     // Remember who provided the map for showing UI feedback.
                     mapProvider = peer
@@ -316,13 +382,19 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 if let lineNode = try NSKeyedUnarchiver.unarchivedObject(ofClass: SCNNode.self, from: data) {
                     // Add anchor to the session, ARSCNView delegate adds visible content.
                     //sceneView.session.add(anchor: anchor)
-                    sceneView.scene.rootNode.addChildNode(lineNode)
+                    //check that data exists
+                    //put in right location
+                    let cyl = lineNode.geometry as! SCNCylinder
+                    let tranform = lineNode.transform
+                    print("HEIGHT: \(cyl.height), RADIUS: \(cyl.radius)\n TRANSFORM: \(tranform.m41),\(tranform.m42),\(tranform.m43),\(tranform.m44)")
+                    self.sceneView.scene.rootNode.addChildNode(lineNode)
+                    print("Added node to screen")
                 }
                 else {
                     print("unknown data recieved from \(peer)")
             }
         } catch {
-            print("can't decode data recieved from \(peer)")
+            print("can't decode data recieved from \(peer). Was probably lines")
         }
     }
 }

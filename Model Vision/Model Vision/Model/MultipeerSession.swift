@@ -16,7 +16,7 @@ import MultipeerConnectivity
 
 /// - Tag: MultipeerSession
 class MultipeerSession: NSObject {
-    static let serviceType = "pbj-ModelVision"
+    static let serviceType = "pxj5088-MV"
     
     private let myPeerID = MCPeerID(displayName: UIDevice.current.name)
     private var session: MCSession!
