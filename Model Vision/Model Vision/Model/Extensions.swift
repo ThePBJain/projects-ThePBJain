@@ -555,3 +555,39 @@ extension float4x4 {
                   float4(vector.x, vector.y, vector.z, 1))
     }
 }
+
+class Downloader {
+    class func load(url: URL, to localUrl: URL, completion: @escaping () -> ()) {
+        let sessionConfig = URLSessionConfiguration.default
+        let session = URLSession(configuration: sessionConfig)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
+            if let tempLocalUrl = tempLocalUrl, error == nil {
+                // Success
+                if let statusCode = (response as? HTTPURLResponse)?.statusCode {
+                    print("Success: \(statusCode)")
+                }
+                
+                do {
+                    try? FileManager.default.removeItem(at: localUrl)
+                    try FileManager.default.copyItem(at: tempLocalUrl, to: localUrl)
+                    completion()
+                } catch (let writeError) {
+                    print("error writing file \(localUrl) : \(writeError)")
+                    //run anyways if already exists
+                    /*if err.lowercased().contains("exists"){
+                        completion()
+                    }*/
+                    
+                }
+                
+            } else {
+                print("Failure: %@", error?.localizedDescription);
+            }
+        }
+        task.resume()
+    }
+}

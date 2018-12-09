@@ -40,6 +40,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     var multipeerSession: MultipeerSession!
     var initalizedWorldMap: Bool = true
     var hasSent = false
+    var documentsUrl : URL?
     
     /// Marks if the AR experience is available for restart.
     var isRestartAvailable = true
@@ -96,16 +97,35 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         //let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapped(recognizer:)))
         //sceneView.addGestureRecognizer(tap)
-        /*let box = SCNBox(width: 0.2, height: 0.2, length: 0.2, chamferRadius: 0)
-        let mat = SCNMaterial()
-        mat.diffuse.contents = UIColor.red
-        box.materials = [mat]
-        let boxNode = SCNNode(geometry: box)
-        boxNode.position = SCNVector3(0,0,-0.5)
-        self.sceneView.scene.rootNode.addChildNode(boxNode)*/
         
-    
+        configureLighting()
+        guard let newModel = URL(string: "http://nuntagri.com/Fighter.obj") else { fatalError() }
+        var documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        documentsUrl!.appendPathComponent("1.obj")
+        self.documentsUrl = documentsUrl
+        Downloader.load(url: newModel, to: documentsUrl!) {
+            let mdlAsset = MDLAsset(url: documentsUrl!)
+            //MDLObject()
+            mdlAsset.object(at: 0)
+            
+            let node = SCNNode(mdlObject: mdlAsset.object(at: 0))
+            
+            node.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
+            node.physicsBody?.mass = 2.0
+            self.sceneView.scene.rootNode.addChildNode(node)
+            
+        }
+        /*let mdlAsset = MDLAsset(url: documentsUrl!)
+        let scene = SCNScene(mdlAsset: mdlAsset)
+        
+        self.sceneView.scene = scene*/
     }
+    
+    func configureLighting() {
+        sceneView.autoenablesDefaultLighting = true
+        sceneView.automaticallyUpdatesLighting = true
+    }
+    
     func restartExperience() {
         guard isRestartAvailable else { return }
         isRestartAvailable = false
@@ -183,17 +203,31 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        // Place content only for anchors found by plane detection.
-        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-        self.statusViewController.cancelScheduledMessage(for: .planeEstimation)
-        self.statusViewController.showMessage("SURFACE DETECTED")
-        // Create a custom object to visualize the plane geometry and extent.
-        let plane = Plane(anchor: planeAnchor, in: sceneView)
-        //plane.updateOcclusionSetting()
+        if let name = anchor.name, name.hasPrefix("box") {
+            let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
+            let mat = SCNMaterial()
+            mat.diffuse.contents = UIColor.red
+            //mat.lightingModel = .lambert
+            box.materials = [mat]
+            let boxNode = SCNNode(geometry: box)
+            boxNode.simdTransform = anchor.transform
+            boxNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
+            boxNode.physicsBody?.mass = 2.0
+            //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
+            
+            node.addChildNode(boxNode)
+        }else if let planeAnchor = anchor as? ARPlaneAnchor {
+            // Place content only for anchors found by plane detection.
+            self.statusViewController.cancelScheduledMessage(for: .planeEstimation)
+            self.statusViewController.showMessage("SURFACE DETECTED")
+            // Create a custom object to visualize the plane geometry and extent.
+            let plane = Plane(anchor: planeAnchor, in: sceneView)
+            
+            // Add the visualization to the ARKit-managed node so that it tracks
+            // changes in the plane anchor as plane estimation continues.
+            node.addChildNode(plane)
+        }
         
-        // Add the visualization to the ARKit-managed node so that it tracks
-        // changes in the plane anchor as plane estimation continues.
-        node.addChildNode(plane)
     }
     
     
@@ -257,21 +291,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         let sceneView = recognizer.view as! ARSCNView
         let touchLocation = recognizer.location(in: sceneView)
         let hitResults = sceneView.hitTest(touchLocation, options: [:])
-        if !hitResults.isEmpty {
-            // this means the node has been touched
-            let hit = hitResults.first
-            let box = SCNBox(width: 0.2, height: 0.2, length: 0.2, chamferRadius: 0)
-            let mat = SCNMaterial()
-            mat.diffuse.contents = UIColor.red
-            box.materials = [mat]
-            let boxNode = SCNNode(geometry: box)
-            boxNode.position = hit?.worldCoordinates ?? SCNVector3(0,0,-0.5)
+        
+        // Hit test to find a place for a virtual object.
+        /*guard let hitTestResult = sceneView
+            .hitTest(recognizer.location(in: sceneView), types: [.existingPlaneUsingGeometry, .estimatedHorizontalPlane])
+            .first
+            else { return }*/
+        if !hitResults.isEmpty{
+            // Place an anchor for a virtual character. The model appears in renderer(_:didAdd:for:).
+            let hitPosition = hitResults[0].worldCoordinates
             
-            boxNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
-            boxNode.physicsBody?.mass = 2.0
-            //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
-            sceneView.scene.rootNode.addChildNode(boxNode)
+            let matrix = SCNMatrix4Translate(SCNMatrix4Identity, hitPosition.x , hitPosition.y, hitPosition.z)
+            
+            let simd_matrix = simd_float4x4(matrix)
+            let anchor = ARAnchor(name: "box", transform: simd_matrix)
+            self.sceneView.session.add(anchor: anchor)
+            
+            // Send the anchor info to peers, so they can place the same content.
+            guard let data = try? NSKeyedArchiver.archivedData(withRootObject: anchor, requiringSecureCoding: true)
+                else { fatalError("can't encode anchor") }
+            self.multipeerSession.sendToAllPeers(data)
         }
+        
+        
     }
     
     // MARK: - Drawing Lines
@@ -336,6 +378,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
          */
         let transform = SCNMatrix4(m11: x.x, m12: x.y, m13: x.z, m14: 0.0, m21: y.x, m22: y.y, m23: y.z, m24: 0.0, m31: z.x, m32: z.y, m33: z.z, m34: 0.0, m41: vector1.x, m42: vector1.y, m43: vector1.z, m44: 1.0)
         lineNode.transform = SCNMatrix4Mult(SCNMatrix4MakeTranslation(0.0, height / 2.0, 0.0), transform)
+        
         lineNode.geometry?.firstMaterial?.diffuse.contents = lineColor
         return lineNode
         
@@ -364,6 +407,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     func receivedData(_ data: Data, from peer: MCPeerID) {
         
         do {
+            //set to false down the road
             if !self.initalizedWorldMap {
                 if let worldMap = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data) {
                     // Run the session with the received world map.
@@ -386,6 +430,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                     //put in right location
                     let cyl = lineNode.geometry as! SCNCylinder
                     let tranform = lineNode.transform
+                    
                     print("HEIGHT: \(cyl.height), RADIUS: \(cyl.radius)\n TRANSFORM: \(tranform.m41),\(tranform.m42),\(tranform.m43),\(tranform.m44)")
                     self.sceneView.scene.rootNode.addChildNode(lineNode)
                     print("Added node to screen")
