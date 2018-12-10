@@ -51,6 +51,14 @@ class MultipeerSession: NSObject {
         }
     }
     
+    func send(_ data: Data, to peers:[MCPeerID]) {
+        do {
+            try session.send(data, toPeers: session.connectedPeers, with: .reliable)
+        } catch {
+            print("error sending data to peers: \(error.localizedDescription)")
+        }
+    }
+    
     var connectedPeers: [MCPeerID] {
         return session.connectedPeers
     }

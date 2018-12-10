@@ -38,7 +38,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     let lineColor = UIColor.red
     
     var multipeerSession: MultipeerSession!
-    var initalizedWorldMap: Bool = true
+    var initalizedWorldMap: Bool = false
+    var isServer = true
     var hasSent = false
     var documentsUrl : URL?
     
@@ -104,7 +105,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         documentsUrl!.appendPathComponent("1.obj")
         self.documentsUrl = documentsUrl
         Downloader.load(url: newModel, to: documentsUrl!) {
-            let mdlAsset = MDLAsset(url: documentsUrl!)
+            /*let mdlAsset = MDLAsset(url: documentsUrl!)
             //MDLObject()
             mdlAsset.object(at: 0)
             
@@ -112,7 +113,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             
             node.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
             node.physicsBody?.mass = 2.0
-            self.sceneView.scene.rootNode.addChildNode(node)
+            self.sceneView.scene.rootNode.addChildNode(node)*/
             
         }
         /*let mdlAsset = MDLAsset(url: documentsUrl!)
@@ -204,18 +205,38 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         if let name = anchor.name, name.hasPrefix("box") {
+            
             let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
+            //let mdlAsset = MDLAsset(url: documentsUrl!)
+            //let box = SCNGeometry(mdlMesh: mdlAsset.object(at: 0) as! MDLMesh)
             let mat = SCNMaterial()
             mat.diffuse.contents = UIColor.red
             //mat.lightingModel = .lambert
             box.materials = [mat]
             let boxNode = SCNNode(geometry: box)
-            boxNode.simdTransform = anchor.transform
+            //boxNode.simdTransform = anchor.transform
             boxNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
             boxNode.physicsBody?.mass = 2.0
-            //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
+            boxNode.simdWorldTransform = anchor.transform
             
+            //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
+            //self.sceneView.scene.rootNode.addChildNode(boxNode)
             node.addChildNode(boxNode)
+        }else if let name = anchor.name, name.hasPrefix("internet") {
+            
+            let mdlAsset = MDLAsset(url: documentsUrl!)
+            let internetObject = SCNGeometry(mdlMesh: mdlAsset.object(at: 0) as! MDLMesh)
+            let mat = SCNMaterial()
+            mat.diffuse.contents = UIColor.red
+            internetObject.materials = [mat]
+            let internetNode = SCNNode(geometry: internetObject)
+            //boxNode.simdTransform = anchor.transform
+            internetNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
+            internetNode.physicsBody?.mass = 2.0
+            internetNode.simdWorldTransform = anchor.transform
+            
+            //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
+            node.addChildNode(internetNode)
         }else if let planeAnchor = anchor as? ARPlaneAnchor {
             // Place content only for anchors found by plane detection.
             self.statusViewController.cancelScheduledMessage(for: .planeEstimation)
@@ -310,7 +331,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             // Send the anchor info to peers, so they can place the same content.
             guard let data = try? NSKeyedArchiver.archivedData(withRootObject: anchor, requiringSecureCoding: true)
                 else { fatalError("can't encode anchor") }
+            //self.multipeerSession.send(data, to: [mapProvider!])
             self.multipeerSession.sendToAllPeers(data)
+            print("Peers#: \(self.multipeerSession.connectedPeers.count)")
         }
         
         
@@ -418,26 +441,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                     
                     // Remember who provided the map for showing UI feedback.
                     mapProvider = peer
+                    self.isServer = false
                     self.initalizedWorldMap = true
                     
                 }
             }
             else
-                if let lineNode = try NSKeyedUnarchiver.unarchivedObject(ofClass: SCNNode.self, from: data) {
+                if let lineNode = try? NSKeyedUnarchiver.unarchivedObject(ofClass: SCNNode.self, from: data) {
                     // Add anchor to the session, ARSCNView delegate adds visible content.
                     //sceneView.session.add(anchor: anchor)
                     //check that data exists
                     //put in right location
-                    let cyl = lineNode.geometry as! SCNCylinder
-                    let tranform = lineNode.transform
-                    
-                    print("HEIGHT: \(cyl.height), RADIUS: \(cyl.radius)\n TRANSFORM: \(tranform.m41),\(tranform.m42),\(tranform.m43),\(tranform.m44)")
-                    self.sceneView.scene.rootNode.addChildNode(lineNode)
+                    self.sceneView.scene.rootNode.addChildNode(lineNode!)
                     print("Added node to screen")
-                }
-                else {
+                }else if let boxAnchor = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARAnchor.self, from: data) {
+                    sceneView.session.add(anchor: boxAnchor)
+                }else{
                     print("unknown data recieved from \(peer)")
-            }
+                }
         } catch {
             print("can't decode data recieved from \(peer). Was probably lines")
         }
