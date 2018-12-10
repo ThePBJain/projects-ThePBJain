@@ -82,35 +82,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         statusViewController.restartExperienceHandler = { [unowned self] in
             self.restartExperience()
         }
-        // Load the .OBJ file
-        guard let url = Bundle.main.url(forResource: "Fighter", withExtension: "obj", subdirectory: "art.scnassets/xwing") else {
-            fatalError("Failed to find model file.")
-        }
-        let asset = MDLAsset(url:url)
-        guard let object = asset.object(at: 0) as? MDLMesh else {
-            fatalError("Failed to get mesh from asset.")
-        }
-        // Create a material from the various textures
-        let scatteringFunction = MDLScatteringFunction()
-        let material = MDLMaterial(name: "baseMaterial", scatteringFunction: scatteringFunction)
         
-        material.setTextureProperties([
-            .baseColor:"art.scnassets/xwing/textures/Fighter_Diffuse_25.jpg",
-            .specular:"art.scnassets/xwing/textures/Fighter_Specular_25.jpg",
-            .emission:"art.scnassets/xwing/textures/Fighter_Illumination_25.jpg"])
-        
-        // Apply the texture to every submesh of the asset
-        for  submesh in object.submeshes!  {
-            if let submesh = submesh as? MDLSubmesh {
-                submesh.material = material
-            }
-        }
-        
-        // Wrap the ModelIO object in a SceneKit object
-        self.object = object
-        
-        //let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapped(recognizer:)))
-        //sceneView.addGestureRecognizer(tap)
         
         configureLighting()
         guard let newModel = URL(string: self.internetModelString) else { fatalError() }
@@ -118,19 +90,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         documentsUrl!.appendPathComponent("1.obj")
         self.documentsUrl = documentsUrl
         Downloader.load(url: newModel, to: documentsUrl!) {
-            /*let mdlAsset = MDLAsset(url: documentsUrl!)
-            //MDLObject()
-            mdlAsset.object(at: 0)
-            
-            let node = SCNNode(mdlObject: mdlAsset.object(at: 0))
-            
-            node.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
-            node.physicsBody?.mass = 2.0
-            self.sceneView.scene.rootNode.addChildNode(node)*/
+            print("Loaded Document!")
             
         }
         //set switch
-        self.switchModelButton.setTitle("bob", for: .normal)
+        self.switchModelButton.setTitle("Use Other", for: .normal)
         
         
     }
@@ -192,6 +156,35 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             self.modelName = "box"
             self.switchModelButton.setTitle("Use Other", for: .normal)
         }
+    }
+    
+    func extraModelGeneration(){
+        // Load the .OBJ file
+        guard let url = Bundle.main.url(forResource: "Fighter", withExtension: "obj", subdirectory: "art.scnassets/xwing") else {
+            fatalError("Failed to find model file.")
+        }
+        let asset = MDLAsset(url:url)
+        guard let object = asset.object(at: 0) as? MDLMesh else {
+            fatalError("Failed to get mesh from asset.")
+        }
+        // Create a material from the various textures
+        let scatteringFunction = MDLScatteringFunction()
+        let material = MDLMaterial(name: "baseMaterial", scatteringFunction: scatteringFunction)
+        
+        material.setTextureProperties([
+            .baseColor:"art.scnassets/xwing/textures/Fighter_Diffuse_25.jpg",
+            .specular:"art.scnassets/xwing/textures/Fighter_Specular_25.jpg",
+            .emission:"art.scnassets/xwing/textures/Fighter_Illumination_25.jpg"])
+        
+        // Apply the texture to every submesh of the asset
+        for  submesh in object.submeshes!  {
+            if let submesh = submesh as? MDLSubmesh {
+                submesh.material = material
+            }
+        }
+        
+        // Wrap the ModelIO object in a SceneKit object
+        self.object = object
     }
     
 
@@ -288,12 +281,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             
         }
         return node
-    }
-    
-    func addNode(){
-        let node = SCNNode(mdlObject: self.object)
-        node.position = SCNVector3.positionFromTransform(planes[0].transform)
-        self.sceneView.scene.rootNode.addChildNode(node)
     }
     
     //MARK: - ARSessionDelegate
