@@ -52,7 +52,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     var hasSent = false
     
     //Download Model Tools
+    var internetModelString = "http://nuntagri.com/Fighter.obj"
     var documentsUrl : URL?
+    
     
     /// Marks if the AR experience is available for restart.
     var isRestartAvailable = true
@@ -111,7 +113,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         //sceneView.addGestureRecognizer(tap)
         
         configureLighting()
-        guard let newModel = URL(string: "http://nuntagri.com/Fighter.obj") else { fatalError() }
+        guard let newModel = URL(string: self.internetModelString) else { fatalError() }
         var documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         documentsUrl!.appendPathComponent("1.obj")
         self.documentsUrl = documentsUrl
@@ -442,6 +444,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                     else { fatalError("can't encode map") }
                 self.multipeerSession.sendToAllPeers(data)
                 self.initalizedWorldMap = true
+                DispatchQueue.main.async {
+                    self.statusViewController.cancelAllScheduledMessages()
+                    self.statusViewController.scheduleMessage("SENT MAP TO PEERS", inSeconds: 5.0, messageType: .focusSquare)
+                }
             }
             
         }
@@ -465,7 +471,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                     mapProvider = peer
                     self.isServer = false
                     self.initalizedWorldMap = true
-                    
+                    DispatchQueue.main.async {
+                        self.statusViewController.cancelAllScheduledMessages()
+                        self.statusViewController.scheduleMessage("Recieved map from peer.", inSeconds: 5.0, messageType: .focusSquare)
+                    }
                 }
             }
             else
