@@ -26,21 +26,32 @@ extension MDLMaterial {
 }
 
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
-
+    
+    //scene requirements
     @IBOutlet var sceneView: ARSCNView!
     var planes : [ARPlaneAnchor] = []
+    
+    //line generation and object setup
     var object : MDLMesh!
-    var setup = false
     var buttonPressed = false
     var previousPoint: SCNVector3?
+    
+    //buttons
     @IBOutlet weak var shareMapButton: UIButton!
     @IBOutlet weak var drawLineButton: UIButton!
+    @IBOutlet weak var switchModelButton: UIButton!
+    
+    //Model Tools
+    var modelName = "box"
     let lineColor = UIColor.red
     
+    //Multipeer tools
     var multipeerSession: MultipeerSession!
     var initalizedWorldMap: Bool = false
     var isServer = true
     var hasSent = false
+    
+    //Download Model Tools
     var documentsUrl : URL?
     
     /// Marks if the AR experience is available for restart.
@@ -116,10 +127,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             self.sceneView.scene.rootNode.addChildNode(node)*/
             
         }
-        /*let mdlAsset = MDLAsset(url: documentsUrl!)
-        let scene = SCNScene(mdlAsset: mdlAsset)
+        //set switch
+        self.switchModelButton.setTitle("bob", for: .normal)
         
-        self.sceneView.scene = scene*/
+        
     }
     
     func configureLighting() {
@@ -164,6 +175,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         // Pause the view's session
         self.sceneView.session.pause()
+    }
+    
+    // MARK: - Switch Models
+    
+    
+    @IBAction func switchModel(_ sender: Any) {
+        if self.modelName == "box" {
+            //model is currently "box"
+            self.modelName = "internet"
+            self.switchModelButton.setTitle("Use Box", for: .normal)
+        }else{
+            //model is currently "internet"
+            self.modelName = "box"
+            self.switchModelButton.setTitle("Use Other", for: .normal)
+        }
     }
     
 
@@ -257,10 +283,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         let node = SCNNode()
         if let planeAnchor = anchor as? ARPlaneAnchor {
             planes.append(planeAnchor)
-            if !setup {
-                self.setup = true
-                //self.addNode()
-            }
             
         }
         return node
@@ -325,7 +347,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             let matrix = SCNMatrix4Translate(SCNMatrix4Identity, hitPosition.x , hitPosition.y, hitPosition.z)
             
             let simd_matrix = simd_float4x4(matrix)
-            let anchor = ARAnchor(name: "box", transform: simd_matrix)
+            let anchor = ARAnchor(name: self.modelName, transform: simd_matrix)
             self.sceneView.session.add(anchor: anchor)
             
             // Send the anchor info to peers, so they can place the same content.
