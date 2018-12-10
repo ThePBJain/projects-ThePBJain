@@ -10,7 +10,8 @@ Run on two devices, First device that starts will be master, any lines it draws 
 1. You may have to change the signing certificate for the app as I used a weird one.
 
 ## Actions to Do
-- Map surroundings to generate planes (flat surfaces) on both devices
+- Move device around to map surroundings to generate planes (flat surfaces) on both devices
+- Map floor as well
 - When share button is enabled, press it (should see message on top left when successfully shared)
 - Tap on a plane (any flat surface on screen) and you should see a red box appear (should also appear on other device if pressed share button before)
 - Should also see boxes move around and fall if not on a plane/surface. (May see boxes "fall out of the world" if you haven't fully mapped area)
