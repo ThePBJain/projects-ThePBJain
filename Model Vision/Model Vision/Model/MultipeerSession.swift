@@ -13,7 +13,7 @@
  */
 
 import MultipeerConnectivity
-
+//TODO: talk about Multipeer Connectivity - 1
 /// - Tag: MultipeerSession
 class MultipeerSession: NSObject {
     static let serviceType = "pxj5088-MV"
@@ -27,22 +27,23 @@ class MultipeerSession: NSObject {
     
     /// - Tag: MultipeerSetup
     init(receivedDataHandler: @escaping (Data, MCPeerID) -> Void ) {
+        //TODO: talk about Multipeer Connectivity - 1
         self.receivedDataHandler = receivedDataHandler
         
         super.init()
         
         session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .required)
         session.delegate = self
-        
+        //TODO: talk about Multipeer Connectivity - 1.1
         serviceAdvertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: nil, serviceType: MultipeerSession.serviceType)
         serviceAdvertiser.delegate = self
         serviceAdvertiser.startAdvertisingPeer()
-        
+        //TODO: talk about Multipeer Connectivity - 1.2
         serviceBrowser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: MultipeerSession.serviceType)
         serviceBrowser.delegate = self
         serviceBrowser.startBrowsingForPeers()
     }
-    
+    //TODO: talk about Multipeer Connectivity - 1.3
     func sendToAllPeers(_ data: Data) {
         do {
             try session.send(data, toPeers: session.connectedPeers, with: .reliable)
@@ -63,7 +64,7 @@ class MultipeerSession: NSObject {
         return session.connectedPeers
     }
 }
-
+//TODO: talk about Multipeer Connectivity - 1.4
 extension MultipeerSession: MCSessionDelegate {
     
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
@@ -71,6 +72,7 @@ extension MultipeerSession: MCSessionDelegate {
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
+        //TODO: talk about Multipeer Connectivity - 1.5
         receivedDataHandler(data, peerID)
     }
     
@@ -89,7 +91,7 @@ extension MultipeerSession: MCSessionDelegate {
 }
 
 extension MultipeerSession: MCNearbyServiceBrowserDelegate {
-    
+    //TODO: talk about Multipeer Connectivity - Related to 1.2
     /// - Tag: FoundPeer
     public func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String: String]?) {
         // Invite the new peer to the session.
@@ -103,7 +105,7 @@ extension MultipeerSession: MCNearbyServiceBrowserDelegate {
 }
 
 extension MultipeerSession: MCNearbyServiceAdvertiserDelegate {
-    
+    //TODO: talk about Multipeer Connectivity - Related to 1.1
     /// - Tag: AcceptInvite
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         // Call handler to accept invitation and join the session.

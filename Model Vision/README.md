@@ -19,3 +19,7 @@ Run on two devices, First device that starts will be master, any lines it draws 
 -  Press the "Use Other" button. Now when you tap on screen it will load an X-wing model from the internet, paint it red and let it slowly float down away. This will occur in the direction of when you first run the app as loading models through the internet did not work properly as normal objects did. 
 - The button should now say "Use Box", if you press on that, it will go back to placing red boxes around the playing field.
 - Look around with the lines and the boxes. You'll see that at the right angle, the boxes and lines get hidden by the planes (which represents the surface under it) because of occlusion
+
+
+## Notes:
+- Once objects are placed, their physics is independent of devices. I.e each device processes the physics that happens on the object by itself. Therefore it is possible for objects to drift away or even diappear on certain devices.

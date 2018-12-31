@@ -27,6 +27,7 @@ extension MDLMaterial {
 
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
+    //MARK: - Variables
     //scene requirements
     @IBOutlet var sceneView: ARSCNView!
     var planes : [ARPlaneAnchor] = []
@@ -52,7 +53,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     var hasSent = false
     
     //Download Model Tools
-    var internetModelString = "http://nuntagri.com/Fighter.obj"
+    var internetModelString = "http://nuntagri.com/Lowpoly_Notebook_2.obj"
     var documentsUrl : URL?
     
     
@@ -64,6 +65,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     lazy var statusViewController: StatusViewController = {
         return children.lazy.compactMap({ $0 as? StatusViewController }).first!
     }()
+    
+    //MARK: - Main Setup
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,6 +88,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         
         configureLighting()
+        //TODO: Talk about this and show downloader (Why these models are hard to import)
         guard let newModel = URL(string: self.internetModelString) else { fatalError() }
         var documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         documentsUrl!.appendPathComponent("1.obj")
@@ -125,6 +129,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         }
     }
     
+    //TODO: Talk about this
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -189,7 +194,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
 
     // MARK: - ARSCNViewDelegate
-    
 
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         // Update only anchors and nodes set up by `renderer(_:didAdd:for:)`.
@@ -223,7 +227,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         }
         
     }
-    
+    //TODO: talk about Multipeer Connectivity - 3
+    //adding anchors and nodes
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         if let name = anchor.name, name.hasPrefix("box") {
             
@@ -284,7 +289,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     //MARK: - ARSessionDelegate
-    
+    //TODO: Talk about this
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         switch frame.worldMappingStatus {
         case .notAvailable, .limited:
@@ -319,6 +324,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     // MARK: - Hit Test detection
+    //TODO: Talk about this
     @IBAction func tapped(recognizer :UITapGestureRecognizer) {
         let sceneView = recognizer.view as! ARSCNView
         let touchLocation = recognizer.location(in: sceneView)
@@ -361,6 +367,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         guard let pointOfView = sceneView.pointOfView else { return }
         
         let mat = pointOfView.transform
+        //TODO: explain how you convert World to camera coords
+        // Cam coords = R*C*(worldcoords) (matrix multiplication)
         let dir = SCNVector3(-1 * mat.m31, -1 * mat.m32, -1 * mat.m33)
         let currentPosition = pointOfView.position + (dir * 0.1)
         
@@ -391,12 +399,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         return SCNVector3Make((first.x + second.x) / 2, (first.y + second.y) / 2, (first.z + second.z) / 2)
     }
     
+    //TODO: Talk about this
     func lineFrom(vector vector1: SCNVector3, toVector vector2: SCNVector3) -> SCNNode {
         //switch this to anchors
         let cyl = SCNCylinder(radius: 0.002, height: CGFloat(vector1.distance(to: vector2)))
         //return SCNGeometry(sources: [source], elements: [element])
         let lineNode = SCNNode(geometry: cyl)
         //lineNode.position = midpoint(first: previousPoint, second: currentPosition)
+        //TODO: Describe the matrix transforms to get this done (right hand rule)
         let distDiff = vector2 - vector1
         let height = distDiff.length()
         let y = distDiff.normalized()
@@ -420,8 +430,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     //MARK: - Multipeer functions
     
-    /// - Tag: GetWorldMap
-    
+    //TODO: talk about Multipeer Connectivity - 2
+    //initalizing shared data
     @IBAction func shareSession(_ sender: Any) {
         sceneView.session.getCurrentWorldMap { worldMap, error in
             DispatchQueue.main.async {
@@ -441,6 +451,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     var mapProvider: MCPeerID?
+    //TODO: talk about Multipeer Connectivity - Reciving data
     /// - Tag: ReceiveData
     func receivedData(_ data: Data, from peer: MCPeerID) {
         
