@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SceneKit
 import ARKit
 import ModelIO
 import SceneKit.ModelIO
@@ -25,7 +24,7 @@ extension MDLMaterial {
     }
 }
 
-class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate {
     
     //MARK: - Variables
     //scene requirements
@@ -51,6 +50,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     var initalizedWorldMap: Bool = false
     var isServer = true
     var hasSent = false
+    var mapProvider: MCPeerID?
     
     //Download Model Tools
     var internetModelString = "http://nuntagri.com/Lowpoly_Notebook_2.obj"
@@ -59,6 +59,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     /// Marks if the AR experience is available for restart.
     var isRestartAvailable = true
+    
+    var classifier : Classification!
     
     /// The view controller that displays the status and "restart experience" UI.
     //taken from apple's best practices guide for arkit: https://developer.apple.com/documentation/arkit/handling_3d_interaction_and_ui_controls_in_augmented_reality
@@ -71,6 +73,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //setup Classifier
+        self.classifier = Classification(statusController: self.statusViewController)
+        
+        //setup multipeer connectivity
         self.multipeerSession = MultipeerSession(receivedDataHandler: receivedData)
         
         // Set the view's delegate
@@ -121,15 +127,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         }
         self.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
         
+        //remove draw lines
+        self.sceneView.scene.rootNode.enumerateChildNodes{ (child, _) in
+            child.removeFromParentNode()
+            
+        }
         statusViewController.scheduleMessage("FIND A SURFACE TO PLACE AN OBJECT", inSeconds: 7.5, messageType: .planeEstimation)
         
         // Disable restart for a while in order to give the session time to restart.
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
             self.isRestartAvailable = true
         }
+        //TODO: send the reset to peers somehow
     }
     
-    //TODO: Talk about this
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -227,7 +238,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         }
         
     }
-    //TODO: talk about Multipeer Connectivity - 3
     //adding anchors and nodes
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         if let name = anchor.name, name.hasPrefix("box") {
@@ -254,10 +264,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             let internetObject = SCNGeometry(mdlMesh: mdlAsset.object(at: 0) as! MDLMesh)
             let mat = SCNMaterial()
             mat.diffuse.contents = UIColor.red
+            //mat.colorBufferWriteMask = []
+            //mat.isDoubleSided = true
             internetObject.materials = [mat]
             let internetNode = SCNNode(geometry: internetObject)
             //boxNode.simdTransform = anchor.transform
-            internetNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
+            internetNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
             internetNode.physicsBody?.mass = 2.0
             internetNode.simdWorldTransform = anchor.transform
             
@@ -265,8 +277,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             node.addChildNode(internetNode)
         }else if let planeAnchor = anchor as? ARPlaneAnchor {
             // Place content only for anchors found by plane detection.
-            self.statusViewController.cancelScheduledMessage(for: .planeEstimation)
-            self.statusViewController.showMessage("SURFACE DETECTED")
+            //self.statusViewController.cancelScheduledMessage(for: .planeEstimation)
+            //self.statusViewController.showMessage("SURFACE DETECTED")
             // Create a custom object to visualize the plane geometry and extent.
             let plane = Plane(anchor: planeAnchor, in: sceneView)
             
@@ -288,40 +300,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         return node
     }
     
-    //MARK: - ARSessionDelegate
-    //TODO: Talk about this
-    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        switch frame.worldMappingStatus {
-        case .notAvailable, .limited:
-            self.shareMapButton.isEnabled = false
-        case .extending:
-            if !multipeerSession.connectedPeers.isEmpty {
-                self.hasSent = true
-                self.shareMapButton.isEnabled = true
-            }
-        case .mapped:
-            if !multipeerSession.connectedPeers.isEmpty{
-                self.hasSent = true
-                self.shareMapButton.isEnabled = true
-            }
-        }
-    }
-
     
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        // Present an error message to the user
-        
-    }
-    
-    func sessionWasInterrupted(_ session: ARSession) {
-        // Inform the user that the session has been interrupted, for example, by presenting an overlay
-        
-    }
-    
-    func sessionInterruptionEnded(_ session: ARSession) {
-        // Reset tracking and/or remove existing anchors if consistent tracking is required
-        
-    }
     
     // MARK: - Hit Test detection
     //TODO: Talk about this
@@ -356,140 +335,5 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
     }
     
-    // MARK: - Drawing Lines
-    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        DispatchQueue.main.async {
-            self.buttonPressed = self.drawLineButton.isHighlighted
-        }
-    }
-    func renderer(_ renderer: SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: TimeInterval) {
-        
-        guard let pointOfView = sceneView.pointOfView else { return }
-        
-        let mat = pointOfView.transform
-        //TODO: explain how you convert World to camera coords
-        // Cam coords = R*C*(worldcoords) (matrix multiplication)
-        let dir = SCNVector3(-1 * mat.m31, -1 * mat.m32, -1 * mat.m33)
-        let currentPosition = pointOfView.position + (dir * 0.1)
-        
-        if self.buttonPressed {
-            if let previousPoint = previousPoint {
-                
-                let lineNode = lineFrom(vector: previousPoint, toVector: currentPosition)
-                //lineNode.position = midpoint(first: previousPoint, second: currentPosition)
-                sceneView.scene.rootNode.addChildNode(lineNode)
-                /*guard let hitTestResult = sceneView
-                    .hitTest(sceneView.center, types: [.existingPlaneUsingGeometry, .estimatedHorizontalPlane])
-                    .first
-                    else { return }
-                let anchor = ARAnchor(name: "line", transform: hitTestResult.worldTransform)
-                sceneView.session.add(anchor: anchor)*/
-                // Send the anchor info to peers, so they can place the same content.
-                if !self.multipeerSession.connectedPeers.isEmpty{
-                    guard let data = try? NSKeyedArchiver.archivedData(withRootObject: lineNode, requiringSecureCoding: true)
-                        else { fatalError("can't encode anchor") }
-                    self.multipeerSession.sendToAllPeers(data)
-                }
-                
-            }
-        }
-        previousPoint = currentPosition
-    }
-    func midpoint(first: SCNVector3, second: SCNVector3) -> SCNVector3 {
-        return SCNVector3Make((first.x + second.x) / 2, (first.y + second.y) / 2, (first.z + second.z) / 2)
-    }
     
-    //TODO: Talk about this
-    func lineFrom(vector vector1: SCNVector3, toVector vector2: SCNVector3) -> SCNNode {
-        //switch this to anchors
-        let cyl = SCNCylinder(radius: 0.002, height: CGFloat(vector1.distance(to: vector2)))
-        //return SCNGeometry(sources: [source], elements: [element])
-        let lineNode = SCNNode(geometry: cyl)
-        //lineNode.position = midpoint(first: previousPoint, second: currentPosition)
-        //TODO: Describe the matrix transforms to get this done (right hand rule)
-        let distDiff = vector2 - vector1
-        let height = distDiff.length()
-        let y = distDiff.normalized()
-        let up = distDiff.cross(vector2).normalized()
-        let x = y.cross(up).normalized()
-        let z = x.cross(y).normalized()
-        
-        /* Matrix transform
-         x.x  x.y  x.z  0
-         y.x  y.y  y.z  0
-         z.x  z.y  z.z  0
-         w.x  w.y  w.z  1
-         */
-        let transform = SCNMatrix4(m11: x.x, m12: x.y, m13: x.z, m14: 0.0, m21: y.x, m22: y.y, m23: y.z, m24: 0.0, m31: z.x, m32: z.y, m33: z.z, m34: 0.0, m41: vector1.x, m42: vector1.y, m43: vector1.z, m44: 1.0)
-        lineNode.transform = SCNMatrix4Mult(SCNMatrix4MakeTranslation(0.0, height / 2.0, 0.0), transform)
-        
-        lineNode.geometry?.firstMaterial?.diffuse.contents = lineColor
-        return lineNode
-        
-    }
-    
-    //MARK: - Multipeer functions
-    
-    //TODO: talk about Multipeer Connectivity - 2
-    //initalizing shared data
-    @IBAction func shareSession(_ sender: Any) {
-        sceneView.session.getCurrentWorldMap { worldMap, error in
-            DispatchQueue.main.async {
-                guard let map = worldMap
-                    else { print("Error: \(error!.localizedDescription)"); return }
-                guard let data = try? NSKeyedArchiver.archivedData(withRootObject: map, requiringSecureCoding: true)
-                    else { fatalError("can't encode map") }
-                self.multipeerSession.sendToAllPeers(data)
-                self.initalizedWorldMap = true
-                DispatchQueue.main.async {
-                    self.statusViewController.cancelAllScheduledMessages()
-                    self.statusViewController.scheduleMessage("SENT MAP TO PEERS", inSeconds: 5.0, messageType: .focusSquare)
-                }
-            }
-            
-        }
-    }
-    
-    var mapProvider: MCPeerID?
-    //TODO: talk about Multipeer Connectivity - Reciving data
-    /// - Tag: ReceiveData
-    func receivedData(_ data: Data, from peer: MCPeerID) {
-        
-        do {
-            //set to false down the road
-            if !self.initalizedWorldMap {
-                if let worldMap = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data) {
-                    // Run the session with the received world map.
-                    let configuration = ARWorldTrackingConfiguration()
-                    configuration.planeDetection = .horizontal
-                    configuration.initialWorldMap = worldMap
-                    self.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-                    
-                    // Remember who provided the map for showing UI feedback.
-                    mapProvider = peer
-                    self.isServer = false
-                    self.initalizedWorldMap = true
-                    DispatchQueue.main.async {
-                        self.statusViewController.cancelAllScheduledMessages()
-                        self.statusViewController.scheduleMessage("Recieved map from peer.", inSeconds: 5.0, messageType: .focusSquare)
-                    }
-                }
-            }
-            else
-                if let lineNode = try? NSKeyedUnarchiver.unarchivedObject(ofClass: SCNNode.self, from: data) {
-                    // Add anchor to the session, ARSCNView delegate adds visible content.
-                    //sceneView.session.add(anchor: anchor)
-                    //check that data exists
-                    //put in right location
-                    self.sceneView.scene.rootNode.addChildNode(lineNode!)
-                    print("Added node to screen")
-                }else if let boxAnchor = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARAnchor.self, from: data) {
-                    sceneView.session.add(anchor: boxAnchor)
-                }else{
-                    print("unknown data recieved from \(peer)")
-                }
-        } catch {
-            print("can't decode data recieved from \(peer). Was probably lines")
-        }
-    }
 }

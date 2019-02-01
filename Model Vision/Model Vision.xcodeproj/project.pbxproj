@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		6A34B35821ADEB0800D14E62 /* StatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B35721ADEB0800D14E62 /* StatusViewController.swift */; };
 		6A387207219A53EB00CFAFE2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A387206219A53EB00CFAFE2 /* Extensions.swift */; };
+		6A8C61ED21F17B2F00A1F684 /* Inceptionv3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 6A8C61EC21F17B2F00A1F684 /* Inceptionv3.mlmodel */; };
+		6A919C0621DFDE4800DAA241 /* VisionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A919C0521DFDE4800DAA241 /* VisionExtension.swift */; };
+		6A919C0821DFE67600DAA241 /* ARSessionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A919C0721DFE67600DAA241 /* ARSessionExtension.swift */; };
+		6A919C0A21DFE94200DAA241 /* DrawLineExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A919C0921DFE94200DAA241 /* DrawLineExtension.swift */; };
+		6A919C0C21DFEA2F00DAA241 /* MultipeerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A919C0B21DFEA2F00DAA241 /* MultipeerExtension.swift */; };
 		6AA61E1021A9E9E1002EE1E0 /* Plane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA61E0F21A9E9E1002EE1E0 /* Plane.swift */; };
 		6ACA549521AB9A8A0029A160 /* MultipeerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ACA549421AB9A8A0029A160 /* MultipeerSession.swift */; };
 		6ADDD637218FEDBD00187DA8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ADDD636218FEDBD00187DA8 /* AppDelegate.swift */; };
@@ -33,6 +38,11 @@
 /* Begin PBXFileReference section */
 		6A34B35721ADEB0800D14E62 /* StatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewController.swift; sourceTree = "<group>"; };
 		6A387206219A53EB00CFAFE2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		6A8C61EC21F17B2F00A1F684 /* Inceptionv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = Inceptionv3.mlmodel; sourceTree = "<group>"; };
+		6A919C0521DFDE4800DAA241 /* VisionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionExtension.swift; sourceTree = "<group>"; };
+		6A919C0721DFE67600DAA241 /* ARSessionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSessionExtension.swift; sourceTree = "<group>"; };
+		6A919C0921DFE94200DAA241 /* DrawLineExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawLineExtension.swift; sourceTree = "<group>"; };
+		6A919C0B21DFEA2F00DAA241 /* MultipeerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerExtension.swift; sourceTree = "<group>"; };
 		6AA61E0F21A9E9E1002EE1E0 /* Plane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plane.swift; sourceTree = "<group>"; };
 		6ACA549421AB9A8A0029A160 /* MultipeerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerSession.swift; sourceTree = "<group>"; };
 		6ACA549621ABB2B90029A160 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -89,9 +99,9 @@
 		6ADDD635218FEDBD00187DA8 /* Model Vision */ = {
 			isa = PBXGroup;
 			children = (
+				6ADDD658218FEE3100187DA8 /* Model */,
 				6ADDD65A218FEE4400187DA8 /* Controller */,
 				6ADDD659218FEE3F00187DA8 /* View */,
-				6ADDD658218FEE3100187DA8 /* Model */,
 				6ADDD636218FEDBD00187DA8 /* AppDelegate.swift */,
 				6ADDD644218FEDBF00187DA8 /* Info.plist */,
 			);
@@ -110,6 +120,7 @@
 		6ADDD658218FEE3100187DA8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				6A8C61EC21F17B2F00A1F684 /* Inceptionv3.mlmodel */,
 				6AA61E0F21A9E9E1002EE1E0 /* Plane.swift */,
 				6A387206219A53EB00CFAFE2 /* Extensions.swift */,
 				6ACA549421AB9A8A0029A160 /* MultipeerSession.swift */,
@@ -132,7 +143,11 @@
 			isa = PBXGroup;
 			children = (
 				6ADDD63A218FEDBD00187DA8 /* ViewController.swift */,
+				6A919C0521DFDE4800DAA241 /* VisionExtension.swift */,
 				6A34B35721ADEB0800D14E62 /* StatusViewController.swift */,
+				6A919C0721DFE67600DAA241 /* ARSessionExtension.swift */,
+				6A919C0921DFE94200DAA241 /* DrawLineExtension.swift */,
+				6A919C0B21DFEA2F00DAA241 /* MultipeerExtension.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -239,12 +254,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A8C61ED21F17B2F00A1F684 /* Inceptionv3.mlmodel in Sources */,
 				6ADDD63B218FEDBD00187DA8 /* ViewController.swift in Sources */,
+				6A919C0621DFDE4800DAA241 /* VisionExtension.swift in Sources */,
+				6A919C0A21DFE94200DAA241 /* DrawLineExtension.swift in Sources */,
 				6A387207219A53EB00CFAFE2 /* Extensions.swift in Sources */,
 				6ACA549521AB9A8A0029A160 /* MultipeerSession.swift in Sources */,
+				6A919C0C21DFEA2F00DAA241 /* MultipeerExtension.swift in Sources */,
 				6AA61E1021A9E9E1002EE1E0 /* Plane.swift in Sources */,
 				6A34B35821ADEB0800D14E62 /* StatusViewController.swift in Sources */,
 				6ADDD637218FEDBD00187DA8 /* AppDelegate.swift in Sources */,
+				6A919C0821DFE67600DAA241 /* ARSessionExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
