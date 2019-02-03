@@ -104,7 +104,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
         }
         //set switch
-        self.switchModelButton.setTitle("Use Other", for: .normal)
+        self.switchModelButton.setTitle("Use Drone", for: .normal)
         
         
     }
@@ -146,6 +146,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
+        guard let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: "gallery", bundle: nil) else {
+            fatalError("Missing expected asset catalog resources.")
+        }
+        configuration.detectionObjects = referenceObjects
         configuration.planeDetection = [.horizontal, .vertical]
         // Run the view's session
         self.sceneView.session.run(configuration)
@@ -165,13 +169,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBAction func switchModel(_ sender: Any) {
         if self.modelName == "box" {
             //model is currently "box"
+            self.modelName = "drone"
+            self.switchModelButton.setTitle("Use Other", for: .normal)
+        }else if self.modelName == "drone" {
             self.modelName = "internet"
             self.switchModelButton.setTitle("Use Box", for: .normal)
         }else{
             //model is currently "internet"
             self.modelName = "box"
-            self.switchModelButton.setTitle("Use Other", for: .normal)
+            self.switchModelButton.setTitle("Use Drone", for: .normal)
         }
+        
     }
     
     func extraModelGeneration(){
@@ -240,6 +248,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     //adding anchors and nodes
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        if let objectAnchor = anchor as? ARObjectAnchor {
+            let referenceObj = objectAnchor.referenceObject
+            let scale = CGFloat(referenceObj.scale.x)
+            
+            node.addChildNode(DetectedBoundingBox(points: referenceObj.rawFeaturePoints.points, scale: scale))
+        }
         if let name = anchor.name, name.hasPrefix("box") {
             
             let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
@@ -270,6 +284,28 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             let internetNode = SCNNode(geometry: internetObject)
             //boxNode.simdTransform = anchor.transform
             internetNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
+            internetNode.physicsBody?.mass = 2.0
+            internetNode.simdWorldTransform = anchor.transform
+            
+            //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
+            node.addChildNode(internetNode)
+        }else if let name = anchor.name, name.hasPrefix("drone") {
+            
+            guard let url = Bundle.main.url(forResource: "drone", withExtension: "obj", subdirectory: "art.scnassets") else {
+                fatalError("Failed to find model file.")
+            }
+            let mdlAsset = MDLAsset(url: url)
+            let internetObject = SCNGeometry(mdlMesh: mdlAsset.object(at: 0) as! MDLMesh)
+            let mat = SCNMaterial()
+            mat.diffuse.contents = UIColor.white
+            //mat.colorBufferWriteMask = []
+            //mat.isDoubleSided = true
+            internetObject.materials = [mat]
+            let internetNode = SCNNode(geometry: internetObject)
+            //boxNode.simdTransform = anchor.transform
+            internetNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
+            internetNode.physicsBody?.isAffectedByGravity = false
+            internetNode.physicsBody?.applyForce(SCNVector3(0, 3, 0), asImpulse: false)
             internetNode.physicsBody?.mass = 2.0
             internetNode.simdWorldTransform = anchor.transform
             

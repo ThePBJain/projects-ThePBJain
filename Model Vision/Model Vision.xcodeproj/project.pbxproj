@@ -15,6 +15,9 @@
 		6A919C0A21DFE94200DAA241 /* DrawLineExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A919C0921DFE94200DAA241 /* DrawLineExtension.swift */; };
 		6A919C0C21DFEA2F00DAA241 /* MultipeerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A919C0B21DFEA2F00DAA241 /* MultipeerExtension.swift */; };
 		6AA61E1021A9E9E1002EE1E0 /* Plane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA61E0F21A9E9E1002EE1E0 /* Plane.swift */; };
+		6AB668A52204BDDE009DDD26 /* ObjectOriginAxis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB668A42204BDDE009DDD26 /* ObjectOriginAxis.swift */; };
+		6AB668A72204BEFA009DDD26 /* DetectedBoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB668A62204BEF9009DDD26 /* DetectedBoundingBox.swift */; };
+		6AB668A92204C3A7009DDD26 /* Wireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB668A82204C3A6009DDD26 /* Wireframe.swift */; };
 		6ACA549521AB9A8A0029A160 /* MultipeerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ACA549421AB9A8A0029A160 /* MultipeerSession.swift */; };
 		6ADDD637218FEDBD00187DA8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ADDD636218FEDBD00187DA8 /* AppDelegate.swift */; };
 		6ADDD639218FEDBD00187DA8 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 6ADDD638218FEDBD00187DA8 /* art.scnassets */; };
@@ -44,6 +47,9 @@
 		6A919C0921DFE94200DAA241 /* DrawLineExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawLineExtension.swift; sourceTree = "<group>"; };
 		6A919C0B21DFEA2F00DAA241 /* MultipeerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerExtension.swift; sourceTree = "<group>"; };
 		6AA61E0F21A9E9E1002EE1E0 /* Plane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plane.swift; sourceTree = "<group>"; };
+		6AB668A42204BDDE009DDD26 /* ObjectOriginAxis.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectOriginAxis.swift; sourceTree = "<group>"; };
+		6AB668A62204BEF9009DDD26 /* DetectedBoundingBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectedBoundingBox.swift; sourceTree = "<group>"; };
+		6AB668A82204C3A6009DDD26 /* Wireframe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wireframe.swift; sourceTree = "<group>"; };
 		6ACA549421AB9A8A0029A160 /* MultipeerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerSession.swift; sourceTree = "<group>"; };
 		6ACA549621ABB2B90029A160 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		6ADDD633218FEDBD00187DA8 /* Model Vision.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Model Vision.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -131,6 +137,9 @@
 		6ADDD659218FEE3F00187DA8 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				6AB668A62204BEF9009DDD26 /* DetectedBoundingBox.swift */,
+				6AB668A82204C3A6009DDD26 /* Wireframe.swift */,
+				6AB668A42204BDDE009DDD26 /* ObjectOriginAxis.swift */,
 				6ADDD63C218FEDBD00187DA8 /* Main.storyboard */,
 				6ADDD641218FEDBF00187DA8 /* LaunchScreen.storyboard */,
 				6ADDD63F218FEDBF00187DA8 /* Assets.xcassets */,
@@ -262,7 +271,10 @@
 				6ACA549521AB9A8A0029A160 /* MultipeerSession.swift in Sources */,
 				6A919C0C21DFEA2F00DAA241 /* MultipeerExtension.swift in Sources */,
 				6AA61E1021A9E9E1002EE1E0 /* Plane.swift in Sources */,
+				6AB668A92204C3A7009DDD26 /* Wireframe.swift in Sources */,
 				6A34B35821ADEB0800D14E62 /* StatusViewController.swift in Sources */,
+				6AB668A72204BEFA009DDD26 /* DetectedBoundingBox.swift in Sources */,
+				6AB668A52204BDDE009DDD26 /* ObjectOriginAxis.swift in Sources */,
 				6ADDD637218FEDBD00187DA8 /* AppDelegate.swift in Sources */,
 				6A919C0821DFE67600DAA241 /* ARSessionExtension.swift in Sources */,
 			);

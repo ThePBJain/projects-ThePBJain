@@ -15,6 +15,8 @@ extension ViewController {
         DispatchQueue.main.async {
             self.buttonPressed = self.drawLineButton.isHighlighted
         }
+        //detecting ball
+        //testRun?.updateOnEveryFrame()
     }
     func renderer(_ renderer: SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: TimeInterval) {
         
