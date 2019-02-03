@@ -298,7 +298,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             node.addChildNode(internetNode)
         }else if let name = anchor.name, name.hasPrefix("drone") {
             
-            guard let url = Bundle.main.url(forResource: "drone", withExtension: "obj", subdirectory: "art.scnassets") else {
+            guard let url = Bundle.main.url(forResource: "liteDrone", withExtension: "obj", subdirectory: "art.scnassets") else {
                 fatalError("Failed to find model file.")
             }
             let mdlAsset = MDLAsset(url: url)
