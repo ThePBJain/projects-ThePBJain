@@ -15,6 +15,8 @@
 		6A919C0A21DFE94200DAA241 /* DrawLineExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A919C0921DFE94200DAA241 /* DrawLineExtension.swift */; };
 		6A919C0C21DFEA2F00DAA241 /* MultipeerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A919C0B21DFEA2F00DAA241 /* MultipeerExtension.swift */; };
 		6AA61E1021A9E9E1002EE1E0 /* Plane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA61E0F21A9E9E1002EE1E0 /* Plane.swift */; };
+		6AB194C92206BF11003B041E /* pilotbrain_v1.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 6AB194C82206BF11003B041E /* pilotbrain_v1.mlmodel */; };
+		6AB194CB2206C2AC003B041E /* PilotExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB194CA2206C2AC003B041E /* PilotExtension.swift */; };
 		6AB668A52204BDDE009DDD26 /* ObjectOriginAxis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB668A42204BDDE009DDD26 /* ObjectOriginAxis.swift */; };
 		6AB668A72204BEFA009DDD26 /* DetectedBoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB668A62204BEF9009DDD26 /* DetectedBoundingBox.swift */; };
 		6AB668A92204C3A7009DDD26 /* Wireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB668A82204C3A6009DDD26 /* Wireframe.swift */; };
@@ -47,6 +49,8 @@
 		6A919C0921DFE94200DAA241 /* DrawLineExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawLineExtension.swift; sourceTree = "<group>"; };
 		6A919C0B21DFEA2F00DAA241 /* MultipeerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerExtension.swift; sourceTree = "<group>"; };
 		6AA61E0F21A9E9E1002EE1E0 /* Plane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plane.swift; sourceTree = "<group>"; };
+		6AB194C82206BF11003B041E /* pilotbrain_v1.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = pilotbrain_v1.mlmodel; sourceTree = "<group>"; };
+		6AB194CA2206C2AC003B041E /* PilotExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PilotExtension.swift; sourceTree = "<group>"; };
 		6AB668A42204BDDE009DDD26 /* ObjectOriginAxis.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectOriginAxis.swift; sourceTree = "<group>"; };
 		6AB668A62204BEF9009DDD26 /* DetectedBoundingBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectedBoundingBox.swift; sourceTree = "<group>"; };
 		6AB668A82204C3A6009DDD26 /* Wireframe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wireframe.swift; sourceTree = "<group>"; };
@@ -127,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				6A8C61EC21F17B2F00A1F684 /* Inceptionv3.mlmodel */,
+				6AB194C82206BF11003B041E /* pilotbrain_v1.mlmodel */,
 				6AA61E0F21A9E9E1002EE1E0 /* Plane.swift */,
 				6A387206219A53EB00CFAFE2 /* Extensions.swift */,
 				6ACA549421AB9A8A0029A160 /* MultipeerSession.swift */,
@@ -157,6 +162,7 @@
 				6A919C0721DFE67600DAA241 /* ARSessionExtension.swift */,
 				6A919C0921DFE94200DAA241 /* DrawLineExtension.swift */,
 				6A919C0B21DFEA2F00DAA241 /* MultipeerExtension.swift */,
+				6AB194CA2206C2AC003B041E /* PilotExtension.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -267,9 +273,11 @@
 				6ADDD63B218FEDBD00187DA8 /* ViewController.swift in Sources */,
 				6A919C0621DFDE4800DAA241 /* VisionExtension.swift in Sources */,
 				6A919C0A21DFE94200DAA241 /* DrawLineExtension.swift in Sources */,
+				6AB194CB2206C2AC003B041E /* PilotExtension.swift in Sources */,
 				6A387207219A53EB00CFAFE2 /* Extensions.swift in Sources */,
 				6ACA549521AB9A8A0029A160 /* MultipeerSession.swift in Sources */,
 				6A919C0C21DFEA2F00DAA241 /* MultipeerExtension.swift in Sources */,
+				6AB194C92206BF11003B041E /* pilotbrain_v1.mlmodel in Sources */,
 				6AA61E1021A9E9E1002EE1E0 /* Plane.swift in Sources */,
 				6AB668A92204C3A7009DDD26 /* Wireframe.swift in Sources */,
 				6A34B35821ADEB0800D14E62 /* StatusViewController.swift in Sources */,

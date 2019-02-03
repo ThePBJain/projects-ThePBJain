@@ -40,7 +40,11 @@ extension ViewController {
                 if let worldMap = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data) {
                     // Run the session with the received world map.
                     let configuration = ARWorldTrackingConfiguration()
-                    configuration.planeDetection = .horizontal
+                    guard let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: "gallery", bundle: nil) else {
+                        fatalError("Missing expected asset catalog resources.")
+                    }
+                    configuration.detectionObjects = referenceObjects
+                    configuration.planeDetection = [.horizontal, .vertical]
                     configuration.initialWorldMap = worldMap
                     self.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
                     

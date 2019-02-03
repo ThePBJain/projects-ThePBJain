@@ -106,7 +106,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         //set switch
         self.switchModelButton.setTitle("Use Drone", for: .normal)
         
-        
+        //test pilot brain
+        let brain = PilotBrain(droneLocation: SCNVector3(0.0, 0.0, 0.0), goalLocation: SCNVector3(0.0, 0.0, 10.0))
+        let answer = brain.getDroneVectors()
+        print( "DRONE FORCE VECTORS: \(answer)")
     }
     
     func configureLighting() {
@@ -121,6 +124,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         statusViewController.cancelAllScheduledMessages()
         
         let configuration = ARWorldTrackingConfiguration()
+        guard let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: "gallery", bundle: nil) else {
+            fatalError("Missing expected asset catalog resources.")
+        }
+        configuration.detectionObjects = referenceObjects
         configuration.planeDetection = [.horizontal, .vertical]
         if #available(iOS 12.0, *) {
             configuration.environmentTexturing = .automatic
@@ -251,7 +258,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if let objectAnchor = anchor as? ARObjectAnchor {
             let referenceObj = objectAnchor.referenceObject
             let scale = CGFloat(referenceObj.scale.x)
-            
+            //TODO: make it so that this adding is sent to peers
             node.addChildNode(DetectedBoundingBox(points: referenceObj.rawFeaturePoints.points, scale: scale))
         }
         if let name = anchor.name, name.hasPrefix("box") {
