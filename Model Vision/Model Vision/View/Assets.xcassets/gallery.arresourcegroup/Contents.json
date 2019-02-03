@@ -6,6 +6,9 @@
   "resources" : [
     {
       "filename" : "chocolateMilk.arobject"
+    },
+    {
+      "filename" : "redBall.arobject"
     }
   ]
 }
