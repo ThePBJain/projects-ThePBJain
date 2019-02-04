@@ -111,10 +111,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         //set switch
         self.switchModelButton.setTitle("Use Drone", for: .normal)
         
-        //test pilot brain
-        let brain = PilotBrain(droneLocation: SCNVector3(0.0, 0.0, 0.0), goalLocation: SCNVector3(0.0, 0.0, 10.0))
-        let answer = brain.getDroneVectors()
-        print( "DRONE FORCE VECTORS: \(answer)")
     }
     
     func configureLighting() {
@@ -166,8 +162,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Run the view's session
         self.sceneView.session.run(configuration)
         statusViewController.scheduleMessage("TRY MOVING LEFT OR RIGHT", inSeconds: 5.0, messageType: .focusSquare)
+         print("ROOTNODE WORLD POS: \(self.sceneView.scene.rootNode.worldPosition)")
     }
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -326,6 +322,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             self.drone = droneNode
             droneNode.physicsBody?.mass = 1.0
             
+            let box = SCNBox(width: 0.05, height: 0.05, length: 0.05, chamferRadius: 0)
+            let matNew = SCNMaterial()
+            matNew.diffuse.contents = UIColor.red
+            box.materials = [matNew]
+            let thrust0 = SCNNode(geometry: box)
+            let thrust2 = SCNNode(geometry: box)
+            let thrust4 = SCNNode(geometry: box)
+            let thrust6 = SCNNode(geometry: box)
+            thrust0.position = self.brain!.thrusters[0].position
+            thrust2.position = self.brain!.thrusters[2].position
+            thrust4.position = self.brain!.thrusters[4].position
+            thrust6.position = self.brain!.thrusters[6].position
+            droneNode.addChildNode(thrust0)
+            droneNode.addChildNode(thrust2)
+            droneNode.addChildNode(thrust4)
+            droneNode.addChildNode(thrust6)
             //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
             node.addChildNode(droneNode)
         }else if let planeAnchor = anchor as? ARPlaneAnchor {
