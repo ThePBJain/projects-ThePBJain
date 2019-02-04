@@ -62,6 +62,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     var classifier : Classification!
     
+    //Pilot Brain
+    var goalNode : SCNNode?
+    var brain : PilotBrain?
+    var drone : SCNNode?
+    
     /// The view controller that displays the status and "restart experience" UI.
     //taken from apple's best practices guide for arkit: https://developer.apple.com/documentation/arkit/handling_3d_interaction_and_ui_controls_in_augmented_reality
     lazy var statusViewController: StatusViewController = {
@@ -260,6 +265,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             let scale = CGFloat(referenceObj.scale.x)
             //TODO: make it so that this adding is sent to peers
             node.addChildNode(DetectedBoundingBox(points: referenceObj.rawFeaturePoints.points, scale: scale))
+            self.goalNode = node
         }
         if let name = anchor.name, name.hasPrefix("box") {
             
@@ -302,22 +308,26 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 fatalError("Failed to find model file.")
             }
             let mdlAsset = MDLAsset(url: url)
-            let internetObject = SCNGeometry(mdlMesh: mdlAsset.object(at: 0) as! MDLMesh)
+            let droneObject = SCNGeometry(mdlMesh: mdlAsset.object(at: 0) as! MDLMesh)
             let mat = SCNMaterial()
             mat.diffuse.contents = UIColor.white
             //mat.colorBufferWriteMask = []
             //mat.isDoubleSided = true
-            internetObject.materials = [mat]
-            let internetNode = SCNNode(geometry: internetObject)
+            droneObject.materials = [mat]
+            let droneNode = SCNNode(geometry: droneObject)
             //boxNode.simdTransform = anchor.transform
-            internetNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
-            internetNode.physicsBody?.isAffectedByGravity = false
-            internetNode.physicsBody?.applyForce(SCNVector3(0, 3, 0), asImpulse: false)
-            internetNode.physicsBody?.mass = 2.0
-            internetNode.simdWorldTransform = anchor.transform
+            droneNode.simdWorldTransform = anchor.transform
+            
+            droneNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
+            droneNode.physicsBody?.isAffectedByGravity = true
+            //self.goalNode?.position
+            self.brain = PilotBrain(droneLocation: droneNode.worldPosition, goalLocation: (self.goalNode?.worldPosition ?? SCNVector3Zero))
+            //droneNode.physicsBody?.applyForce(SCNVector3(0, 3, 0), asImpulse: false)
+            self.drone = droneNode
+            droneNode.physicsBody?.mass = 1.0
             
             //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
-            node.addChildNode(internetNode)
+            node.addChildNode(droneNode)
         }else if let planeAnchor = anchor as? ARPlaneAnchor {
             // Place content only for anchors found by plane detection.
             //self.statusViewController.cancelScheduledMessage(for: .planeEstimation)

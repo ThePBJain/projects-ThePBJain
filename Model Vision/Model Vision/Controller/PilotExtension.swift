@@ -52,13 +52,13 @@ public class PilotBrain {
             if i % 2 == 0 {
                 switch i {
                 case 0:
-                    thruster.position = SCNVector3(0.0, 1.0, 0.0)
+                    thruster.position = SCNVector3(0.0, 2.0, 0.0)
                 case 2:
-                    thruster.position = SCNVector3(1.0, 0.0, 0.0)
+                    thruster.position = SCNVector3(2.0, 0.0, 0.0)
                 case 4:
-                    thruster.position = SCNVector3(0.0, -1.0, 0.0)
+                    thruster.position = SCNVector3(0.0, -2.0, 0.0)
                 case 6:
-                    thruster.position = SCNVector3(-1.0, 0.0, 0.0)
+                    thruster.position = SCNVector3(-2.0, 0.0, 0.0)
                 default:
                     fatalError("Unexpected value for thruster: \(i)")
                 }
@@ -67,6 +67,7 @@ public class PilotBrain {
         }
         
     }
+    /*
     private lazy var DroneForceVectors: MLMultiArray = {
         // Instantiate the model from its generated Swift class.
         let model = pilotbrain_v1()
@@ -93,10 +94,34 @@ public class PilotBrain {
         
         return pilotBrainOutput.action__0
         
-    }()
+    }()*/
     
     func getDroneVectors() -> MLMultiArray {
-        return self.DroneForceVectors
+        //return self.DroneForceVectors
+        // Instantiate the model from its generated Swift class.
+        let model = pilotbrain_v1()
+        //TODO: find a cleaner way of doing this
+        var inputArray = goalLocation.toArray() + droneLocation.toArray() + droneRotation.toArray() + droneVelocity.toArray() + droneAngleVelocity.toArray() + droneAcceleration.toArray()
+        
+        //use reduce in the future
+        for thruster in thrusters {
+            inputArray += thruster.toArray()
+        }
+        
+        guard let multiArray = try? MLMultiArray(shape: [66], dataType: .double) else {
+            fatalError("Unexpected runtime error. MLMultiArray")
+        }
+        for (index, element) in inputArray.enumerated() {
+            multiArray[index] = NSNumber(floatLiteral: element)
+        }
+        print(multiArray)
+        
+        let pilotInput = pilotbrain_v1Input(vector_observation__0: multiArray)
+        guard let pilotBrainOutput = try? model.prediction(input: pilotInput) else {
+            fatalError("Unexpected runtime error.")
+        }
+        
+        return pilotBrainOutput.action__0
     }
     
 }
