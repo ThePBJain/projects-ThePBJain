@@ -52,13 +52,13 @@ public class PilotBrain {
             if i % 2 == 0 {
                 switch i {
                 case 0:
-                    thruster.position = SCNVector3(0.0, 2.0, 0.0)
+                    thruster.position = SCNNode.localFront * 0.4 //SCNVector3(0.0, 0.0, -0.4)
                 case 2:
-                    thruster.position = SCNVector3(2.0, 0.0, 0.0)
+                    thruster.position = SCNNode.localRight * 0.4 //SCNVector3(0.4, 0.0, 0.0)
                 case 4:
-                    thruster.position = SCNVector3(0.0, -2.0, 0.0)
+                    thruster.position = SCNNode.localFront * -0.4 //SCNVector3(0.0, 0.0, 2.0)
                 case 6:
-                    thruster.position = SCNVector3(-2.0, 0.0, 0.0)
+                    thruster.position = SCNNode.localRight * -0.4 //SCNVector3(-2.0, 0.0, 0.0)
                 default:
                     fatalError("Unexpected value for thruster: \(i)")
                 }
@@ -114,7 +114,7 @@ public class PilotBrain {
         for (index, element) in inputArray.enumerated() {
             multiArray[index] = NSNumber(floatLiteral: element)
         }
-        print(multiArray)
+        //print(multiArray)
         
         let pilotInput = pilotbrain_v1Input(vector_observation__0: multiArray)
         guard let pilotBrainOutput = try? model.prediction(input: pilotInput) else {
