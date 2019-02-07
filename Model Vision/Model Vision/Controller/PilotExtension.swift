@@ -35,6 +35,8 @@ public class PilotBrain {
     var thrusters = [Thruster]()
     
     init(droneLocation: SCNVector3, goalLocation: SCNVector3){
+        //everything is in meters, seconds and degrees
+        
         self.droneLocation = droneLocation
         //for testing set it to camera origin
         self.goalLocation = goalLocation
@@ -100,8 +102,8 @@ public class PilotBrain {
     func getDroneVectors() -> MLMultiArray {
         //return self.DroneForceVectors
         // Instantiate the model from its generated Swift class.
-        let model = pilotbrain_v1()
-        //let model = pilotbrain_v2()
+        //let model = pilotbrain_v1()
+        let model = pilotbrain_v2()
         //TODO: find a cleaner way of doing this
         var inputArray = goalLocation.toArray() + droneLocation.toArray() + droneRotation.toArray() + droneVelocity.toArray() + droneAngleVelocity.toArray() + droneAcceleration.toArray()
         print("------------")
@@ -119,8 +121,8 @@ public class PilotBrain {
         }
         //print(multiArray)
         
-        let pilotInput = pilotbrain_v1Input(vector_observation__0: multiArray)
-        //let pilotInput = pilotbrain_v2Input(vector_observation__0: multiArray)
+        //let pilotInput = pilotbrain_v1Input(vector_observation__0: multiArray)
+        let pilotInput = pilotbrain_v2Input(vector_observation__0: multiArray)
         guard let pilotBrainOutput = try? model.prediction(input: pilotInput) else {
             fatalError("Unexpected runtime error.")
         }

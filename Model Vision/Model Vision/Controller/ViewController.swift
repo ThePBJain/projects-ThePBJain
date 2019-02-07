@@ -230,11 +230,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     
                     //update data
                     //double check this
-                    self.brain!.droneLocation = SCNVector3Zero
-                    //self.brain!.droneLocation = droneNode.presentation.worldPosition
-                    let goalLoc = droneNode.presentation.convertPosition(goalNode.worldPosition, from: self.sceneView.scene.rootNode)
-                    self.brain!.goalLocation = goalLoc
-                    //self.brain!.goalLocation = goalNode.worldPosition
+                    //self.brain!.droneLocation = SCNVector3Zero
+                    self.brain!.droneLocation = droneNode.presentation.worldPosition
+                    //let goalLoc = droneNode.presentation.convertPosition(goalNode.worldPosition, from: self.sceneView.scene.rootNode)
+                    //self.brain!.goalLocation = goalLoc
+                    self.brain!.goalLocation = goalNode.worldPosition
                     let eulerAnglesInDegrees = droneNode.presentation.eulerAngles * (180.0/Float.pi)
                     self.brain!.droneRotation = eulerAnglesInDegrees
                     let currentVelocity = droneNode.physicsBody!.velocity
@@ -257,15 +257,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     let newForces = self.brain!.getDroneVectors()
                     
                     droneNode.physicsBody!.clearAllForces()
-                    droneNode.enumerateChildNodes { (node, stop) in
+                    /*droneNode.enumerateChildNodes { (node, stop) in
                         node.removeFromParentNode()
-                    }
+                    }*/
                     print("------------")
                     print(newForces)
                     for i in 0...3 {
                         let force = newForces[i]
-                        //Double(exactly: force)! * 20.0
-                        let finalForce = self.clamp( (Double(i) * 10.0)-20.0, minValue: 0.0, maxValue: 20.0)
+                        //Double(exactly: force)! * 40.0
+                        let finalForce = self.clamp( Double(exactly: force)! * 20.0, minValue: 0.0, maxValue: 20.0)
                         
                         print(finalForce)
                         var thruster = self.brain!.thrusters[2*i]
@@ -284,13 +284,16 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                         }
                         //droneNode.rotation
                         //assume applyforce is local
+                        
                         let forceVector = SCNVector3(0, finalForce, 0)
                         //assume applyforce is world
                         let thrustVector = droneNode.presentation.convertVector(forceVector, to: self.sceneView.scene.rootNode)
+                        
+                        let worldThrustVector = droneNode.presentation.worldUp * Float(finalForce)
                         //print("Thrust vector: \(thrustVector)")
-                        droneNode.physicsBody!.applyForce(thrustVector, at: thruster.position, asImpulse: false)
+                        droneNode.physicsBody!.applyForce(worldThrustVector, at: thruster.position, asImpulse: false)
                         //paint the thruster
-                        /*let box = SCNBox(width: 0.05, height: 0.1, length: 0.05, chamferRadius: 0)
+                        /*let box = SCNBox(width: 0.05, height: 0.05, length: 0.05, chamferRadius: 0)
                         let matNew = SCNMaterial()
                         matNew.diffuse.contents = UIColor.red
                         box.materials = [matNew]

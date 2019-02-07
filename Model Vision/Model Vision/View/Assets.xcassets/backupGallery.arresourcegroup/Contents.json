@@ -5,10 +5,7 @@
   },
   "resources" : [
     {
-      "filename" : "brain.arobject"
-    },
-    {
-      "filename" : "redBall.arobject"
+      "filename" : "chocolateMilk.arobject"
     }
   ]
 }
