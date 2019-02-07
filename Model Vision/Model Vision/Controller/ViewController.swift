@@ -219,8 +219,71 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.object = object
     }
     
-
+    // MARK: - PilotBrain loop and ARSCNViewDelegate
+    var prevVelocity : SCNVector3?
+    var prevTime : TimeInterval?
+    func renderer(_ renderer: SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
+        if let droneNode = self.drone {
+            //print("found drone")
+            if let pilotBrain = self.brain {
+                if let goalNode = self.goalNode {
+                    
+                    //update data
+                    //double check this
+                    self.brain!.droneLocation = SCNVector3Zero
+                    //self.brain!.droneLocation = droneNode.presentation.worldPosition
+                    let goalLoc = droneNode.presentation.convertPosition(goalNode.worldPosition, from: self.sceneView.scene.rootNode)
+                    self.brain!.goalLocation = goalLoc
+                    //self.brain!.goalLocation = goalNode.worldPosition
+                    let eulerAnglesInDegrees = droneNode.presentation.eulerAngles * (180.0/Float.pi)
+                    self.brain!.droneRotation = eulerAnglesInDegrees
+                    let currentVelocity = droneNode.physicsBody!.velocity
+                    self.brain!.droneVelocity = currentVelocity
+                    let angularVelocity = droneNode.physicsBody!.angularVelocity
+                    let angularMagnitudeInDeg = angularVelocity.w * (180.0/Float.pi)
+                    self.brain!.droneAngleVelocity = SCNVector3(angularVelocity.x, angularVelocity.y, angularVelocity.z)*angularMagnitudeInDeg
+                    //droneNode.physicsBody!.angularVelocity
+                    //droneNode.position
+                    //droneNode.presentation.position
+                    
+                    self.brain!.droneAcceleration = (currentVelocity - (self.prevVelocity ?? SCNVector3Zero))/Float(time - (self.prevTime ?? 0.0))
+                    self.prevTime = time
+                    self.prevVelocity = droneNode.physicsBody!.velocity
+                    
+                    //print("Physics:\nVelocity:\(droneNode.physicsBody!.velocity)\nAngular Velocity:\(droneNode.physicsBody!.angularVelocity)")
+                    //print("Drone Presentation Location: \(droneNode.presentation.position)")
+                    //print("Input Values in Session: \(goalLoc)")
+                    
+                    let newForces = self.brain!.getDroneVectors()
+                    
+                    droneNode.physicsBody!.clearAllForces()
+                    print("------------")
+                    print(newForces)
+                    for i in 0...3 {
+                        let force = newForces[i]
+                        //Double(exactly: force)! * 40.0
+                        let finalForce = self.clamp( Double(exactly: force)! * 20.0, minValue: 0.0, maxValue: 20.0)
+                        
+                        print(finalForce)
+                        let thruster = self.brain!.thrusters[2*i]
+                        //droneNode.rotation
+                        //assume applyforce is local
+                        let forceVector = SCNVector3(0, finalForce, 0)
+                        //assume applyforce is world
+                        let thrustVector = droneNode.presentation.convertVector(forceVector, to: self.sceneView.scene.rootNode)
+                        //print("Thrust vector: \(thrustVector)")
+                        droneNode.physicsBody!.applyForce(thrustVector, at: thruster.position, asImpulse: false)
+                        //pilotBrain.droneAcceleration += forceVector
+                        
+                    }
+                    
+                }
+                
+            }
+        }
+    }
     // MARK: - ARSCNViewDelegate
+    
 
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         // Update only anchors and nodes set up by `renderer(_:didAdd:for:)`.
@@ -319,25 +382,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             //self.goalNode?.position
             self.brain = PilotBrain(droneLocation: droneNode.worldPosition, goalLocation: (self.goalNode?.worldPosition ?? SCNVector3Zero))
             //droneNode.physicsBody?.applyForce(SCNVector3(0, 3, 0), asImpulse: false)
-            self.drone = droneNode
             droneNode.physicsBody?.mass = 1.0
             
             let box = SCNBox(width: 0.05, height: 0.05, length: 0.05, chamferRadius: 0)
             let matNew = SCNMaterial()
             matNew.diffuse.contents = UIColor.red
             box.materials = [matNew]
-            let thrust0 = SCNNode(geometry: box)
-            let thrust2 = SCNNode(geometry: box)
-            let thrust4 = SCNNode(geometry: box)
-            let thrust6 = SCNNode(geometry: box)
-            thrust0.position = self.brain!.thrusters[0].position
-            thrust2.position = self.brain!.thrusters[2].position
-            thrust4.position = self.brain!.thrusters[4].position
-            thrust6.position = self.brain!.thrusters[6].position
-            droneNode.addChildNode(thrust0)
-            droneNode.addChildNode(thrust2)
-            droneNode.addChildNode(thrust4)
-            droneNode.addChildNode(thrust6)
+            for i in 0...3 {
+                let thruster = SCNNode(geometry: box)
+                thruster.position = self.brain!.thrusters[2*i].position
+                droneNode.addChildNode(thruster)
+            }
+            self.drone = droneNode
             //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
             node.addChildNode(droneNode)
         }else if let planeAnchor = anchor as? ARPlaneAnchor {

@@ -53,6 +53,7 @@ public class PilotBrain {
                 switch i {
                 case 0:
                     thruster.position = SCNNode.localFront * 0.4 //SCNVector3(0.0, 0.0, -0.4)
+                    
                 case 2:
                     thruster.position = SCNNode.localRight * 0.4 //SCNVector3(0.4, 0.0, 0.0)
                 case 4:
@@ -99,10 +100,12 @@ public class PilotBrain {
     func getDroneVectors() -> MLMultiArray {
         //return self.DroneForceVectors
         // Instantiate the model from its generated Swift class.
+        //let model = pilotbrain_v1()
         let model = pilotbrain_v1()
         //TODO: find a cleaner way of doing this
         var inputArray = goalLocation.toArray() + droneLocation.toArray() + droneRotation.toArray() + droneVelocity.toArray() + droneAngleVelocity.toArray() + droneAcceleration.toArray()
-        
+        print("------------")
+        print("Input Values in PilotBrain: \(inputArray)")
         //use reduce in the future
         for thruster in thrusters {
             inputArray += thruster.toArray()

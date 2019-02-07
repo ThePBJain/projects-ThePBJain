@@ -28,6 +28,7 @@
 		6ADDD640218FEDBF00187DA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6ADDD63F218FEDBF00187DA8 /* Assets.xcassets */; };
 		6ADDD643218FEDBF00187DA8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6ADDD641218FEDBF00187DA8 /* LaunchScreen.storyboard */; };
 		6ADDD64E218FEDBF00187DA8 /* Model_VisionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ADDD64D218FEDBF00187DA8 /* Model_VisionTests.swift */; };
+		6AEC2A41220B9E71008EF761 /* pilotbrain_v2.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 6AEC2A40220B9E71008EF761 /* pilotbrain_v2.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		6ADDD649218FEDBF00187DA8 /* Model VisionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Model VisionTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6ADDD64D218FEDBF00187DA8 /* Model_VisionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model_VisionTests.swift; sourceTree = "<group>"; };
 		6ADDD64F218FEDBF00187DA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6AEC2A40220B9E71008EF761 /* pilotbrain_v2.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = pilotbrain_v2.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				6A8C61EC21F17B2F00A1F684 /* Inceptionv3.mlmodel */,
+				6AEC2A40220B9E71008EF761 /* pilotbrain_v2.mlmodel */,
 				6AB194C82206BF11003B041E /* pilotbrain_v1.mlmodel */,
 				6AA61E0F21A9E9E1002EE1E0 /* Plane.swift */,
 				6A387206219A53EB00CFAFE2 /* Extensions.swift */,
@@ -271,6 +274,7 @@
 			files = (
 				6A8C61ED21F17B2F00A1F684 /* Inceptionv3.mlmodel in Sources */,
 				6ADDD63B218FEDBD00187DA8 /* ViewController.swift in Sources */,
+				6AEC2A41220B9E71008EF761 /* pilotbrain_v2.mlmodel in Sources */,
 				6A919C0621DFDE4800DAA241 /* VisionExtension.swift in Sources */,
 				6A919C0A21DFE94200DAA241 /* DrawLineExtension.swift in Sources */,
 				6AB194CB2206C2AC003B041E /* PilotExtension.swift in Sources */,
