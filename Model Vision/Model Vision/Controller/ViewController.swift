@@ -91,7 +91,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Show statistics such as fps and timing information
         self.sceneView.showsStatistics = true
         
-        self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]//[ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+        self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showPhysicsFields]//[ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         // Hook up status view controller callback(s).
         statusViewController.restartExperienceHandler = { [unowned self] in
             self.restartExperience()
@@ -257,15 +257,31 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     let newForces = self.brain!.getDroneVectors()
                     
                     droneNode.physicsBody!.clearAllForces()
+                    droneNode.enumerateChildNodes { (node, stop) in
+                        node.removeFromParentNode()
+                    }
                     print("------------")
                     print(newForces)
                     for i in 0...3 {
                         let force = newForces[i]
-                        //Double(exactly: force)! * 40.0
-                        let finalForce = self.clamp( Double(exactly: force)! * 20.0, minValue: 0.0, maxValue: 20.0)
+                        //Double(exactly: force)! * 20.0
+                        let finalForce = self.clamp( (Double(i) * 10.0)-20.0, minValue: 0.0, maxValue: 20.0)
                         
                         print(finalForce)
-                        let thruster = self.brain!.thrusters[2*i]
+                        var thruster = self.brain!.thrusters[2*i]
+                        //find the right thruster
+                        switch i {
+                        case 0:
+                            thruster = self.brain!.thrusters[0]
+                        case 1:
+                            thruster = self.brain!.thrusters[4]
+                        case 2:
+                            thruster = self.brain!.thrusters[2]
+                        case 3:
+                            thruster = self.brain!.thrusters[6]
+                        default:
+                            fatalError("Unexpected Case")
+                        }
                         //droneNode.rotation
                         //assume applyforce is local
                         let forceVector = SCNVector3(0, finalForce, 0)
@@ -273,7 +289,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                         let thrustVector = droneNode.presentation.convertVector(forceVector, to: self.sceneView.scene.rootNode)
                         //print("Thrust vector: \(thrustVector)")
                         droneNode.physicsBody!.applyForce(thrustVector, at: thruster.position, asImpulse: false)
-                        //pilotBrain.droneAcceleration += forceVector
+                        //paint the thruster
+                        /*let box = SCNBox(width: 0.05, height: 0.1, length: 0.05, chamferRadius: 0)
+                        let matNew = SCNMaterial()
+                        matNew.diffuse.contents = UIColor.red
+                        box.materials = [matNew]
+                        let thrusterNode = SCNNode(geometry: box)
+                        thrusterNode.position = thruster.position
+                        //thrusterNode.rotation
+                        droneNode.addChildNode(thrusterNode)*/
                         
                     }
                     
