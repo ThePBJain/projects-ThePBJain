@@ -32,9 +32,7 @@ extension ViewController: ARSessionDelegate {
             }
         }
         
-        //Drone Updates
-        
-        
+        //Hand tracking updates
         
         guard self.classifier.currentBuffer == nil, case .normal = frame.camera.trackingState else {
             return
@@ -43,6 +41,12 @@ extension ViewController: ARSessionDelegate {
         // Retain the image buffer for Vision processing.
         self.classifier.currentBuffer = frame.capturedImage
         self.classifier.classifyCurrentImage()
+        let classification = self.classifier.getClassification()
+        if(classification == "fist-UB-RHand"){
+            self.handInPosition = true;
+        }else{
+            self.handInPosition = false;
+        }
     }
     
     

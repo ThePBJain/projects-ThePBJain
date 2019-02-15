@@ -68,6 +68,27 @@ extension SCNVector3 {
     func cross(_ vec: SCNVector3) -> SCNVector3 {
         return SCNVector3(self.y * vec.z - self.z * vec.y, self.z * vec.x - self.x * vec.z, self.x * vec.y - self.y * vec.x)
     }
+    func negateZ() -> SCNVector3 {
+        return SCNVector3(self.x, self.y, self.z * -1.0)
+    }
+    
+    /// - parameter distance: Distance from other location (in meters)
+    /// - parameter to: Other vector to compare to
+    func closerThan(distance dist: Float, to otherVector: SCNVector3?) -> Bool{
+        if let otherVect = otherVector {
+            if self.distance(to: otherVect) > dist {
+                return false
+            }else{
+                return true
+            }
+        }else{
+            return false
+        }
+    }
+    
+    func randomize(by meters: Float) -> SCNVector3{
+        return SCNVector3Make(self.x + Float.random(in: 0.0...meters), self.y + Float.random(in: 0.0...meters), self.z + Float.random(in: 0.0...meters))
+    }
 }
 
 public let SCNVector3One: SCNVector3 = SCNVector3(1.0, 1.0, 1.0)

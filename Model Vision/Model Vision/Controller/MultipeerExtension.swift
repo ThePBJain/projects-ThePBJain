@@ -36,7 +36,9 @@ extension ViewController {
         
         do {
             //set to false down the road
+            print("RECIEVED DATA")
             if !self.initalizedWorldMap {
+                print("IN INIT")
                 if let worldMap = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data) {
                     // Run the session with the received world map.
                     let configuration = ARWorldTrackingConfiguration()
@@ -66,11 +68,18 @@ extension ViewController {
                     //put in right location
                     self.sceneView.scene.rootNode.addChildNode(lineNode!)
                     print("Added node to screen")
-                }else if let boxAnchor = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARAnchor.self, from: data) {
-                    sceneView.session.add(anchor: boxAnchor)
-                }else{
+                }else if let boxAnchor = try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARAnchor.self, from: data) {
+                    sceneView.session.add(anchor: boxAnchor!)
+                }else if let _ = try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARObjectAnchor.self, from: data){
+                    //probably wont need this if statement...
+                    //sceneView.session.add(anchor: obj)
+                    print("WE WERENT SUPPOSED TO BE HERE BUT WE HERE BOI MULTIPEER AROBJECTANCHOR!!!")
+                }else if let actions = try? NSKeyedUnarchiver.unarchivedObject(ofClass: SCNAction.self, from: data){
+                    print("Got Actions")
+                    self.pipeNode?.runAction(actions!)
+                } else{
                     print("unknown data recieved from \(peer)")
-            }
+                }
         } catch {
             print("can't decode data recieved from \(peer). Was probably lines")
         }

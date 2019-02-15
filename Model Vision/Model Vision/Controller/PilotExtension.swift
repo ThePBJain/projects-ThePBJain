@@ -14,7 +14,7 @@ public struct Thruster {
     var position: SCNVector3
     var rotation: SCNVector3
     func toArray() -> Array<Double> {
-        return position.toArray() + rotation.toArray()
+        return position.negateZ().toArray() + rotation.toArray()
     }
 }
 extension SCNVector3 {
@@ -54,12 +54,12 @@ public class PilotBrain {
             if i % 2 == 0 {
                 switch i {
                 case 0:
-                    thruster.position = SCNNode.localFront * 0.4 //SCNVector3(0.0, 0.0, -0.4)
+                    thruster.position = SCNNode.localFront * 0.4 //SCNVector3(0.0, 0.0, 0.4)
                     
                 case 2:
                     thruster.position = SCNNode.localRight * 0.4 //SCNVector3(0.4, 0.0, 0.0)
                 case 4:
-                    thruster.position = SCNNode.localFront * -0.4 //SCNVector3(0.0, 0.0, 2.0)
+                    thruster.position = SCNNode.localFront * -0.4 //SCNVector3(0.0, 0.0, -0.4)
                 case 6:
                     thruster.position = SCNNode.localRight * -0.4 //SCNVector3(-2.0, 0.0, 0.0)
                 default:

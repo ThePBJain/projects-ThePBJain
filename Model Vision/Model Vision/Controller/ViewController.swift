@@ -53,19 +53,24 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var mapProvider: MCPeerID?
     
     //Download Model Tools
-    var internetModelString = "http://nuntagri.com/Lowpoly_Notebook_2.obj"
+    var internetModelString = "http://ec2-107-23-146-57.compute-1.amazonaws.com/Lowpoly_Notebook_2.obj"
     var documentsUrl : URL?
     
     
     /// Marks if the AR experience is available for restart.
     var isRestartAvailable = true
     
+    //hand tracking tools
     var classifier : Classification!
+    var handInPosition = false;
+    var pipeNode : SCNNode?
     
     //Pilot Brain
     var goalNode : SCNNode?
     var brain : PilotBrain?
     var drone : SCNNode?
+    
+    
     
     /// The view controller that displays the status and "restart experience" UI.
     //taken from apple's best practices guide for arkit: https://developer.apple.com/documentation/arkit/handling_3d_interaction_and_ui_controls_in_augmented_reality
@@ -163,6 +168,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.sceneView.session.run(configuration)
         statusViewController.scheduleMessage("TRY MOVING LEFT OR RIGHT", inSeconds: 5.0, messageType: .focusSquare)
          print("ROOTNODE WORLD POS: \(self.sceneView.scene.rootNode.worldPosition)")
+        let pipeAnchor = ARAnchor(name: "pipe", transform: simd_float4x4(self.sceneView.scene.rootNode.transform))
+        self.sceneView.session.add(anchor: pipeAnchor)
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -222,33 +229,57 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     // MARK: - PilotBrain loop and ARSCNViewDelegate
     var prevVelocity : SCNVector3?
     var prevTime : TimeInterval?
+    var pipeIsMoving = false
     func renderer(_ renderer: SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
+        //for hand tracking
+        if self.handInPosition && !pipeIsMoving && self.sceneView.pointOfView!.worldPosition.closerThan(distance: 0.2, to: self.pipeNode?.worldPosition){
+            self.pipeIsMoving = true
+            let move = SCNAction.moveBy(x: CGFloat.random(in: 0.0...0.5), y: CGFloat.random(in: 0.0...0.5), z: CGFloat.random(in: 0.0...0.5), duration: 1.0)
+            let rotate = SCNAction.rotateBy(x: CGFloat.random(in: 0.0...CGFloat.pi/2.0), y: CGFloat.random(in: 0.0...CGFloat.pi/2.0), z: CGFloat.random(in: 0.0...CGFloat.pi/2.0), duration: 1.0)
+            print("We movin: \(move)")
+            let actions = SCNAction.group([move,rotate])
+            self.pipeNode?.runAction(actions)
+            // Send the anchor info to peers, so they can place the same content.
+            guard let data = try? NSKeyedArchiver.archivedData(withRootObject: actions, requiringSecureCoding: true)
+                else { fatalError("can't encode actions") }
+            //self.multipeerSession.send(data, to: [mapProvider!])
+            self.multipeerSession.sendToAllPeers(data)
+            print("Peers#: \(self.multipeerSession.connectedPeers.count)")
+            //locked for 1.5 seconds
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+                self.pipeIsMoving = false
+            })
+            
+            
+            
+        }
+        //for pilot brain
         if let droneNode = self.drone {
             //print("found drone")
             if let pilotBrain = self.brain {
                 if let goalNode = self.goalNode {
                     
-                    //update data
+                    let normalizeToBrain = SCNNode.localFront
                     //double check this
                     //self.brain!.droneLocation = SCNVector3Zero
-                    self.brain!.droneLocation = droneNode.presentation.worldPosition
+                    self.brain!.droneLocation = droneNode.presentation.worldPosition.negateZ()
                     //let goalLoc = droneNode.presentation.convertPosition(goalNode.worldPosition, from: self.sceneView.scene.rootNode)
                     //self.brain!.goalLocation = goalLoc
-                    self.brain!.goalLocation = goalNode.worldPosition
-                    let eulerAnglesInDegrees = droneNode.presentation.eulerAngles * (180.0/Float.pi)
+                    self.brain!.goalLocation = goalNode.worldPosition.negateZ()
+                    let eulerAnglesInDegrees = droneNode.presentation.eulerAngles.negateZ() * (180.0/Float.pi)
                     self.brain!.droneRotation = eulerAnglesInDegrees
-                    let currentVelocity = droneNode.physicsBody!.velocity
+                    let currentVelocity = droneNode.physicsBody!.velocity.negateZ()
                     self.brain!.droneVelocity = currentVelocity
                     let angularVelocity = droneNode.physicsBody!.angularVelocity
                     let angularMagnitudeInDeg = angularVelocity.w * (180.0/Float.pi)
-                    self.brain!.droneAngleVelocity = SCNVector3(angularVelocity.x, angularVelocity.y, angularVelocity.z)*angularMagnitudeInDeg
+                    self.brain!.droneAngleVelocity = SCNVector3(angularVelocity.x, angularVelocity.y, angularVelocity.z * -1.0)*angularMagnitudeInDeg
                     //droneNode.physicsBody!.angularVelocity
                     //droneNode.position
                     //droneNode.presentation.position
                     
                     self.brain!.droneAcceleration = (currentVelocity - (self.prevVelocity ?? SCNVector3Zero))/Float(time - (self.prevTime ?? 0.0))
                     self.prevTime = time
-                    self.prevVelocity = droneNode.physicsBody!.velocity
+                    self.prevVelocity = currentVelocity
                     
                     //print("Physics:\nVelocity:\(droneNode.physicsBody!.velocity)\nAngular Velocity:\(droneNode.physicsBody!.angularVelocity)")
                     //print("Drone Presentation Location: \(droneNode.presentation.position)")
@@ -346,14 +377,47 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     //adding anchors and nodes
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        if let objectAnchor = anchor as? ARObjectAnchor {
+        if let objectAnchor = anchor as? ARObjectAnchor, (objectAnchor.referenceObject.name?.hasPrefix("macbook"))! {
+            print("MADE THE MACBOOK!")
+            let mdlAsset = MDLAsset(url: documentsUrl!)
+            let internetObject = SCNGeometry(mdlMesh: mdlAsset.object(at: 0) as! MDLMesh)
+            
+            let mat = SCNMaterial()
+            //mat.diffuse.contents = UIColor.red
+            mat.colorBufferWriteMask = []
+            mat.isDoubleSided = true
+            internetObject.materials = [mat]
+            let internetNode = SCNNode(geometry: internetObject)
+            //boxNode.simdTransform = anchor.transform
+            internetNode.rotation = SCNVector4(0, 1.0, 0.0, Float.pi/2.0)
+            internetNode.localTranslate(by: SCNVector3(0.08, 0, 0))
+            //internetNode.localRotate(by: rotation)
+            internetNode.physicsBody = SCNPhysicsBody(type: .kinematic, shape: SCNPhysicsShape(geometry: internetObject, options: nil))
+            
+            node.addChildNode(internetNode)
+            
+            
+            // Send the anchor info to peers, so they can place the same content.
+            guard let data = try? NSKeyedArchiver.archivedData(withRootObject: anchor, requiringSecureCoding: true)
+                else { fatalError("can't encode anchor") }
+            //self.multipeerSession.send(data, to: [mapProvider!])
+            self.multipeerSession.sendToAllPeers(data)
+            print("Peers#: \(self.multipeerSession.connectedPeers.count)")
+            
+        }else if let objectAnchor = anchor as? ARObjectAnchor {
             let referenceObj = objectAnchor.referenceObject
             let scale = CGFloat(referenceObj.scale.x)
             //TODO: make it so that this adding is sent to peers
             node.addChildNode(DetectedBoundingBox(points: referenceObj.rawFeaturePoints.points, scale: scale))
             self.goalNode = node
-        }
-        if let name = anchor.name, name.hasPrefix("box") {
+            
+            // Send the anchor info to peers, so they can place the same content.
+            guard let data = try? NSKeyedArchiver.archivedData(withRootObject: anchor, requiringSecureCoding: true)
+                else { fatalError("can't encode anchor") }
+            //self.multipeerSession.send(data, to: [mapProvider!])
+            self.multipeerSession.sendToAllPeers(data)
+            print("Peers#: \(self.multipeerSession.connectedPeers.count)")
+        }else if let name = anchor.name, name.hasPrefix("box") {
             
             let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
             //let mdlAsset = MDLAsset(url: documentsUrl!)
@@ -423,6 +487,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             self.drone = droneNode
             //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
             node.addChildNode(droneNode)
+        }else if let name = anchor.name, name.hasPrefix("pipe") {
+            
+            guard let url = Bundle.main.url(forResource: "waterpipe", withExtension: "obj", subdirectory: "art.scnassets") else {
+                fatalError("Failed to find model file.")
+            }
+            let mdlAsset = MDLAsset(url: url)
+            let pipeObject = SCNGeometry(mdlMesh: mdlAsset.object(at: 0) as! MDLMesh)
+            let mat = SCNMaterial()
+            mat.diffuse.contents = UIColor.white
+            pipeObject.materials = [mat]
+            let pipeNode = SCNNode(geometry: pipeObject)
+            //boxNode.simdTransform = anchor.transform
+            pipeNode.simdWorldTransform = anchor.transform
+            
+            self.pipeNode = pipeNode
+            node.addChildNode(pipeNode)
         }else if let planeAnchor = anchor as? ARPlaneAnchor {
             // Place content only for anchors found by plane detection.
             //self.statusViewController.cancelScheduledMessage(for: .planeEstimation)

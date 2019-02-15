@@ -17,14 +17,15 @@ public class Classification {
     init(statusController: StatusViewController){
         self.statusViewController = statusController
     }
-    // MARK: - Vision classification
+    // MARK: - Vision classification for hand
     
     // Vision classification request and model
     /// - Tag: ClassificationRequest
     private lazy var classificationRequest: VNCoreMLRequest = {
         do {
             // Instantiate the model from its generated Swift class.
-            let model = try VNCoreMLModel(for: Inceptionv3().model)
+            
+            let model = try VNCoreMLModel(for: example_5s0_hand_model().model)
             let request = VNCoreMLRequest(model: model, completionHandler: { [weak self] request, error in
                 self?.processClassifications(for: request, error: error)
             })
@@ -33,7 +34,8 @@ public class Classification {
             request.imageCropAndScaleOption = .centerCrop
             
             // Use CPU for Vision processing to ensure that there are adequate GPU resources for rendering.
-            request.usesCPUOnly = true
+            
+            //request.usesCPUOnly = true
             
             return request
         } catch {
@@ -93,6 +95,11 @@ public class Classification {
         DispatchQueue.main.async { [weak self] in
             self?.displayClassifierResults()
         }
+        
+    }
+    
+    public func getClassification() -> String {
+        return self.identifierString;
     }
     
     // Show the classification results in the UI.
