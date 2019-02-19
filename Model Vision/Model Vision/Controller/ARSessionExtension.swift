@@ -42,10 +42,15 @@ extension ViewController: ARSessionDelegate {
         self.classifier.currentBuffer = frame.capturedImage
         self.classifier.classifyCurrentImage()
         let classification = self.classifier.getClassification()
-        if(classification == "fist-UB-RHand"){
+        if (classification == "fist-UB-RHand" || classification == "FIVE-UB-RHand"){
             self.handInPosition = true;
         }else{
             self.handInPosition = false;
+        }
+        if(classification == "fist-UB-RHand"){
+            self.handIsFist = true;
+        }else{
+            self.handIsFist = false;
         }
     }
     

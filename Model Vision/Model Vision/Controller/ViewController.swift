@@ -63,7 +63,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     //hand tracking tools
     var classifier : Classification!
     var handInPosition = false;
+    var handIsFist = false;
     var pipeNode : SCNNode?
+    var handNode : SCNNode?
+    let buildingOrder = ["hub", "pvcscrew", "pipe", "pipeangle", "pipe"]
     
     //Pilot Brain
     var goalNode : SCNNode?
@@ -96,7 +99,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Show statistics such as fps and timing information
         self.sceneView.showsStatistics = true
         
-        self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showPhysicsFields]//[ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+        self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showPhysicsFields, .showBoundingBoxes]//[ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         // Hook up status view controller callback(s).
         statusViewController.restartExperienceHandler = { [unowned self] in
             self.restartExperience()
@@ -232,7 +235,27 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var pipeIsMoving = false
     func renderer(_ renderer: SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
         //for hand tracking
-        if self.handInPosition && !pipeIsMoving && self.sceneView.pointOfView!.worldPosition.closerThan(distance: 0.2, to: self.pipeNode?.worldPosition){
+        /*
+        if self.handInPosition && self.handNode == nil {
+            print("making hand")
+            guard let url = Bundle.main.url(forResource: "hand", withExtension: "obj", subdirectory: "art.scnassets") else {
+                fatalError("Failed to find model file.")
+            }
+            let mdlAsset = MDLAsset(url: url)
+            let handObj = SCNGeometry(mdlMesh: mdlAsset.object(at: 0) as! MDLMesh)
+            let mat = SCNMaterial()
+            mat.diffuse.contents = UIColor.white
+            handObj.materials = [mat]
+            let handNode = SCNNode(geometry: handObj)
+            //boxNode.simdTransform = anchor.transform
+            //handNode.localTranslate(by: SCNVector3(0, 0, -0.5))
+            self.handNode = handNode
+            self.sceneView.scene.rootNode.addChildNode(handNode)
+        }else if !self.handInPosition && self.handNode != nil {
+            self.handNode!.removeFromParentNode()
+            self.handNode = nil
+        }*/
+        if self.handIsFist && !pipeIsMoving && self.sceneView.pointOfView!.worldPosition.closerThan(distance: 0.2, to: self.pipeNode?.worldPosition){
             self.pipeIsMoving = true
             let move = SCNAction.moveBy(x: CGFloat.random(in: 0.0...0.5), y: CGFloat.random(in: 0.0...0.5), z: CGFloat.random(in: 0.0...0.5), duration: 1.0)
             let rotate = SCNAction.rotateBy(x: CGFloat.random(in: 0.0...CGFloat.pi/2.0), y: CGFloat.random(in: 0.0...CGFloat.pi/2.0), z: CGFloat.random(in: 0.0...CGFloat.pi/2.0), duration: 1.0)
@@ -437,16 +460,20 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             node.addChildNode(boxNode)
         }else if let name = anchor.name, name.hasPrefix("internet") {
             
-            let mdlAsset = MDLAsset(url: documentsUrl!)
+            guard let url = Bundle.main.url(forResource: "pvcscrew", withExtension: "obj", subdirectory: "art.scnassets") else {
+                fatalError("Failed to find model file.")
+            }
+            let mdlAsset = MDLAsset(url: url)
+            //let mdlAsset = MDLAsset(url: documentsUrl!)
             let internetObject = SCNGeometry(mdlMesh: mdlAsset.object(at: 0) as! MDLMesh)
             let mat = SCNMaterial()
-            mat.diffuse.contents = UIColor.red
+            mat.diffuse.contents = UIColor.white
             //mat.colorBufferWriteMask = []
             //mat.isDoubleSided = true
             internetObject.materials = [mat]
             let internetNode = SCNNode(geometry: internetObject)
             //boxNode.simdTransform = anchor.transform
-            internetNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
+            internetNode.physicsBody = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(geometry: internetObject, options: [.type: SCNPhysicsShape.ShapeType.boundingBox]))
             internetNode.physicsBody?.mass = 2.0
             internetNode.simdWorldTransform = anchor.transform
             
