@@ -76,6 +76,7 @@ extension SCNVector3 {
     /// - parameter to: Other vector to compare to
     func closerThan(distance dist: Float, to otherVector: SCNVector3?) -> Bool{
         if let otherVect = otherVector {
+            print(self.distance(to: otherVect))
             if self.distance(to: otherVect) > dist {
                 return false
             }else{

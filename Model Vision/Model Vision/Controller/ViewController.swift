@@ -66,8 +66,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var handIsFist = false;
     var pipeNode : SCNNode?
     var handNode : SCNNode?
-    let buildingOrder = ["hub", "pvcscrew", "pipe", "pipeangle", "pipe"]
-    
+    let buildingOrder = ["hub", "pvcscrew", "pipe", "pvcangle", "pipeangled"]
+    let buildingPositions = [SCNVector3Zero, SCNVector3(-0.019, -0.1, 0.01), SCNVector3(0.0, 0.01, 0.0), SCNVector3(0.0, 0.12, 0.0), SCNVector3(0.0, 0.12, 0.0)]
+    let buildingRotations = [SCNVector4Zero, SCNVector4Zero, SCNVector4Zero, SCNVector4Zero, SCNVector4(0.0, 0.0, 1.0, 0.8)]
+    var buildingCounter = 0
     //Pilot Brain
     var goalNode : SCNNode?
     var brain : PilotBrain?
@@ -99,7 +101,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Show statistics such as fps and timing information
         self.sceneView.showsStatistics = true
         
-        self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showPhysicsFields, .showBoundingBoxes]//[ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+        self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showPhysicsFields]//, .showBoundingBoxes, .showPhysicsShapes]
         // Hook up status view controller callback(s).
         statusViewController.restartExperienceHandler = { [unowned self] in
             self.restartExperience()
@@ -142,7 +144,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             configuration.environmentTexturing = .automatic
         }
         self.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-        
+        self.buildingCounter = 0
         //remove draw lines
         self.sceneView.scene.rootNode.enumerateChildNodes{ (child, _) in
             child.removeFromParentNode()
@@ -255,23 +257,67 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             self.handNode!.removeFromParentNode()
             self.handNode = nil
         }*/
-        if self.handIsFist && !pipeIsMoving && self.sceneView.pointOfView!.worldPosition.closerThan(distance: 0.2, to: self.pipeNode?.worldPosition){
-            self.pipeIsMoving = true
-            let move = SCNAction.moveBy(x: CGFloat.random(in: 0.0...0.5), y: CGFloat.random(in: 0.0...0.5), z: CGFloat.random(in: 0.0...0.5), duration: 1.0)
-            let rotate = SCNAction.rotateBy(x: CGFloat.random(in: 0.0...CGFloat.pi/2.0), y: CGFloat.random(in: 0.0...CGFloat.pi/2.0), z: CGFloat.random(in: 0.0...CGFloat.pi/2.0), duration: 1.0)
-            print("We movin: \(move)")
-            let actions = SCNAction.group([move,rotate])
-            self.pipeNode?.runAction(actions)
-            // Send the anchor info to peers, so they can place the same content.
-            guard let data = try? NSKeyedArchiver.archivedData(withRootObject: actions, requiringSecureCoding: true)
-                else { fatalError("can't encode actions") }
-            //self.multipeerSession.send(data, to: [mapProvider!])
-            self.multipeerSession.sendToAllPeers(data)
-            print("Peers#: \(self.multipeerSession.connectedPeers.count)")
-            //locked for 1.5 seconds
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
-                self.pipeIsMoving = false
-            })
+        if self.handIsFist {
+            print("HAND IS FIST: \(self.handIsFist)")
+            print("pipe Is moving: \(self.pipeIsMoving)")
+            //print(self.sceneView.pointOfView!.worldPosition.closerThan(distance: 0.3, to: self.lastBuiltNode?.presentation.worldPosition))
+        }
+        if self.handIsFist && !pipeIsMoving && self.sceneView.pointOfView!.worldPosition.closerThan(distance: 0.3, to: self.lastBuiltNode?.presentation.worldPosition){
+            print("Made it here")
+            if self.buildingCounter > 4 {
+                print("FINISHED!")
+            }else {
+                self.pipeIsMoving = true
+                //self.lastBuiltNode!.simdWorldTransform
+                /*
+                //let simd_matrix = simd_float4x4(matrix)
+                let anchor = ARAnchor(name: self.modelName, transform: self.lastBuiltNode!.simdWorldTransform)
+                
+                self.sceneView.session.add(anchor: anchor)*/
+                
+                guard let url = Bundle.main.url(forResource: self.buildingOrder[self.buildingCounter], withExtension: "obj", subdirectory: "art.scnassets") else {
+                    fatalError("Failed to find model file.")
+                }
+                let mdlAsset = MDLAsset(url: url)
+                //let mdlAsset = MDLAsset(url: documentsUrl!)
+                let internetObject = SCNGeometry(mdlMesh: mdlAsset.object(at: 0) as! MDLMesh)
+                let mat = SCNMaterial()
+                mat.diffuse.contents = UIColor.red
+                //mat.colorBufferWriteMask = []
+                //mat.isDoubleSided = true
+                internetObject.materials = [mat]
+                let internetNode = SCNNode(geometry: internetObject)
+                //internetNode.worldPosition = self.lastBuiltNode!.presentation.worldPosition + self.lastBuiltNode!.worldUp*0.01;
+                //internetNode.localTranslate(by: SCNNode.localUp*Float(self.buildingPositions[self.buildingCounter]))
+                //let translation = self.lastBuiltNode!.convertVector(SCNVector3Zero, from: self.lastBuiltNode!.presentation)
+                let translation = self.lastBuiltNode!.presentation.convertVector(self.buildingPositions[self.buildingCounter], to: self.lastBuiltNode!)
+                
+                internetNode.localTranslate(by: translation)
+                
+                internetNode.rotation = self.buildingRotations[self.buildingCounter]
+                print("THE INDEX IS: \(self.buildingCounter)")
+                //print(internetNode.position)
+                //boxNode.simdTransform = anchor.transform
+                //internetNode.physicsBody = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(geometry: internetObject, options: [.type: SCNPhysicsShape.ShapeType.boundingBox]))
+                //internetNode.physicsBody?.mass = 2.0
+                self.buildingCounter += 1
+                
+                //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
+                self.lastBuiltNode!.parent!.addChildNode(internetNode)
+                self.lastBuiltNode = internetNode
+                // Send the anchor info to peers, so they can place the same content.
+                /*
+                guard let data = try? NSKeyedArchiver.archivedData(withRootObject: anchor, requiringSecureCoding: true)
+                    else { fatalError("can't encode actions") }
+                //self.multipeerSession.send(data, to: [mapProvider!])
+                self.multipeerSession.sendToAllPeers(data)
+                print("Peers#: \(self.multipeerSession.connectedPeers.count)")*/
+                //locked for 1.5 seconds
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+                    self.pipeIsMoving = false
+                })
+            }
+            
             
             
             
@@ -399,6 +445,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     }
     //adding anchors and nodes
+    var lastBuiltNode : SCNNode?
+    var buildingAnchor : ARAnchor?
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         if let objectAnchor = anchor as? ARObjectAnchor, (objectAnchor.referenceObject.name?.hasPrefix("macbook"))! {
             print("MADE THE MACBOOK!")
@@ -457,10 +505,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
             //self.sceneView.scene.rootNode.addChildNode(boxNode)
+            
             node.addChildNode(boxNode)
         }else if let name = anchor.name, name.hasPrefix("internet") {
             
-            guard let url = Bundle.main.url(forResource: "pvcscrew", withExtension: "obj", subdirectory: "art.scnassets") else {
+            guard let url = Bundle.main.url(forResource: self.buildingOrder[self.buildingCounter], withExtension: "obj", subdirectory: "art.scnassets") else {
                 fatalError("Failed to find model file.")
             }
             let mdlAsset = MDLAsset(url: url)
@@ -475,8 +524,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             //boxNode.simdTransform = anchor.transform
             internetNode.physicsBody = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(geometry: internetObject, options: [.type: SCNPhysicsShape.ShapeType.boundingBox]))
             internetNode.physicsBody?.mass = 2.0
+            self.buildingCounter += 1
             internetNode.simdWorldTransform = anchor.transform
-            
+            self.lastBuiltNode = internetNode
             //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
             node.addChildNode(internetNode)
         }else if let name = anchor.name, name.hasPrefix("drone") {
