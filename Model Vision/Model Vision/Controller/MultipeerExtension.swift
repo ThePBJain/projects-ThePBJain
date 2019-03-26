@@ -66,7 +66,16 @@ extension ViewController {
                     //sceneView.session.add(anchor: anchor)
                     //check that data exists
                     //put in right location
-                    self.sceneView.scene.rootNode.addChildNode(lineNode!)
+                    if lineNode?.name == "tutorial" {
+                        self.buildingCounter += 1
+                        
+                        //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
+                        self.lastBuiltNode!.parent!.addChildNode(lineNode!)
+                        self.lastBuiltNode = lineNode
+                    }else{
+                        self.sceneView.scene.rootNode.addChildNode(lineNode!)
+                    }
+                    
                     print("Added node to screen")
                 }else if let boxAnchor = try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARAnchor.self, from: data) {
                     sceneView.session.add(anchor: boxAnchor!)

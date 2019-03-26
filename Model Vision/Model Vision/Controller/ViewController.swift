@@ -173,8 +173,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.sceneView.session.run(configuration)
         statusViewController.scheduleMessage("TRY MOVING LEFT OR RIGHT", inSeconds: 5.0, messageType: .focusSquare)
          print("ROOTNODE WORLD POS: \(self.sceneView.scene.rootNode.worldPosition)")
-        let pipeAnchor = ARAnchor(name: "pipe", transform: simd_float4x4(self.sceneView.scene.rootNode.transform))
-        self.sceneView.session.add(anchor: pipeAnchor)
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -257,11 +255,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             self.handNode!.removeFromParentNode()
             self.handNode = nil
         }*/
-        if self.handIsFist {
-            print("HAND IS FIST: \(self.handIsFist)")
-            print("pipe Is moving: \(self.pipeIsMoving)")
-            //print(self.sceneView.pointOfView!.worldPosition.closerThan(distance: 0.3, to: self.lastBuiltNode?.presentation.worldPosition))
-        }
         if self.handIsFist && !pipeIsMoving && self.sceneView.pointOfView!.worldPosition.closerThan(distance: 0.3, to: self.lastBuiltNode?.presentation.worldPosition){
             print("Made it here")
             if self.buildingCounter > 4 {
@@ -269,11 +262,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             }else {
                 self.pipeIsMoving = true
                 //self.lastBuiltNode!.simdWorldTransform
-                /*
-                //let simd_matrix = simd_float4x4(matrix)
-                let anchor = ARAnchor(name: self.modelName, transform: self.lastBuiltNode!.simdWorldTransform)
-                
-                self.sceneView.session.add(anchor: anchor)*/
                 
                 guard let url = Bundle.main.url(forResource: self.buildingOrder[self.buildingCounter], withExtension: "obj", subdirectory: "art.scnassets") else {
                     fatalError("Failed to find model file.")
@@ -287,31 +275,25 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 //mat.isDoubleSided = true
                 internetObject.materials = [mat]
                 let internetNode = SCNNode(geometry: internetObject)
-                //internetNode.worldPosition = self.lastBuiltNode!.presentation.worldPosition + self.lastBuiltNode!.worldUp*0.01;
-                //internetNode.localTranslate(by: SCNNode.localUp*Float(self.buildingPositions[self.buildingCounter]))
-                //let translation = self.lastBuiltNode!.convertVector(SCNVector3Zero, from: self.lastBuiltNode!.presentation)
+                internetNode.name = "tutorial"
                 let translation = self.lastBuiltNode!.presentation.convertVector(self.buildingPositions[self.buildingCounter], to: self.lastBuiltNode!)
                 
                 internetNode.localTranslate(by: translation)
                 
                 internetNode.rotation = self.buildingRotations[self.buildingCounter]
-                print("THE INDEX IS: \(self.buildingCounter)")
-                //print(internetNode.position)
-                //boxNode.simdTransform = anchor.transform
-                //internetNode.physicsBody = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(geometry: internetObject, options: [.type: SCNPhysicsShape.ShapeType.boundingBox]))
-                //internetNode.physicsBody?.mass = 2.0
+
                 self.buildingCounter += 1
                 
                 //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
                 self.lastBuiltNode!.parent!.addChildNode(internetNode)
                 self.lastBuiltNode = internetNode
                 // Send the anchor info to peers, so they can place the same content.
-                /*
-                guard let data = try? NSKeyedArchiver.archivedData(withRootObject: anchor, requiringSecureCoding: true)
+                
+                guard let data = try? NSKeyedArchiver.archivedData(withRootObject: internetNode, requiringSecureCoding: true)
                     else { fatalError("can't encode actions") }
                 //self.multipeerSession.send(data, to: [mapProvider!])
                 self.multipeerSession.sendToAllPeers(data)
-                print("Peers#: \(self.multipeerSession.connectedPeers.count)")*/
+                print("Peers#: \(self.multipeerSession.connectedPeers.count)")
                 //locked for 1.5 seconds
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
                     self.pipeIsMoving = false
