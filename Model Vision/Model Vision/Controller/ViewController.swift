@@ -66,10 +66,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var handIsFist = false;
     var pipeNode : SCNNode?
     var handNode : SCNNode?
-    let buildingOrder = ["hub", "pvcscrew", "pipe", "pvcangle", "pipeangled"]
-    let buildingPositions = [SCNVector3Zero, SCNVector3(-0.019, -0.1, 0.01), SCNVector3(0.0, 0.01, 0.0), SCNVector3(0.0, 0.12, 0.0), SCNVector3(0.0, 0.12, 0.0)]
-    let buildingRotations = [SCNVector4Zero, SCNVector4Zero, SCNVector4Zero, SCNVector4Zero, SCNVector4(0.0, 0.0, 1.0, 0.8)]
+    let buildingOrder1 = ["hub", "pvcscrew", "pipe", "pvcright", "pipe", "pvcright", "pipe", "pvcright", "pipe", "pvcright", "pipe"]
+    let buildingPositions1 = [SCNVector3Zero, SCNVector3(-0.019, -0.1, 0.01), SCNVector3(0.0, 0.01, 0.0), SCNVector3(0.005, 0.11, -0.010), SCNVector3(0.08, 0.115, -0.08), SCNVector3(0.15, 0.118, -0.141), SCNVector3(0.222, 0.115, -0.08), SCNVector3(0.29, 0.126, -0.01), SCNVector3(0.297, 0.22, -0.002), SCNVector3(0.290, 0.32, 0), SCNVector3(0.225, 0.326, 0.075)]
+    let buildingRotations1 = [SCNVector4Zero, SCNVector4Zero, SCNVector4Zero, SCNVector4(0.0, -1.0, 0.0, Double.pi/4.0), SCNVector4(1.0, 0.0, 1.0, Double.pi/2.0),  SCNVector4(-0.6785983, 0.6785983, -0.2810846, 2.593564), SCNVector4(0.8628561, 0.3574067, -0.3574067, 1.717772), SCNVector4(0.8628561, 0.3574067, -0.3574067, 1.717772), SCNVector4Zero, SCNVector4(0.0, 1.0, 0.0, Double.pi * 3.0/4.0), SCNVector4(1.0, 0.0, 1.0, Double.pi/2.0)]
     var buildingCounter = 0
+    let maxBuildPieces = 10
     //Pilot Brain
     var goalNode : SCNNode?
     var brain : PilotBrain?
@@ -257,13 +258,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }*/
         if self.handIsFist && !pipeIsMoving && self.sceneView.pointOfView!.worldPosition.closerThan(distance: 0.3, to: self.lastBuiltNode?.presentation.worldPosition){
             print("Made it here")
-            if self.buildingCounter > 4 {
+            if self.buildingCounter > self.maxBuildPieces {
                 print("FINISHED!")
             }else {
                 self.pipeIsMoving = true
                 //self.lastBuiltNode!.simdWorldTransform
                 
-                guard let url = Bundle.main.url(forResource: self.buildingOrder[self.buildingCounter], withExtension: "obj", subdirectory: "art.scnassets") else {
+                guard let url = Bundle.main.url(forResource: self.buildingOrder1[self.buildingCounter], withExtension: "obj", subdirectory: "art.scnassets") else {
                     fatalError("Failed to find model file.")
                 }
                 let mdlAsset = MDLAsset(url: url)
@@ -276,11 +277,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 internetObject.materials = [mat]
                 let internetNode = SCNNode(geometry: internetObject)
                 internetNode.name = "tutorial"
-                let translation = self.lastBuiltNode!.presentation.convertVector(self.buildingPositions[self.buildingCounter], to: self.lastBuiltNode!)
+                let translation = self.lastBuiltNode!.presentation.convertVector(self.buildingPositions1[self.buildingCounter], to: self.lastBuiltNode!)
                 
                 internetNode.localTranslate(by: translation)
                 
-                internetNode.rotation = self.buildingRotations[self.buildingCounter]
+                internetNode.rotation = self.buildingRotations1[self.buildingCounter]
 
                 self.buildingCounter += 1
                 
@@ -491,7 +492,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             node.addChildNode(boxNode)
         }else if let name = anchor.name, name.hasPrefix("internet") {
             
-            guard let url = Bundle.main.url(forResource: self.buildingOrder[self.buildingCounter], withExtension: "obj", subdirectory: "art.scnassets") else {
+            guard let url = Bundle.main.url(forResource: self.buildingOrder1[self.buildingCounter], withExtension: "obj", subdirectory: "art.scnassets") else {
                 fatalError("Failed to find model file.")
             }
             let mdlAsset = MDLAsset(url: url)

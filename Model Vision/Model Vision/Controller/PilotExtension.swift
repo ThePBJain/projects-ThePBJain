@@ -105,7 +105,8 @@ public class PilotBrain {
         //let model = pilotbrain_v1()
         let model = pilotbrain_v2()
         //TODO: find a cleaner way of doing this
-        var inputArray = goalLocation.toArray() + droneLocation.toArray() + droneRotation.toArray() + droneVelocity.toArray() + droneAngleVelocity.toArray() + droneAcceleration.toArray()
+        var inputArray = goalLocation.toArray() + droneLocation.toArray() + droneRotation.toArray()
+            inputArray += droneVelocity.toArray() + droneAngleVelocity.toArray() + droneAcceleration.toArray()
         print("------------")
         print("Input Values in PilotBrain: \(inputArray)")
         //use reduce in the future
