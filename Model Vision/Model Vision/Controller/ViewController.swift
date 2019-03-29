@@ -67,7 +67,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var pipeNode : SCNNode?
     var handNode : SCNNode?
     let buildingOrder1 = ["hub", "pvcscrew", "pipe", "pvcright", "pipe", "pvcright", "pipe", "pvcright", "pipe", "pvcright", "pipe"]
-    let buildingPositions1 = [SCNVector3Zero, SCNVector3(-0.019, -0.1, 0.01), SCNVector3(0.0, 0.01, 0.0), SCNVector3(0.005, 0.11, -0.010), SCNVector3(0.08, 0.115, -0.08), SCNVector3(0.15, 0.118, -0.141), SCNVector3(0.222, 0.115, -0.08), SCNVector3(0.29, 0.126, -0.01), SCNVector3(0.297, 0.22, -0.002), SCNVector3(0.290, 0.32, 0), SCNVector3(0.225, 0.326, 0.075)]
+    let buildingPositions1 = [SCNVector3Zero, SCNVector3(-0.019, -0.1, 0.01), SCNVector3(0.0, 0.01, 0.0), SCNVector3(0.005, 0.11, -0.010), SCNVector3(0.08, 0.115, -0.08), SCNVector3(0.15, 0.118, -0.141), SCNVector3(0.222, 0.115, -0.08), SCNVector3(0.29, 0.126, -0.01), SCNVector3(0.297, 0.22, -0.002), SCNVector3(0.290, 0.32, 0), SCNVector3(0.225, 0.326, 0.07)]
     let buildingRotations1 = [SCNVector4Zero, SCNVector4Zero, SCNVector4Zero, SCNVector4(0.0, -1.0, 0.0, Double.pi/4.0), SCNVector4(1.0, 0.0, 1.0, Double.pi/2.0),  SCNVector4(-0.6785983, 0.6785983, -0.2810846, 2.593564), SCNVector4(0.8628561, 0.3574067, -0.3574067, 1.717772), SCNVector4(0.8628561, 0.3574067, -0.3574067, 1.717772), SCNVector4Zero, SCNVector4(0.0, 1.0, 0.0, Double.pi * 3.0/4.0), SCNVector4(1.0, 0.0, 1.0, Double.pi/2.0)]
     var buildingCounter = 0
     let maxBuildPieces = 10
@@ -305,6 +305,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             
         }
+        /*
         //for pilot brain
         if let droneNode = self.drone {
             //print("found drone")
@@ -390,7 +391,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 }
                 
             }
-        }
+        }*/
     }
     // MARK: - ARSCNViewDelegate
     
@@ -431,7 +432,42 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var lastBuiltNode : SCNNode?
     var buildingAnchor : ARAnchor?
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        if let objectAnchor = anchor as? ARObjectAnchor, (objectAnchor.referenceObject.name?.hasPrefix("macbook"))! {
+        if let objectAnchor = anchor as? ARObjectAnchor, (objectAnchor.referenceObject.name?.hasPrefix("mainHub"))! {
+            print("MADE THE mainHub!")
+            guard let url = Bundle.main.url(forResource: "hub", withExtension: "obj", subdirectory: "art.scnassets") else {
+                fatalError("Failed to find model file.")
+            }
+            guard let url2 = Bundle.main.url(forResource: "pvcscrew", withExtension: "obj", subdirectory: "art.scnassets") else {
+                fatalError("Failed to find model file.")
+            }
+            let mdlAsset = MDLAsset(url: url)
+            let internetObject = SCNGeometry(mdlMesh: mdlAsset.object(at: 0) as! MDLMesh)
+            
+            let mat = SCNMaterial()
+            mat.diffuse.contents = UIColor.red
+            internetObject.materials = [mat]
+            let internetNode = SCNNode(geometry: internetObject)
+            
+            let mdlAsset2 = MDLAsset(url: url2)
+            let internetObject2 = SCNGeometry(mdlMesh: mdlAsset2.object(at: 0) as! MDLMesh)
+            
+            internetObject2.materials = [mat]
+            let internetNode2 = SCNNode(geometry: internetObject2)
+            
+            
+            
+            self.lastBuiltNode = internetNode2
+            node.addChildNode(internetNode)
+            node.addChildNode(internetNode2)
+            
+            // Send the anchor info to peers, so they can place the same content.
+            guard let data = try? NSKeyedArchiver.archivedData(withRootObject: anchor, requiringSecureCoding: true)
+                else { fatalError("can't encode anchor") }
+            //self.multipeerSession.send(data, to: [mapProvider!])
+            self.multipeerSession.sendToAllPeers(data)
+            print("Peers#: \(self.multipeerSession.connectedPeers.count)")
+            
+        }else if let objectAnchor = anchor as? ARObjectAnchor, (objectAnchor.referenceObject.name?.hasPrefix("macbook"))! {
             print("MADE THE MACBOOK!")
             let mdlAsset = MDLAsset(url: documentsUrl!)
             let internetObject = SCNGeometry(mdlMesh: mdlAsset.object(at: 0) as! MDLMesh)
