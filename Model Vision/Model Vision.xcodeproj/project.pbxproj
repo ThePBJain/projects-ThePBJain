@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A001EB62267A9D2002D9867 /* Tutorials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A001EB52267A9D2002D9867 /* Tutorials.swift */; };
+		6A001EB82267AA38002D9867 /* Tutorials.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6A001EB72267AA38002D9867 /* Tutorials.plist */; };
 		6A34B35821ADEB0800D14E62 /* StatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B35721ADEB0800D14E62 /* StatusViewController.swift */; };
 		6A387207219A53EB00CFAFE2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A387206219A53EB00CFAFE2 /* Extensions.swift */; };
 		6A919C0621DFDE4800DAA241 /* VisionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A919C0521DFDE4800DAA241 /* VisionExtension.swift */; };
@@ -43,6 +45,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6A001EB52267A9D2002D9867 /* Tutorials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tutorials.swift; sourceTree = "<group>"; };
+		6A001EB72267AA38002D9867 /* Tutorials.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Tutorials.plist; sourceTree = "<group>"; };
 		6A34B35721ADEB0800D14E62 /* StatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewController.swift; sourceTree = "<group>"; };
 		6A387206219A53EB00CFAFE2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		6A919C0521DFDE4800DAA241 /* VisionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionExtension.swift; sourceTree = "<group>"; };
@@ -140,6 +144,8 @@
 				6AA61E0F21A9E9E1002EE1E0 /* Plane.swift */,
 				6A387206219A53EB00CFAFE2 /* Extensions.swift */,
 				6ACA549421AB9A8A0029A160 /* MultipeerSession.swift */,
+				6A001EB52267A9D2002D9867 /* Tutorials.swift */,
+				6A001EB72267AA38002D9867 /* Tutorials.plist */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -256,6 +262,7 @@
 			files = (
 				6ADDD639218FEDBD00187DA8 /* art.scnassets in Resources */,
 				6ADDD643218FEDBF00187DA8 /* LaunchScreen.storyboard in Resources */,
+				6A001EB82267AA38002D9867 /* Tutorials.plist in Resources */,
 				6ADDD640218FEDBF00187DA8 /* Assets.xcassets in Resources */,
 				6ADDD63E218FEDBD00187DA8 /* Main.storyboard in Resources */,
 			);
@@ -291,6 +298,7 @@
 				6AB668A72204BEFA009DDD26 /* DetectedBoundingBox.swift in Sources */,
 				6AB668A52204BDDE009DDD26 /* ObjectOriginAxis.swift in Sources */,
 				6ADDD637218FEDBD00187DA8 /* AppDelegate.swift in Sources */,
+				6A001EB62267A9D2002D9867 /* Tutorials.swift in Sources */,
 				6A919C0821DFE67600DAA241 /* ARSessionExtension.swift in Sources */,
 				6AE3C9452215399E008CA5F6 /* example_5s0_hand_model.mlmodel in Sources */,
 			);

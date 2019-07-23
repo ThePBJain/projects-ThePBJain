@@ -67,7 +67,7 @@ extension ViewController {
                     //check that data exists
                     //put in right location
                     if lineNode?.name == "tutorial" {
-                        self.buildingCounter += 1
+                        self.instruction = Instruction(rotation: SCNVector4Zero, position: SCNVector3Zero, order: "", instructionNum: self.instruction?.instructionNum ?? 0 + 1 )
                         
                         //boxNode.physicsBody?.categoryBitMask = SCNPhysicsCollisionCategory.
                         self.lastBuiltNode!.parent!.addChildNode(lineNode!)
