@@ -445,13 +445,13 @@
 			</dict>
 			<dict>
 				<key>x</key>
-				<integer>0</integer>
+				<real>-0.35740677</real>
 				<key>y</key>
-				<real>1</real>
+				<real>-0.35740677</real>
 				<key>z</key>
-				<integer>0</integer>
+				<real>0.8628563</real>
 				<key>w</key>
-				<real>2.35619449019</real>
+				<real>1.7177713</real>
 			</dict>
 			<dict>
 				<key>x</key>
@@ -465,13 +465,13 @@
 			</dict>
 			<dict>
 				<key>x</key>
-				<real>1</real>
+				<real>-0.70710677</real>
 				<key>y</key>
 				<integer>0</integer>
 				<key>z</key>
-				<real>1</real>
+				<real>-0.70710677</real>
 				<key>w</key>
-				<real>1.57079632679</real>
+				<real>1.5707964</real>
 			</dict>
 			<dict>
 				<key>x</key>
@@ -564,27 +564,27 @@
 			</dict>
 			<dict>
 				<key>x</key>
-				<real>0.27</real>
+				<real>0.006</real>
 				<key>y</key>
-				<real>0.4</real>
+				<real>0.398</real>
 				<key>z</key>
-				<real>0</real>
+				<real>-0.283</real>
 			</dict>
 			<dict>
 				<key>x</key>
-				<real>0.211</real>
+				<real>0.059</real>
 				<key>y</key>
-				<real>0.405</real>
+				<real>0.396</real>
 				<key>z</key>
-				<real>0.064</real>
+				<real>-0.343</real>
 			</dict>
 			<dict>
 				<key>x</key>
-				<real>0.211</real>
+				<real>0.11</real>
 				<key>y</key>
-				<real>0.405</real>
+				<real>0.396</real>
 				<key>z</key>
-				<real>0.064</real>
+				<real>-0.425</real>
 			</dict>
 			<dict>
 				<key>x</key>
