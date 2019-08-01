@@ -266,7 +266,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             self.handNode!.removeFromParentNode()
             self.handNode = nil
         }*/
-        if self.handIsFist && !pipeIsMoving && self.sceneView.pointOfView!.worldPosition.closerThan(distance: 0.5, to: self.lastBuiltNode?.presentation.worldPosition){
+        if (self.handIsFist || self.buttonPressed) && !pipeIsMoving && self.sceneView.pointOfView!.worldPosition.closerThan(distance: 0.5, to: self.lastBuiltNode?.presentation.worldPosition){
             print("Made it here")
             let instruct = tutorialModel.getInstruction(after: self.instruction, for: self.tutorialNum)
             self.instruction = instruct
@@ -308,9 +308,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 self.multipeerSession.sendToAllPeers(data)
                 print("Peers#: \(self.multipeerSession.connectedPeers.count)")
                 //locked for 1.5 seconds
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+                self.pipeIsMoving = false
+                /*DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
                     self.pipeIsMoving = false
-                })
+                })*/
             }
             
             

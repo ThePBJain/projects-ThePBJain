@@ -475,33 +475,33 @@
 			</dict>
 			<dict>
 				<key>x</key>
-				<real>1</real>
+				<real>0.67859846</real>
 				<key>y</key>
-				<integer>0</integer>
+				<real>0.67859846</real>
 				<key>z</key>
-				<real>1</real>
+				<real>-0.2810847</real>
 				<key>w</key>
-				<real>1.57079632679</real>
+				<real>1.0960565</real>
 			</dict>
 			<dict>
 				<key>x</key>
-				<real>1</real>
-				<key>y</key>
 				<integer>0</integer>
+				<key>y</key>
+				<integer>-1</integer>
 				<key>z</key>
-				<real>1</real>
+				<integer>0</integer>
 				<key>w</key>
-				<real>1.57079632679</real>
+				<real>3.9269908</real>
 			</dict>
 			<dict>
 				<key>x</key>
-				<real>1</real>
+				<integer>0</integer>
 				<key>y</key>
 				<integer>0</integer>
 				<key>z</key>
-				<real>1</real>
+				<integer>0</integer>
 				<key>w</key>
-				<real>1.57079632679</real>
+				<integer>0</integer>
 			</dict>
 		</array>
 		<key>positions</key>
@@ -580,35 +580,35 @@
 			</dict>
 			<dict>
 				<key>x</key>
-				<real>0.11</real>
+				<real>0.117</real>
 				<key>y</key>
-				<real>0.396</real>
+				<real>0.393</real>
 				<key>z</key>
-				<real>-0.425</real>
+				<real>-0.412</real>
 			</dict>
 			<dict>
 				<key>x</key>
-				<real>0.211</real>
+				<real>0.082</real>
 				<key>y</key>
-				<real>0.405</real>
+				<real>0.332</real>
 				<key>z</key>
-				<real>0.064</real>
+				<real>-0.459</real>
 			</dict>
 			<dict>
 				<key>x</key>
-				<real>0.211</real>
+				<real>0.041</real>
 				<key>y</key>
-				<real>0.405</real>
+				<real>0.279</real>
 				<key>z</key>
-				<real>0.064</real>
+				<real>-0.498</real>
 			</dict>
 			<dict>
 				<key>x</key>
-				<real>0.211</real>
+				<real>0.042</real>
 				<key>y</key>
-				<real>0.405</real>
+				<real>0.192</real>
 				<key>z</key>
-				<real>0.064</real>
+				<real>-0.495</real>
 			</dict>
 		</array>
 		<key>orders</key>
