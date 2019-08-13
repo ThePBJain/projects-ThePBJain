@@ -308,10 +308,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 self.multipeerSession.sendToAllPeers(data)
                 print("Peers#: \(self.multipeerSession.connectedPeers.count)")
                 //locked for 1.5 seconds
-                self.pipeIsMoving = false
-                /*DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+                //self.pipeIsMoving = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
                     self.pipeIsMoving = false
-                })*/
+                })
             }
             
             
