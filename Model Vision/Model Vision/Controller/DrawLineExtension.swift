@@ -18,6 +18,7 @@ extension ViewController {
         //detecting ball
         //testRun?.updateOnEveryFrame()
     }
+    /*
     func renderer(_ renderer: SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: TimeInterval) {
         
         guard let pointOfView = sceneView.pointOfView else { return }
@@ -51,6 +52,7 @@ extension ViewController {
         }
         previousPoint = currentPosition
     }
+ */
     func midpoint(first: SCNVector3, second: SCNVector3) -> SCNVector3 {
         return SCNVector3Make((first.x + second.x) / 2, (first.y + second.y) / 2, (first.z + second.z) / 2)
     }
