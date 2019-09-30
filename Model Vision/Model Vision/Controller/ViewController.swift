@@ -70,11 +70,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var instruction : Instruction? = nil
     var tutorialNum : Int = 0
     var tutorialFinished = false
-    /*let buildingOrder1 = ["pipe", "pvcright", "pipe", "pvcright", "pipe", "pvcright", "pipe", "pvcright", "pipe"]
-    let buildingPositions1 = [SCNVector3(-0.002, 0.12, -0.015), SCNVector3(0.002, 0.21, -0.024), SCNVector3(0.064, 0.215, -0.082), SCNVector3(0.128, 0.217, -0.139), SCNVector3(0.20, 0.213, -0.08), SCNVector3(0.27, 0.225, -0.01), SCNVector3(0.277, 0.31, -0.002), SCNVector3(0.270, 0.40, 0.0), SCNVector3(0.211, 0.405, 0.064)]
-    let buildingRotations1 = [ SCNVector4Zero, SCNVector4(0.0, -1.0, 0.0, Double.pi/4.0), SCNVector4(1.0, 0.0, 1.0, Double.pi/2.0),  SCNVector4(-0.6785983, 0.6785983, -0.2810846, 2.593564), SCNVector4(0.8628561, 0.3574067, -0.3574067, 1.717772), SCNVector4(0.8628561, 0.3574067, -0.3574067, 1.717772), SCNVector4Zero, SCNVector4(0.0, 1.0, 0.0, Double.pi * 3.0/4.0), SCNVector4(1.0, 0.0, 1.0, Double.pi/2.0)]
-    var buildingCounter = 0
-    let maxBuildPieces = 8*/
     
     //Pilot Brain
     var goalNode : SCNNode?
@@ -151,6 +146,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
         self.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
         self.tutorialNum = 0
+        self.instruction = nil
+        self.tutorialFinished = false
         self.switchModelButton.setTitle("Tut \(self.tutorialNum + 1)", for: .normal)
         //remove draw lines
         self.sceneView.scene.rootNode.enumerateChildNodes{ (child, _) in
@@ -190,7 +187,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     // MARK: - Switch Models
     
-    
     @IBAction func switchModel(_ sender: Any) {
         /*if self.modelName == "box" {
             //model is currently "box"
@@ -207,6 +203,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.tutorialNum = (self.tutorialNum + 1) % self.tutorialModel.numTutorials()
         self.switchModelButton.setTitle("Tut \(self.tutorialNum + 1)", for: .normal)
         self.sceneView.scene.rootNode.childNode(withName: "tutorial-hub", recursively: false)?.removeFromParentNode()
+        self.instruction = nil
         self.tutorialFinished = false
         
     }
@@ -677,7 +674,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     
     // MARK: - Hit Test detection
-    //TODO: Talk about this
     @IBAction func tapped(recognizer :UITapGestureRecognizer) {
         let sceneView = recognizer.view as! ARSCNView
         let touchLocation = recognizer.location(in: sceneView)
