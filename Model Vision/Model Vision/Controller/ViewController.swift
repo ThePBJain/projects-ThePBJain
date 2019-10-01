@@ -202,7 +202,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }*/
         self.tutorialNum = (self.tutorialNum + 1) % self.tutorialModel.numTutorials()
         self.switchModelButton.setTitle("Tut \(self.tutorialNum + 1)", for: .normal)
-        self.sceneView.scene.rootNode.childNode(withName: "tutorial-hub", recursively: false)?.removeFromParentNode()
+        if let tut = self.sceneView.scene.rootNode.childNode(withName: "tutorial-hub", recursively: false)?.childNodes[0] {
+            tut.removeFromParentNode()
+        }
         self.instruction = nil
         self.tutorialFinished = false
         
