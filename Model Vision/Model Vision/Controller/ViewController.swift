@@ -202,7 +202,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }*/
         self.tutorialNum = (self.tutorialNum + 1) % self.tutorialModel.numTutorials()
         self.switchModelButton.setTitle("Tut \(self.tutorialNum + 1)", for: .normal)
-        self.sceneView.scene.rootNode.childNode(withName: "tutorial-hub", recursively: false)?.removeFromParentNode()
+        self.sceneView.scene.rootNode.childNode(withName: "tutorial-hub", recursively: false)?.enumerateChildNodes({ (node, _) in
+            if let name = node.name {
+                if name == "hub2" {
+                    self.lastBuiltNode = node
+                } else if name == "tutorial" {
+                    node.removeFromParentNode()
+                }
+            }
+        })
         self.instruction = nil
         self.tutorialFinished = false
         
@@ -466,7 +474,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             let internetNode2 = SCNNode(geometry: internetObject2)
             internetNode2.localTranslate(by: SCNVector3(-0.02, 0.02, 0.0))
             
-            
+            internetNode.name = "hub1"
+            internetNode2.name = "hub2"
             self.lastBuiltNode = internetNode2
             node.addChildNode(internetNode)
             node.name = "tutorial-hub"
@@ -562,6 +571,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             internetNode2.localTranslate(by: SCNVector3(-0.02, 0.02, 0.0))
             
             
+            internetNode.name = "hub1"
+            internetNode2.name = "hub2"
             self.lastBuiltNode = internetNode2
             node.addChildNode(internetNode)
             node.name = "tutorial-hub"
